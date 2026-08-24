@@ -1,391 +1,569 @@
-/* =========================
-   ARYKART COMPLETE CSS
-========================= */
+/* ===============================
+   ARYKART - COMPLETE STYLE
+================================ */
+
+/* ---------- RESET ---------- */
 
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+
+/* ---------- BODY ---------- */
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f7fff8;
+  background: #f5f5f5;
   color: #222;
+  padding-bottom: 80px;
 }
 
 
-/* =========================
-   NAVBAR
-========================= */
+/* ===============================
+   HEADER
+================================ */
 
-.navbar {
+.header {
+  background: #7b2cbf;
+  color: white;
+  padding: 12px 15px 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 7%;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  margin-bottom: 12px;
 }
+
+
+/* LOGO */
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.nav-links {
-  display: flex;
-  gap: 20px;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #222;
-  font-weight: bold;
-}
-
-
-/* =========================
-   HOME / HERO
-========================= */
-
-.hero {
-  text-align: center;
-  padding: 80px 20px;
-  background: #eaffef;
-}
-
-.fruit {
-  font-size: 45px;
-  margin-bottom: 15px;
-}
-
-.hero h1 {
-  font-size: 50px;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  font-size: 20px;
-}
-
-.tagline {
-  margin: 20px 0;
-  line-height: 1.7;
-}
-
-
-/* =========================
-   BUTTON
-========================= */
-
-.order-btn,
-.place-order-btn {
-  display: inline-block;
-  border: none;
-  background: #16a34a;
-  color: white;
-  padding: 13px 25px;
-  border-radius: 10px;
-  font-size: 17px;
+  font-size: 25px;
   font-weight: bold;
   cursor: pointer;
-  text-decoration: none;
+  letter-spacing: -1px;
 }
 
-.order-btn:hover,
-.place-order-btn:hover {
-  opacity: 0.9;
+.logo span {
+  color: #ffd166;
 }
 
 
-/* =========================
-   PRODUCTS
-========================= */
+/* LOCATION */
 
-.products {
-  padding: 60px 7%;
-  text-align: center;
+.location {
+  font-size: 12px;
+  cursor: pointer;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.products h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
 
-.products-subtitle {
-  margin-bottom: 35px;
-  color: #666;
-}
+/* ===============================
+   SEARCH BOX
+================================ */
 
-.product-grid {
-  display: grid;
-  grid-template-columns:
-    repeat(auto-fit, minmax(270px, 1fr));
-  gap: 25px;
-}
-
-.product-card {
+.search-box {
+  width: 100%;
+  height: 45px;
   background: white;
-  padding: 30px 20px;
-  border-radius: 20px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
 }
 
-.product-emoji {
-  font-size: 45px;
-  margin-bottom: 15px;
-}
-
-.product-card h3 {
-  font-size: 23px;
-  margin-bottom: 10px;
-}
-
-.product-card del {
-  color: #888;
+.search-icon {
   font-size: 18px;
 }
 
-.product-card strong {
-  font-size: 30px;
-}
-
-.discount {
-  color: #dc2626;
-  font-weight: bold;
-  margin: 10px 0;
-}
-
-
-/* =========================
-   ORDER FORM
-========================= */
-
-.order-form-box {
-  max-width: 600px;
-  margin: 50px auto 0;
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-  text-align: left;
-}
-
-.order-form-box h2 {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.order-form-box label {
-  display: block;
-  margin-top: 15px;
-  margin-bottom: 7px;
-  font-weight: bold;
-}
-
-.order-form-box input,
-.order-form-box select,
-.order-form-box textarea {
+.search-box input {
   width: 100%;
-  padding: 13px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-}
-
-.order-form-box textarea {
-  height: 100px;
-  resize: none;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
 }
 
 
-/* =========================
-   QUANTITY
-========================= */
+/* ===============================
+   MAIN CONTENT
+================================ */
 
-.quantity-box {
+.main-content {
+  max-width: 1200px;
+  margin: auto;
+}
+
+
+/* ===============================
+   HERO BANNER
+================================ */
+
+.hero-banner {
+  margin: 12px;
+  padding: 20px;
+  min-height: 145px;
+  border-radius: 18px;
+  background: linear-gradient(
+    135deg,
+    #7b2cbf,
+    #9d4edd
+  );
+  color: white;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
 }
 
-.quantity-box button {
+.hero-text {
+  width: 70%;
+  z-index: 1;
+}
+
+.hero-text h2 {
+  font-size: 23px;
+  line-height: 30px;
+  margin-bottom: 8px;
+}
+
+.hero-text p {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 15px;
+}
+
+.hero-text button {
+  background: white;
+  color: #7b2cbf;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 17px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hero-icon {
+  font-size: 65px;
+  transform: rotate(-8deg);
+}
+
+
+/* ===============================
+   COMMON SECTION
+================================ */
+
+.section,
+.product-section {
+  background: white;
+  margin-top: 10px;
+  padding: 15px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.section-header h2 {
+  font-size: 18px;
+}
+
+.see-all-btn {
+  border: none;
+  background: transparent;
+  color: #7b2cbf;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* ===============================
+   CATEGORIES
+================================ */
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px 10px;
+}
+
+.category {
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.category:active {
+  transform: scale(0.92);
+}
+
+.category-icon {
+  width: 58px;
+  height: 58px;
+  margin: auto;
+  background: #f3e8ff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 29px;
+}
+
+.category-name {
+  font-size: 11px;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* ===============================
+   PRODUCT SECTION
+================================ */
+
+.product-count {
+  color: #888;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+
+/* ===============================
+   PRODUCTS GRID
+================================ */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+
+/* ===============================
+   PRODUCT CARD
+================================ */
+
+.product-card {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+}
+
+.product-card:active {
+  transform: scale(0.98);
+}
+
+
+/* PRODUCT IMAGE */
+
+.product-image {
+  height: 135px;
+  background: #faf7ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 65px;
+}
+
+
+/* PRODUCT DETAILS */
+
+.product-details {
+  padding: 10px;
+}
+
+.product-name {
+  font-size: 13px;
+  line-height: 18px;
+  height: 36px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+
+/* RATING */
+
+.product-rating {
+  display: inline-block;
+  background: #138a5b;
+  color: white;
+  font-size: 10px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+
+/* PRICE */
+
+.product-price-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.product-old-price {
+  font-size: 11px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.product-discount {
+  font-size: 10px;
+  color: #138a5b;
+  font-weight: bold;
+  width: 100%;
+  margin-top: 3px;
+}
+
+
+/* ADD BUTTON */
+
+.add-cart-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px;
+  border: none;
+  border-radius: 7px;
+  background: #7b2cbf;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* ===============================
+   NO PRODUCTS
+================================ */
+
+.no-products {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.no-products-icon {
+  font-size: 50px;
+  margin-bottom: 12px;
+}
+
+.no-products h3 {
+  font-size: 18px;
+  margin-bottom: 7px;
+}
+
+.no-products p {
+  color: #777;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+.no-products button {
+  background: #7b2cbf;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+
+/* ===============================
+   BOTTOM NAVIGATION
+================================ */
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 68px;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+}
+
+.nav-item {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  color: #777;
+  font-size: 10px;
+}
+
+.nav-item.active {
+  color: #7b2cbf;
+  font-weight: bold;
+}
+
+.nav-icon {
+  font-size: 21px;
+  margin-bottom: 3px;
+  position: relative;
+  display: inline-block;
+}
+
+.nav-text {
+  font-size: 10px;
+}
+
+
+/* ===============================
+   CART COUNT
+================================ */
+
+.nav-cart-icon {
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 50%;
+  background: #e53935;
+  color: white;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* ===============================
+   TABLET / DESKTOP
+================================ */
+
+@media (min-width: 600px) {
+
+  body {
+    background: #eeeeee;
+  }
+
+  .header,
+  .main-content,
+  .bottom-nav {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header {
+    border-radius: 0 0 15px 15px;
+  }
+
+  .categories {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .bottom-nav {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+}
+
+
+/* ===============================
+   SMALL MOBILE
+================================ */
+
+@media (max-width: 360px) {
+
+  .categories {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .hero-text h2 {
+    font-size: 19px;
+    line-height: 25px;
+  }
+
+  .hero-icon {
+    font-size: 50px;
+  }
+
+}
+
+/* QUANTITY SYSTEM */
+.quantity-section{
+  margin: 20px 0;
+  padding: 18px;
+  background: #f8f8f8;
+  border-radius: 15px;
+}
+
+.quantity-section h3{
+  margin: 0 0 15px;
+  font-size: 20px;
+}
+
+.quantity-box{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.quantity-box button{
   width: 45px;
   height: 45px;
   border: none;
   border-radius: 10px;
-  font-size: 24px;
+  background: #6a1b9a;
+  color: white;
+  font-size: 28px;
   cursor: pointer;
-  background: #eeeeee;
 }
 
-.quantity-box button:hover {
-  background: #dddddd;
-}
-
-.quantity-box input {
-  width: 70px;
+.quantity-box span{
+  min-width: 45px;
   text-align: center;
-}
-
-
-/* =========================
-   TOTAL
-========================= */
-
-.total-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 25px;
-  padding: 18px;
-  background: #f1f5f9;
-  border-radius: 12px;
-  font-size: 20px;
-}
-
-.total-box strong {
-  font-size: 25px;
-}
-
-
-/* =========================
-   PLACE ORDER BUTTON
-========================= */
-
-.place-order-btn {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.place-order-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-
-/* =========================
-   SUCCESS MESSAGE
-========================= */
-
-.success-message {
-  display: none;
-  max-width: 600px;
-  margin: 40px auto;
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-}
-
-.success-icon {
-  font-size: 60px;
-  margin-bottom: 10px;
-}
-
-.success-message h2 {
-  margin-bottom: 10px;
-}
-
-.success-message p {
-  line-height: 1.8;
-}
-
-
-/* =========================
-   CONTACT
-========================= */
-
-.contact {
-  text-align: center;
-  padding: 60px 20px;
-  background: #eaffef;
-}
-
-.contact h2 {
-  margin-bottom: 15px;
-}
-
-.contact p {
-  margin: 10px;
-}
-
-.phone {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
 }
 
-
-/* =========================
-   FOOTER
-========================= */
-
-footer {
-  text-align: center;
-  padding: 25px;
-  background: #111;
-  color: white;
-  line-height: 1.8;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
-
-  .navbar {
-    padding: 14px 5%;
-  }
-
-  .logo {
-    font-size: 20px;
-  }
-
-  .nav-links {
-    gap: 10px;
-    font-size: 13px;
-  }
-
-  .hero {
-    padding: 60px 15px;
-  }
-
-  .hero h1 {
-    font-size: 40px;
-  }
-
-  .hero p {
-    font-size: 18px;
-  }
-
-  .products {
-    padding: 45px 15px;
-  }
-
-  .products h2 {
-    font-size: 27px;
-  }
-
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .order-form-box {
-    margin-left: 5px;
-    margin-right: 5px;
-    padding: 22px;
-  }
-
+.quantity-price{
+  margin: 15px 0 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #6a1b9a;
 }

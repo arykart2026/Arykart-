@@ -1,451 +1,2589 @@
-<!-- =========================
-     NAVBAR
-========================= -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<nav class="navbar">
+<title>Arykart - Online Shopping</title>
 
-  <div class="logo">
-    🛒 AryKart
-  </div>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial, sans-serif;
+}
 
-  <div class="nav-links">
+body{
+  background:#f5f5f5;
+  color:#222;
+  padding-bottom:85px;
+}
 
-    <a href="#home">
-      Home
-    </a>
+button{
+  cursor:pointer;
+  font-family:inherit;
+}
 
-    <a href="#products">
-      Products
-    </a>
+/* ================= HEADER ================= */
 
-    <a href="#order">
-      Order
-    </a>
+.header{
+  background:linear-gradient(135deg,#4b176b,#8b2fc9);
+  padding:24px 20px 28px;
+  color:white;
+}
 
-    <a href="#contact">
-      Contact
-    </a>
+.top-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
 
-  </div>
+.logo{
+  font-size:36px;
+  font-weight:bold;
+}
 
-</nav>
+.logo span{
+  color:#ffd54f;
+}
 
+.location{
+  font-size:17px;
+}
 
-<!-- =========================
-     HOME
-========================= -->
+.search-box{
+  background:white;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  padding:14px 16px;
+}
 
-<section class="hero" id="home">
+.search-box span{
+  font-size:25px;
+  margin-right:10px;
+}
 
-  <div class="fruit">
-    🍎 🍊 🍉 🥭 🍇
-  </div>
+.search-box input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:18px;
+}
 
-  <h1>
-    AryKart
-  </h1>
+/* ================= HERO ================= */
 
-  <p>
-    Fresh Cut Fruits, Fresh Taste!
-  </p>
+.hero{
+  margin:18px;
+  background:linear-gradient(135deg,#4b176b,#8b2fc9);
+  color:white;
+  border-radius:25px;
+  padding:30px 25px;
+  min-height:220px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-  <p class="tagline">
+.hero h1{
+  font-size:38px;
+  margin-bottom:15px;
+}
 
-    Ek baar mangaiye, baar-baar yaad aayega.<br>
+.hero p{
+  font-size:18px;
+  margin-bottom:20px;
+  color:#eee;
+}
 
-    AryKart ka swaad dil ko bha jayega.
+.hero button{
+  border:none;
+  padding:13px 25px;
+  border-radius:10px;
+  font-size:17px;
+  font-weight:bold;
+  color:#4b176b;
+}
 
-  </p>
+.hero-icon{
+  font-size:85px;
+}
 
-  <a
-    class="order-btn"
-    href="#products"
-  >
-    🛒 Order Now
-  </a>
+/* ================= COMMON ================= */
 
-</section>
+.section{
+  padding:10px 18px;
+}
 
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:15px 0;
+}
 
+.section-title h2{
+  font-size:25px;
+}
 
-<!-- =========================
-     PRODUCTS
-========================= -->
+.view-all{
+  color:#6a1b9a;
+  font-weight:bold;
+  border:none;
+  background:none;
+  font-size:16px;
+}
 
-<section
-  class="products"
-  id="products"
->
+/* ================= CATEGORIES ================= */
 
-  <h2>
-    Our Fresh Cut Fruit Boxes 🍎🥭🍉
-  </h2>
+.categories{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  padding:5px 0 15px;
+}
 
-  <p class="products-subtitle">
-    Freshly Cut • Freshly Packed • Ready to Enjoy!
-  </p>
+.category{
+  text-align:center;
+  cursor:pointer;
+}
 
+.category-icon{
+  width:70px;
+  height:70px;
+  margin:auto;
+  border-radius:50%;
+  background:#eee7f4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:38px;
+  margin-bottom:7px;
+}
 
-  <div class="product-grid">
+.category p{
+  font-size:14px;
+}
 
+/* ================= PRODUCTS ================= */
 
-    <!-- =====================
-         BOX 1
-    ====================== -->
+.products{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
 
-    <div class="product-card">
+.product-card{
+  background:white;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  cursor:pointer;
+}
 
-      <div class="product-emoji">
-        🍎 🍊 🍉 🥭 🍇
-      </div>
+.product-image{
+  height:150px;
+  background:#f5f5f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:85px;
+}
 
-      <h3>
-        Fresh Fruit Box
-      </h3>
+.product-info{
+  padding:12px;
+}
 
-      <p>
+.product-name{
+  font-size:16px;
+  font-weight:bold;
+  height:42px;
+  overflow:hidden;
+}
 
-        <del>
-          ₹199
-        </del>
+.rating{
+  display:inline-block;
+  background:#087f5b;
+  color:white;
+  padding:5px 9px;
+  border-radius:8px;
+  margin:9px 0;
+  font-size:14px;
+}
 
-        <strong>
-          ₹99
-        </strong>
+.price{
+  font-size:25px;
+  font-weight:bold;
+}
 
-      </p>
+.old-price{
+  color:#888;
+  text-decoration:line-through;
+  font-size:15px;
+  margin-left:5px;
+}
 
-      <p class="discount">
-        🔥 SAVE ₹100
-      </p>
+.discount{
+  color:#087f5b;
+  margin-top:5px;
+  font-weight:bold;
+}
 
-      <p>
-        Mixed fresh cut fruits<br>
-        Freshly packed & ready to eat
-      </p>
+.add-cart-btn{
+  width:100%;
+  margin-top:12px;
+  border:none;
+  background:#6a1b9a;
+  color:white;
+  padding:11px;
+  border-radius:10px;
+  font-size:16px;
+  font-weight:bold;
+}
 
-      <br>
+/* ================= BOTTOM NAV ================= */
 
-      <button
-        type="button"
-        class="order-btn"
-        onclick="selectProduct('Fresh Fruit Box', 99)"
-      >
-        Order Now
-      </button>
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:78px;
+  background:white;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -2px 10px rgba(0,0,0,.12);
+  z-index:100;
+}
 
+.nav-item{
+  border:none;
+  background:none;
+  text-align:center;
+  font-size:14px;
+  color:#555;
+  position:relative;
+}
+
+.nav-item .nav-icon{
+  font-size:28px;
+  display:block;
+  margin-bottom:4px;
+}
+
+.nav-item.active{
+  color:#6a1b9a;
+  font-weight:bold;
+}
+
+.cart-count{
+  position:absolute;
+  top:-5px;
+  right:2px;
+  background:#d32f2f;
+  color:white;
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+}
+
+/* ================= PRODUCT MODAL ================= */
+
+.modal{
+  display:none;
+  position:fixed;
+  z-index:500;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:white;
+  overflow-y:auto;
+}
+
+.modal-header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  background:linear-gradient(135deg,#4b176b,#8b2fc9);
+  color:white;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.modal-header h2{
+  font-size:25px;
+}
+
+.close-btn{
+  border:none;
+  background:none;
+  color:white;
+  font-size:35px;
+}
+
+.product-detail{
+  padding:20px;
+}
+
+.detail-image{
+  height:280px;
+  background:#f5f5f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:150px;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+.detail-name{
+  font-size:27px;
+  margin-bottom:15px;
+}
+
+.detail-price{
+  font-size:35px;
+  font-weight:bold;
+}
+
+.detail-description{
+  margin-top:25px;
+}
+
+.detail-description h3{
+  margin-bottom:10px;
+  font-size:23px;
+}
+
+.detail-description p{
+  color:#555;
+  line-height:1.7;
+  font-size:17px;
+}
+
+/* ================= QUANTITY ================= */
+
+.quantity-section{
+  margin:25px 0;
+  padding:18px;
+  background:#f7f3fa;
+  border-radius:15px;
+}
+
+.quantity-section h3{
+  font-size:21px;
+  margin-bottom:15px;
+}
+
+.quantity-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.quantity-box{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.quantity-box button{
+  width:46px;
+  height:46px;
+  border:none;
+  border-radius:12px;
+  background:#6a1b9a;
+  color:white;
+  font-size:28px;
+}
+
+.quantity-box span{
+  min-width:35px;
+  text-align:center;
+  font-size:23px;
+  font-weight:bold;
+}
+
+.quantity-total{
+  margin-top:16px;
+  font-size:19px;
+  font-weight:bold;
+  color:#6a1b9a;
+}
+
+/* ================= PRODUCT BUTTONS ================= */
+
+.product-buttons{
+  display:flex;
+  gap:15px;
+  margin:25px 0;
+}
+
+.product-buttons button{
+  flex:1;
+  padding:16px 8px;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.outline-btn{
+  background:white;
+  color:#6a1b9a;
+  border:2px solid #6a1b9a;
+}
+
+.buy-btn{
+  border:none;
+  color:white;
+  background:linear-gradient(135deg,#4b176b,#8b2fc9);
+}
+
+/* ================= PAGES ================= */
+
+.page{
+  display:none;
+}
+
+.page.active-page{
+  display:block;
+}
+
+.page-header{
+  background:linear-gradient(135deg,#4b176b,#8b2fc9);
+  color:white;
+  padding:30px 20px;
+  font-size:32px;
+  font-weight:bold;
+}
+
+/* ================= CART ================= */
+
+.cart-container{
+  padding:18px;
+}
+
+.cart-item{
+  background:white;
+  padding:15px;
+  border-radius:15px;
+  margin-bottom:14px;
+  display:flex;
+  gap:14px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
+}
+
+.cart-image{
+  width:80px;
+  height:80px;
+  background:#f5f5f5;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:45px;
+  flex-shrink:0;
+}
+
+.cart-info{
+  flex:1;
+}
+
+.cart-name{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.cart-price{
+  color:#6a1b9a;
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.cart-controls{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cart-controls button{
+  border:none;
+  background:#eee7f4;
+  color:#6a1b9a;
+  width:35px;
+  height:35px;
+  border-radius:8px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.remove-btn{
+  color:#d32f2f !important;
+  width:auto !important;
+  padding:0 10px;
+}
+
+.cart-summary{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  margin-top:15px;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  margin:10px 0;
+  font-size:18px;
+}
+
+.total-row{
+  border-top:1px solid #ddd;
+  padding-top:15px;
+  font-size:24px;
+  font-weight:bold;
+}
+
+.checkout-btn{
+  width:100%;
+  border:none;
+  background:#6a1b9a;
+  color:white;
+  padding:16px;
+  margin-top:20px;
+  border-radius:12px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.empty-box{
+  text-align:center;
+  padding:80px 20px;
+}
+
+.empty-box .empty-icon{
+  font-size:70px;
+  margin-bottom:15px;
+}
+
+.empty-box h2{
+  margin-bottom:10px;
+}
+
+.empty-box p{
+  color:#777;
+  font-size:17px;
+}
+
+/* ================= CHECKOUT ================= */
+
+.checkout-container{
+  padding:18px;
+}
+
+.checkout-card{
+  background:white;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:18px;
+}
+
+.checkout-card h2{
+  margin-bottom:18px;
+}
+
+.input-group{
+  margin-bottom:15px;
+}
+
+.input-group label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:bold;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select{
+  width:100%;
+  padding:13px;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+}
+
+.input-group textarea{
+  min-height:80px;
+}
+
+.payment-option{
+  border:1px solid #ddd;
+  padding:15px;
+  border-radius:10px;
+  margin-top:10px;
+}
+
+.payment-option input{
+  margin-right:8px;
+}
+
+.place-order-btn{
+  width:100%;
+  padding:17px;
+  border:none;
+  border-radius:12px;
+  background:#6a1b9a;
+  color:white;
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* ================= ORDERS ================= */
+
+.order-card{
+  background:white;
+  margin:15px 18px;
+  padding:18px;
+  border-radius:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
+}
+
+.order-card h3{
+  margin-bottom:10px;
+}
+
+.order-status{
+  display:inline-block;
+  background:#e8f5e9;
+  color:#087f5b;
+  padding:7px 12px;
+  border-radius:8px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.order-item{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+  color:#555;
+}
+
+/* ================= ACCOUNT ================= */
+
+.account-container{
+  padding:35px 18px;
+}
+
+.profile-card{
+  background:white;
+  padding:35px 20px;
+  text-align:center;
+  border-radius:25px;
+  margin-bottom:25px;
+}
+
+.profile-icon{
+  width:140px;
+  height:140px;
+  margin:auto;
+  border-radius:50%;
+  background:#eee7f4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+}
+
+.profile-card h2{
+  font-size:30px;
+  margin-top:20px;
+}
+
+.profile-card p{
+  color:#777;
+  font-size:18px;
+  margin-top:10px;
+}
+
+.account-option{
+  width:100%;
+  border:none;
+  background:white;
+  padding:22px;
+  margin-bottom:18px;
+  border-radius:18px;
+  text-align:left;
+  font-size:23px;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+/* ================= SETTINGS ================= */
+
+.settings-container{
+  padding:20px;
+}
+
+.setting-card{
+  background:white;
+  padding:18px;
+  border-radius:14px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:18px;
+}
+
+.switch{
+  width:48px;
+  height:27px;
+  position:relative;
+  display:inline-block;
+}
+
+.switch input{
+  display:none;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#ccc;
+  border-radius:20px;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:21px;
+  height:21px;
+  left:3px;
+  bottom:3px;
+  background:white;
+  border-radius:50%;
+  transition:.3s;
+}
+
+.switch input:checked + .slider{
+  background:#6a1b9a;
+}
+
+.switch input:checked + .slider:before{
+  transform:translateX(21px);
+}
+
+.back-button{
+  border:none;
+  background:none;
+  color:white;
+  font-size:32px;
+  margin-right:10px;
+}
+
+/* ================= WISHLIST ================= */
+
+.wishlist-btn{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:40px;
+  height:40px;
+  border:none;
+  border-radius:50%;
+  background:white;
+  font-size:22px;
+}
+
+.product-image-wrap{
+  position:relative;
+}
+
+/* ================= DARK MODE ================= */
+
+body.dark{
+  background:#121212;
+  color:#eee;
+}
+
+body.dark .product-card,
+body.dark .cart-item,
+body.dark .cart-summary,
+body.dark .checkout-card,
+body.dark .profile-card,
+body.dark .account-option,
+body.dark .setting-card,
+body.dark .order-card,
+body.dark .bottom-nav{
+  background:#222;
+  color:#eee;
+}
+
+body.dark .product-image,
+body.dark .detail-image,
+body.dark .cart-image{
+  background:#333;
+}
+
+body.dark .quantity-section{
+  background:#29212f;
+}
+
+body.dark .modal{
+  background:#121212;
+  color:#eee;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(min-width:700px){
+  .products{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .categories{
+    grid-template-columns:repeat(6,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HOME ================= -->
+
+<div id="homePage" class="page active-page">
+
+  <div class="header">
+    <div class="top-header">
+      <div class="logo">Ary<span>kart</span></div>
+      <div class="location">📍 Select Location</div>
     </div>
 
-
-
-    <!-- =====================
-         BOX 2
-    ====================== -->
-
-    <div class="product-card">
-
-      <div class="product-emoji">
-        🍎 🍊 🍉 🥭 🍇
-      </div>
-
-      <h3>
-        Big Fresh Fruit Box
-      </h3>
-
-      <p>
-
-        <del>
-          ₹249
-        </del>
-
-        <strong>
-          ₹149
-        </strong>
-
-      </p>
-
-      <p class="discount">
-        🔥 SAVE ₹100
-      </p>
-
-      <p>
-        Extra quantity mixed fruits<br>
-        Freshly packed & ready to eat
-      </p>
-
-      <br>
-
-      <button
-        type="button"
-        class="order-btn"
-        onclick="selectProduct('Big Fresh Fruit Box', 149)"
-      >
-        Order Now
-      </button>
-
-    </div>
-
-
-  </div>
-
-
-
-  <!-- =========================
-       ORDER FORM
-  ========================= -->
-
-  <div
-    class="order-form-box"
-    id="order"
-  >
-
-    <h2>
-      🛒 Place Your Order
-    </h2>
-
-
-    <!-- PRODUCT -->
-
-    <label>
-      Choose Fruit Box
-    </label>
-
-    <select id="product">
-
-      <option value="">
-        Select Box
-      </option>
-
-      <option value="Fresh Fruit Box|99">
-        Fresh Fruit Box - ₹99
-      </option>
-
-      <option value="Big Fresh Fruit Box|149">
-        Big Fresh Fruit Box - ₹149
-      </option>
-
-    </select>
-
-
-
-    <!-- QUANTITY -->
-
-    <label>
-      Quantity
-    </label>
-
-    <div class="quantity-box">
-
-      <button
-        type="button"
-        onclick="changeQty(-1)"
-      >
-        −
-      </button>
-
-
+    <div class="search-box">
+      <span>🔍</span>
       <input
-        type="number"
-        id="quantity"
-        value="1"
-        min="1"
-        readonly
+        type="text"
+        id="searchInput"
+        placeholder="Search for products, brands and more..."
+        oninput="searchProducts()"
       >
+    </div>
+  </div>
+
+  <div class="hero">
+    <div>
+      <h1>Shop Everything<br>You Need</h1>
+      <p>Best products at amazing prices</p>
+      <button onclick="scrollToProducts()">Shop Now</button>
+    </div>
+
+    <div class="hero-icon">🛍️</div>
+  </div>
+
+  <div class="section">
+
+    <div class="section-title">
+      <h2>Shop by Category</h2>
+    </div>
+
+    <div class="categories">
+
+      <div class="category" onclick="filterCategory('Electronics')">
+        <div class="category-icon">🎧</div>
+        <p>Electronics</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Fashion')">
+        <div class="category-icon">👕</div>
+        <p>Fashion</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Beauty')">
+        <div class="category-icon">💄</div>
+        <p>Beauty</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Home')">
+        <div class="category-icon">🏠</div>
+        <p>Home</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Books')">
+        <div class="category-icon">📚</div>
+        <p>Books</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Toys')">
+        <div class="category-icon">🧸</div>
+        <p>Toys</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Sports')">
+        <div class="category-icon">⚽</div>
+        <p>Sports</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Auto')">
+        <div class="category-icon">🏍️</div>
+        <p>Auto</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Fruits')">
+        <div class="category-icon">🍎</div>
+        <p>Fruits</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Vegetables')">
+        <div class="category-icon">🥕</div>
+        <p>Vegetables</p>
+      </div>
+
+      <div class="category" onclick="filterCategory('Grocery')">
+        <div class="category-icon">🛒</div>
+        <p>Grocery</p>
+      </div>
+
+      <div class="category" onclick="showAllProducts()">
+        <div class="category-icon">🛍️</div>
+        <p>All</p>
+      </div>
+
+    </div>
+
+    <div class="section-title" id="products">
+      <h2>Popular Products</h2>
+      <button class="view-all" onclick="showAllProducts()">View All</button>
+    </div>
+
+    <div id="productList" class="products"></div>
+
+  </div>
+</div>
 
 
-      <button
-        type="button"
-        onclick="changeQty(1)"
-      >
-        +
+<!-- ================= CART PAGE ================= -->
+
+<div id="cartPage" class="page">
+
+  <div class="page-header">🛒 My Cart</div>
+
+  <div id="cartContainer" class="cart-container"></div>
+
+</div>
+
+
+<!-- ================= ORDERS PAGE ================= -->
+
+<div id="ordersPage" class="page">
+
+  <div class="page-header">📦 My Orders</div>
+
+  <div id="ordersContainer"></div>
+
+</div>
+
+
+<!-- ================= ACCOUNT PAGE ================= -->
+
+<div id="accountPage" class="page">
+
+  <div class="page-header">👤 My Account</div>
+
+  <div class="account-container">
+
+    <div class="profile-card">
+      <div class="profile-icon">👤</div>
+      <h2>Arykart User</h2>
+      <p>Welcome to Arykart</p>
+    </div>
+
+    <button class="account-option" onclick="showPage('ordersPage')">
+      📦 My Orders
+    </button>
+
+    <button class="account-option" onclick="openSavedAddresses()">
+      📍 Saved Addresses
+    </button>
+
+    <button class="account-option" onclick="openWishlist()">
+      ❤️ Wishlist
+    </button>
+
+    <button class="account-option" onclick="openSettings()">
+      ⚙️ Settings
+    </button>
+
+    <button class="account-option" onclick="alert('Help & Support: Arykart team will help you soon 😊')">
+      ❓ Help & Support
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- ================= PRODUCT DETAILS ================= -->
+
+<div id="productModal" class="modal">
+
+  <div class="modal-header">
+    <h2>Product Details</h2>
+    <button class="close-btn" onclick="closeProduct()">✕</button>
+  </div>
+
+  <div class="product-detail">
+
+    <div id="detailImage" class="detail-image"></div>
+
+    <h1 id="detailName" class="detail-name"></h1>
+
+    <div>
+      <span id="detailPrice" class="detail-price"></span>
+      <span id="detailOldPrice" class="old-price"></span>
+    </div>
+
+    <div id="detailDiscount" class="discount"></div>
+
+    <!-- QUANTITY SYSTEM -->
+
+    <div class="quantity-section">
+
+      <h3>Quantity</h3>
+
+      <div class="quantity-row">
+
+        <div class="quantity-box">
+          <button onclick="changeProductQuantity(-1)">−</button>
+
+          <span id="productQuantity">1</span>
+
+          <button onclick="changeProductQuantity(1)">+</button>
+        </div>
+
+      </div>
+
+      <div class="quantity-total">
+        Total: ₹<span id="quantityTotal">0</span>
+      </div>
+
+    </div>
+
+    <div class="detail-description">
+      <h3>Product Description</h3>
+      <p id="detailDescription"></p>
+    </div>
+
+    <div class="product-buttons">
+
+      <button class="outline-btn" onclick="addCurrentProduct()">
+        🛒 Add to Cart
+      </button>
+
+      <button class="buy-btn" onclick="buyNow()">
+        ⚡ Buy Now
       </button>
 
     </div>
 
+  </div>
+
+</div>
 
 
-    <!-- NAME -->
+<!-- ================= CHECKOUT ================= -->
 
-    <label>
-      Your Name
-    </label>
+<div id="checkoutModal" class="modal">
 
-    <input
-      type="text"
-      id="customerName"
-      placeholder="Enter your name"
-    >
+  <div class="modal-header">
+    <div style="display:flex;align-items:center">
+      <button class="back-button" onclick="closeCheckout()">←</button>
+      <h2>Checkout</h2>
+    </div>
+  </div>
 
+  <div class="checkout-container">
 
+    <div class="checkout-card">
 
-    <!-- MOBILE -->
+      <h2>📍 Delivery Address</h2>
 
-    <label>
-      Mobile Number
-    </label>
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="customerName" placeholder="Enter your full name">
+      </div>
 
-    <input
-      type="tel"
-      id="mobile"
-      placeholder="Enter 10 digit mobile number"
-      maxlength="10"
-    >
+      <div class="input-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="customerMobile" placeholder="Enter mobile number">
+      </div>
 
+      <div class="input-group">
+        <label>House / Street / Village</label>
+        <textarea id="customerAddress" placeholder="Enter complete address"></textarea>
+      </div>
 
+      <div class="input-group">
+        <label>City / District</label>
+        <input type="text" id="customerCity" placeholder="Enter city or district">
+      </div>
 
-    <!-- ADDRESS -->
+      <div class="input-group">
+        <label>State</label>
+        <input type="text" id="customerState" placeholder="Enter state">
+      </div>
 
-    <label>
-      Delivery Address
-    </label>
-
-    <textarea
-      id="address"
-      placeholder="House No, Village, Area, Landmark..."
-    ></textarea>
-
-
-
-    <!-- PAYMENT -->
-
-    <label>
-      Payment Method
-    </label>
-
-    <select id="payment">
-
-      <option value="">
-        Select Payment Method
-      </option>
-
-      <option value="Cash on Delivery">
-        💵 Cash on Delivery
-      </option>
-
-      <option value="UPI">
-        📱 UPI
-      </option>
-
-    </select>
-
-
-
-    <!-- TOTAL -->
-
-    <div class="total-box">
-
-      <span>
-        Total Amount
-      </span>
-
-      <strong id="total">
-        ₹0
-      </strong>
+      <div class="input-group">
+        <label>PIN Code</label>
+        <input type="number" id="customerPincode" placeholder="Enter PIN code">
+      </div>
 
     </div>
 
+    <div class="checkout-card">
 
+      <h2>📦 Order Summary</h2>
 
-    <!-- PLACE ORDER -->
+      <div id="checkoutItems"></div>
 
-    <button
-      type="button"
-      class="place-order-btn"
-      onclick="placeOrder()"
-    >
-      ✅ Place Order
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span id="checkoutTotal">₹0</span>
+      </div>
+
+    </div>
+
+    <div class="checkout-card">
+
+      <h2>💳 Payment Option</h2>
+
+      <div class="payment-option">
+        <label>
+          <input type="radio" name="payment" value="Cash on Delivery" checked>
+          💵 Cash on Delivery
+        </label>
+      </div>
+
+      <div class="payment-option">
+        <label>
+          <input type="radio" name="payment" value="UPI">
+          📱 UPI Payment
+        </label>
+      </div>
+
+    </div>
+
+    <button class="place-order-btn" onclick="placeOrder()">
+      📦 Place Order
     </button>
 
   </div>
 
+</div>
 
 
-  <!-- =========================
-       SUCCESS MESSAGE
-  ========================= -->
+<!-- ================= SETTINGS ================= -->
 
-  <div
-    class="success-message"
-    id="successMessage"
-  >
+<div id="settingsModal" class="modal">
 
-    <div class="success-icon">
-      ✅
+  <div class="modal-header">
+    <div style="display:flex;align-items:center">
+      <button class="back-button" onclick="closeSettings()">←</button>
+      <h2>⚙️ Settings</h2>
+    </div>
+  </div>
+
+  <div class="settings-container">
+
+    <div class="setting-card">
+      <span>👤 Edit Profile</span>
+      <span>›</span>
     </div>
 
-    <h2>
-      Order Placed Successfully!
-    </h2>
+    <div class="setting-card">
+      <span>🔔 Notifications</span>
+      <label class="switch">
+        <input type="checkbox" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
 
-    <p>
-      Thank you for ordering from AryKart ❤️
-    </p>
+    <div class="setting-card">
+      <span>🌙 Dark Mode</span>
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+        <span class="slider"></span>
+      </label>
+    </div>
 
-    <br>
+    <div class="setting-card">
+      <span>📍 Manage Addresses</span>
+      <span onclick="openSavedAddresses()">›</span>
+    </div>
 
-    <div id="orderDetails"></div>
+    <div class="setting-card">
+      <span>🔒 Privacy & Security</span>
+      <span>›</span>
+    </div>
 
-    <br>
+    <div class="setting-card">
+      <span>🌐 Language</span>
+      <span>English ›</span>
+    </div>
 
-    <button
-      type="button"
-      class="order-btn"
-      onclick="newOrder()"
-    >
-      🛒 Place Another Order
-    </button>
+    <div class="setting-card">
+      <span>ℹ️ About Arykart</span>
+      <span>›</span>
+    </div>
+
+    <div class="setting-card" onclick="alert('You are already using Arykart as a demo user 😊')">
+      <span>🚪 Logout</span>
+      <span>›</span>
+    </div>
 
   </div>
 
-</section>
+</div>
 
 
+<!-- ================= BOTTOM NAVIGATION ================= -->
 
-<!-- =========================
-     CONTACT
-========================= -->
+<div class="bottom-nav">
 
-<section
-  class="contact"
-  id="contact"
->
+  <button class="nav-item active" id="navHome" onclick="showPage('homePage')">
+    <span class="nav-icon">🏠</span>
+    Home
+  </button>
 
-  <h2>
-    Contact AryKart 📞
-  </h2>
+  <button class="nav-item" id="navCategories" onclick="scrollToCategories()">
+    <span class="nav-icon">📁</span>
+    Categories
+  </button>
 
-  <p>
-    Fresh Cut Fruits ke liye WhatsApp karein.
-  </p>
+  <button class="nav-item" id="navCart" onclick="showPage('cartPage')">
+    <span class="nav-icon">🛒</span>
+    <span id="cartCount" class="cart-count">0</span>
+    Cart
+  </button>
 
-  <p class="phone">
-    📱 6207268593
-  </p>
+  <button class="nav-item" id="navOrders" onclick="showPage('ordersPage')">
+    <span class="nav-icon">📦</span>
+    Orders
+  </button>
 
-  <a
-    class="order-btn"
-    href="https://wa.me/916207268593"
-    target="_blank"
-  >
-    WhatsApp Us
-  </a>
+  <button class="nav-item" id="navAccount" onclick="showPage('accountPage')">
+    <span class="nav-icon">👤</span>
+    Account
+  </button>
 
-</section>
-
+</div>
 
 
-<!-- =========================
-     FOOTER
-========================= -->
+<script>
 
-<footer>
+/* ================= PRODUCTS ================= */
 
-  <p>
-    © 2026 AryKart
-  </p>
+const products = [
 
-  <p>
-    Fresh Fruits • Fresh Taste • Freshness
-  </p>
+  {
+    id:1,
+    name:"Wireless Bluetooth Headphones",
+    price:627,
+    oldPrice:689,
+    image:"🎧",
+    category:"Electronics",
+    rating:"4.3",
+    description:"Premium wireless Bluetooth headphones with clear sound, deep bass and comfortable fitting."
+  },
 
-</footer>
+  {
+    id:2,
+    name:"Premium Cotton T-Shirt",
+    price:399,
+    oldPrice:599,
+    image:"👕",
+    category:"Fashion",
+    rating:"4.5",
+    description:"Comfortable premium cotton t-shirt suitable for daily use."
+  },
+
+  {
+    id:3,
+    name:"Professional Makeup Kit",
+    price:899,
+    oldPrice:1200,
+    image:"💄",
+    category:"Beauty",
+    rating:"4.4",
+    description:"Complete makeup kit with premium quality beauty products."
+  },
+
+  {
+    id:4,
+    name:"Modern Table Lamp",
+    price:799,
+    oldPrice:999,
+    image:"💡",
+    category:"Home",
+    rating:"4.2",
+    description:"Beautiful modern table lamp for your bedroom or living room."
+  },
+
+  {
+    id:5,
+    name:"Premium Story Book",
+    price:249,
+    oldPrice:350,
+    image:"📚",
+    category:"Books",
+    rating:"4.6",
+    description:"Interesting book for readers and students."
+  },
+
+  {
+    id:6,
+    name:"Teddy Bear Soft Toy",
+    price:499,
+    oldPrice:699,
+    image:"🧸",
+    category:"Toys",
+    rating:"4.7",
+    description:"Soft and cute teddy bear made with premium material."
+  },
+
+  {
+    id:7,
+    name:"Football",
+    price:699,
+    oldPrice:900,
+    image:"⚽",
+    category:"Sports",
+    rating:"4.5",
+    description:"Durable football suitable for practice and matches."
+  },
+
+  {
+    id:8,
+    name:"Bike Mobile Holder",
+    price:299,
+    oldPrice:450,
+    image:"📱",
+    category:"Auto",
+    rating:"4.4",
+    description:"Strong and secure mobile holder for bike and motorcycle."
+  },
+
+  {
+    id:9,
+    name:"Fresh Mango - 1 Kg",
+    price:150,
+    oldPrice:180,
+    image:"🥭",
+    category:"Fruits",
+    rating:"4.6",
+    description:"Fresh and delicious premium quality mangoes."
+  },
+
+  {
+    id:10,
+    name:"Fresh Fruit Box",
+    price:499,
+    oldPrice:650,
+    image:"🍎🍌🍇",
+    category:"Fruits",
+    rating:"4.8",
+    description:"Fresh mixed fruits carefully packed together in one box."
+  },
+
+  {
+    id:11,
+    name:"Fresh Mixed Vegetables Box",
+    price:199,
+    oldPrice:260,
+    image:"🥕🥦🍅",
+    category:"Vegetables",
+    rating:"4.5",
+    description:"Fresh vegetables packed together for your daily kitchen needs."
+  },
+
+  {
+    id:12,
+    name:"Fresh Tomato - 1 Kg",
+    price:40,
+    oldPrice:55,
+    image:"🍅",
+    category:"Vegetables",
+    rating:"4.4",
+    description:"Fresh farm quality tomatoes."
+  },
+
+  {
+    id:13,
+    name:"Premium Basmati Rice - 1 Kg",
+    price:120,
+    oldPrice:150,
+    image:"🍚",
+    category:"Grocery",
+    rating:"4.6",
+    description:"Premium quality aromatic basmati rice."
+  },
+
+  {
+    id:14,
+    name:"Cooking Oil - 1 Litre",
+    price:140,
+    oldPrice:170,
+    image:"🫗",
+    category:"Grocery",
+    rating:"4.5",
+    description:"Premium cooking oil for your daily kitchen needs."
+  },
+
+  {
+    id:15,
+    name:"Premium Sports Bike Helmet",
+    price:1499,
+    oldPrice:2200,
+    image:"⛑️",
+    category:"Auto",
+    rating:"4.6",
+    description:"Premium safety helmet with strong protection, comfortable fitting and stylish modern design."
+  },
+
+  {
+    id:16,
+    name:"Wireless Smart Watch",
+    price:1299,
+    oldPrice:1800,
+    image:"⌚",
+    category:"Electronics",
+    rating:"4.5",
+    description:"Smart watch with modern features and stylish design."
+  }
+
+];
+
+
+/* ================= DATA ================= */
+
+let cart = JSON.parse(localStorage.getItem("arykartCart")) || [];
+let orders = JSON.parse(localStorage.getItem("arykartOrders")) || [];
+let wishlist = JSON.parse(localStorage.getItem("arykartWishlist")) || [];
+
+let currentProduct = null;
+let selectedProductQuantity = 1;
+
+
+/* ================= DISPLAY PRODUCTS ================= */
+
+function displayProducts(productArray){
+
+  const productList = document.getElementById("productList");
+
+  if(productArray.length === 0){
+
+    productList.innerHTML = `
+      <div class="empty-box" style="grid-column:1/3">
+        <div class="empty-icon">🔍</div>
+        <h2>No products found</h2>
+        <p>Try searching for another product.</p>
+      </div>
+    `;
+
+    return;
+  }
+
+  productList.innerHTML = "";
+
+  productArray.forEach(product => {
+
+    const discount = Math.round(
+      ((product.oldPrice - product.price) / product.oldPrice) * 100
+    );
+
+    const isWishlisted = wishlist.includes(product.id);
+
+    productList.innerHTML += `
+
+      <div class="product-card">
+
+        <div class="product-image-wrap">
+
+          <button
+            class="wishlist-btn"
+            onclick="toggleWishlist(${product.id}, event)"
+          >
+            ${isWishlisted ? "❤️" : "🤍"}
+          </button>
+
+          <div
+            class="product-image"
+            onclick="openProduct(${product.id})"
+          >
+            ${product.image}
+          </div>
+
+        </div>
+
+        <div
+          class="product-info"
+          onclick="openProduct(${product.id})"
+        >
+
+          <div class="product-name">
+            ${product.name}
+          </div>
+
+          <div class="rating">
+            ⭐ ${product.rating}
+          </div>
+
+          <div class="price">
+            ₹${product.price}
+            <span class="old-price">₹${product.oldPrice}</span>
+          </div>
+
+          <div class="discount">
+            ${discount}% OFF
+          </div>
+
+        </div>
+
+        <div class="product-info" style="padding-top:0">
+          <button
+            class="add-cart-btn"
+            onclick="quickAddToCart(${product.id})"
+          >
+            🛒 Add to Cart
+          </button>
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+/* ================= OPEN PRODUCT ================= */
+
+function openProduct(id){
+
+  currentProduct = products.find(product => product.id === id);
+
+  if(!currentProduct) return;
+
+  selectedProductQuantity = 1;
+
+  document.getElementById("detailImage").innerText =
+    currentProduct.image;
+
+  document.getElementById("detailName").innerText =
+    currentProduct.name;
+
+  document.getElementById("detailPrice").innerText =
+    "₹" + currentProduct.price;
+
+  document.getElementById("detailOldPrice").innerText =
+    "₹" + currentProduct.oldPrice;
+
+  const discount = Math.round(
+    ((currentProduct.oldPrice - currentProduct.price) /
+    currentProduct.oldPrice) * 100
+  );
+
+  document.getElementById("detailDiscount").innerText =
+    discount + "% OFF";
+
+  document.getElementById("detailDescription").innerText =
+    currentProduct.description;
+
+  document.getElementById("productQuantity").innerText =
+    selectedProductQuantity;
+
+  updateQuantityTotal();
+
+  document.getElementById("productModal").style.display =
+    "block";
+
+}
+
+
+/* ================= CLOSE PRODUCT ================= */
+
+function closeProduct(){
+
+  document.getElementById("productModal").style.display =
+    "none";
+
+}
+
+
+/* ================= PRODUCT QUANTITY ================= */
+
+function changeProductQuantity(change){
+
+  selectedProductQuantity += change;
+
+  if(selectedProductQuantity < 1){
+    selectedProductQuantity = 1;
+  }
+
+  document.getElementById("productQuantity").innerText =
+    selectedProductQuantity;
+
+  updateQuantityTotal();
+
+}
+
+
+function updateQuantityTotal(){
+
+  if(!currentProduct) return;
+
+  const total =
+    currentProduct.price * selectedProductQuantity;
+
+  document.getElementById("quantityTotal").innerText =
+    total;
+
+}
+
+
+/* ================= ADD CURRENT PRODUCT ================= */
+
+function addCurrentProduct(){
+
+  if(!currentProduct) return;
+
+  const existingProduct =
+    cart.find(item => item.id === currentProduct.id);
+
+  if(existingProduct){
+
+    existingProduct.quantity +=
+      selectedProductQuantity;
+
+  }else{
+
+    cart.push({
+      ...currentProduct,
+      quantity:selectedProductQuantity
+    });
+
+  }
+
+  saveCart();
+
+  alert(
+    currentProduct.name +
+    " (" +
+    selectedProductQuantity +
+    " item) added to cart 🛒"
+  );
+
+}
+
+
+/* ================= QUICK ADD ================= */
+
+function quickAddToCart(id){
+
+  const product =
+    products.find(item => item.id === id);
+
+  if(!product) return;
+
+  const existingProduct =
+    cart.find(item => item.id === product.id);
+
+  if(existingProduct){
+
+    existingProduct.quantity += 1;
+
+  }else{
+
+    cart.push({
+      ...product,
+      quantity:1
+    });
+
+  }
+
+  saveCart();
+
+  alert(product.name + " added to cart 🛒");
+
+}
+
+
+/* ================= BUY NOW ================= */
+
+function buyNow(){
+
+  if(!currentProduct) return;
+
+  const existingProduct =
+    cart.find(item => item.id === currentProduct.id);
+
+  if(existingProduct){
+
+    existingProduct.quantity +=
+      selectedProductQuantity;
+
+  }else{
+
+    cart.push({
+      ...currentProduct,
+      quantity:selectedProductQuantity
+    });
+
+  }
+
+  saveCart();
+
+  closeProduct();
+
+  openCheckout();
+
+}
+
+
+/* ================= SAVE CART ================= */
+
+function saveCart(){
+
+  localStorage.setItem(
+    "arykartCart",
+    JSON.stringify(cart)
+  );
+
+  updateCartCount();
+  displayCart();
+
+}
+
+
+/* ================= CART COUNT ================= */
+
+function updateCartCount(){
+
+  const totalQuantity =
+    cart.reduce(
+      (total,item) =>
+        total + item.quantity,
+      0
+    );
+
+  document.getElementById("cartCount").innerText =
+    totalQuantity;
+
+}
+
+
+/* ================= DISPLAY CART ================= */
+
+function displayCart(){
+
+  const container =
+    document.getElementById("cartContainer");
+
+  if(cart.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty-box">
+
+        <div class="empty-icon">🛒</div>
+
+        <h2>Your Cart is Empty</h2>
+
+        <p>Add products and start shopping.</p>
+
+        <button
+          class="checkout-btn"
+          onclick="showPage('homePage')"
+        >
+          Start Shopping
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+  let subtotal = 0;
+
+  container.innerHTML = "";
+
+  cart.forEach(item => {
+
+    const itemTotal =
+      item.price * item.quantity;
+
+    subtotal += itemTotal;
+
+    container.innerHTML += `
+
+      <div class="cart-item">
+
+        <div class="cart-image">
+          ${item.image}
+        </div>
+
+        <div class="cart-info">
+
+          <div class="cart-name">
+            ${item.name}
+          </div>
+
+          <div class="cart-price">
+            ₹${itemTotal}
+          </div>
+
+          <div class="cart-controls">
+
+            <button
+              onclick="changeCartQuantity(${item.id},-1)"
+            >
+              −
+            </button>
+
+            <strong>${item.quantity}</strong>
+
+            <button
+              onclick="changeCartQuantity(${item.id},1)"
+            >
+              +
+            </button>
+
+            <button
+              class="remove-btn"
+              onclick="removeCartItem(${item.id})"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+  container.innerHTML += `
+
+    <div class="cart-summary">
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>₹${subtotal}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Delivery</span>
+        <span>Free</span>
+      </div>
+
+      <div class="summary-row total-row">
+        <span>Total</span>
+        <span>₹${subtotal}</span>
+      </div>
+
+      <button
+        class="checkout-btn"
+        onclick="openCheckout()"
+      >
+        Proceed to Checkout
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* ================= CART QUANTITY ================= */
+
+function changeCartQuantity(id,change){
+
+  const item =
+    cart.find(product => product.id === id);
+
+  if(!item) return;
+
+  item.quantity += change;
+
+  if(item.quantity < 1){
+    item.quantity = 1;
+  }
+
+  saveCart();
+
+}
+
+
+/* ================= REMOVE CART ITEM ================= */
+
+function removeCartItem(id){
+
+  cart =
+    cart.filter(item => item.id !== id);
+
+  saveCart();
+
+}
+
+
+/* ================= CHECKOUT ================= */
+
+function openCheckout(){
+
+  if(cart.length === 0){
+
+    alert("Your cart is empty 🛒");
+    return;
+
+  }
+
+  let total = 0;
+
+  const checkoutItems =
+    document.getElementById("checkoutItems");
+
+  checkoutItems.innerHTML = "";
+
+  cart.forEach(item => {
+
+    const itemTotal =
+      item.price * item.quantity;
+
+    total += itemTotal;
+
+    checkoutItems.innerHTML += `
+
+      <div class="summary-row">
+
+        <span>
+          ${item.name} × ${item.quantity}
+        </span>
+
+        <strong>₹${itemTotal}</strong>
+
+      </div>
+
+    `;
+
+  });
+
+  document.getElementById("checkoutTotal").innerText =
+    "₹" + total;
+
+  loadSavedAddress();
+
+  document.getElementById("checkoutModal").style.display =
+    "block";
+
+}
+
+
+function closeCheckout(){
+
+  document.getElementById("checkoutModal").style.display =
+    "none";
+
+}
+
+
+/* ================= SAVE ADDRESS ================= */
+
+function saveAddress(){
+
+  const address = {
+
+    name:
+      document.getElementById("customerName").value.trim(),
+
+    mobile:
+      document.getElementById("customerMobile").value.trim(),
+
+    address:
+      document.getElementById("customerAddress").value.trim(),
+
+    city:
+      document.getElementById("customerCity").value.trim(),
+
+    state:
+      document.getElementById("customerState").value.trim(),
+
+    pincode:
+      document.getElementById("customerPincode").value.trim()
+
+  };
+
+  localStorage.setItem(
+    "arykartAddress",
+    JSON.stringify(address)
+  );
+
+  return address;
+
+}
+
+
+function loadSavedAddress(){
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem("arykartAddress")
+    );
+
+  if(!saved) return;
+
+  document.getElementById("customerName").value =
+    saved.name || "";
+
+  document.getElementById("customerMobile").value =
+    saved.mobile || "";
+
+  document.getElementById("customerAddress").value =
+    saved.address || "";
+
+  document.getElementById("customerCity").value =
+    saved.city || "";
+
+  document.getElementById("customerState").value =
+    saved.state || "";
+
+  document.getElementById("customerPincode").value =
+    saved.pincode || "";
+
+}
+
+
+/* ================= PLACE ORDER ================= */
+
+function placeOrder(){
+
+  const name =
+    document.getElementById("customerName").value.trim();
+
+  const mobile =
+    document.getElementById("customerMobile").value.trim();
+
+  const address =
+    document.getElementById("customerAddress").value.trim();
+
+  const city =
+    document.getElementById("customerCity").value.trim();
+
+  const state =
+    document.getElementById("customerState").value.trim();
+
+  const pincode =
+    document.getElementById("customerPincode").value.trim();
+
+  if(
+    !name ||
+    !mobile ||
+    !address ||
+    !city ||
+    !state ||
+    !pincode
+  ){
+
+    alert(
+      "Please fill your complete delivery address 📍"
+    );
+
+    return;
+  }
+
+  const savedAddress =
+    saveAddress();
+
+  const selectedPayment =
+    document.querySelector(
+      'input[name="payment"]:checked'
+    ).value;
+
+  const total =
+    cart.reduce(
+      (sum,item) =>
+        sum + item.price * item.quantity,
+      0
+    );
+
+  const newOrder = {
+
+    id:
+      "ARY" + Date.now(),
+
+    date:
+      new Date().toLocaleString(),
+
+    items:
+      [...cart],
+
+    total:
+      total,
+
+    address:
+      savedAddress,
+
+    payment:
+      selectedPayment,
+
+    status:
+      "Order Placed"
+
+  };
+
+  orders.unshift(newOrder);
+
+  localStorage.setItem(
+    "arykartOrders",
+    JSON.stringify(orders)
+  );
+
+  cart = [];
+
+  saveCart();
+
+  closeCheckout();
+
+  displayOrders();
+
+  showPage("ordersPage");
+
+  alert(
+    "Order placed successfully! 🎉📦"
+  );
+
+}
+
+
+/* ================= DISPLAY ORDERS ================= */
+
+function displayOrders(){
+
+  const container =
+    document.getElementById("ordersContainer");
+
+  if(orders.length === 0){
+
+    container.innerHTML = `
+
+      <div class="empty-box">
+
+        <div class="empty-icon">📦</div>
+
+        <h2>No Orders Yet</h2>
+
+        <p>Your placed orders will appear here.</p>
+
+        <button
+          class="checkout-btn"
+          onclick="showPage('homePage')"
+        >
+          Start Shopping
+        </button>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+  container.innerHTML = "";
+
+  orders.forEach(order => {
+
+    let itemsHTML = "";
+
+    order.items.forEach(item => {
+
+      itemsHTML += `
+
+        <div class="order-item">
+
+          <span>
+            ${item.image}
+            ${item.name} × ${item.quantity}
+          </span>
+
+          <strong>
+            ₹${item.price * item.quantity}
+          </strong>
+
+        </div>
+
+      `;
+
+    });
+
+    container.innerHTML += `
+
+      <div class="order-card">
+
+        <h3>Order ID: ${order.id}</h3>
+
+        <p style="color:#777;margin-bottom:10px">
+          ${order.date}
+        </p>
+
+        ${itemsHTML}
+
+        <hr style="margin:15px 0;border:.5px solid #eee">
+
+        <div class="summary-row">
+          <strong>Total</strong>
+          <strong>₹${order.total}</strong>
+        </div>
+
+        <p style="margin-top:12px">
+          💳 ${order.payment}
+        </p>
+
+        <p style="margin-top:10px;color:#666">
+          📍 ${order.address.address},
+          ${order.address.city},
+          ${order.address.state}
+          - ${order.address.pincode}
+        </p>
+
+        <div class="order-status">
+          ${order.status}
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+/* ================= WISHLIST ================= */
+
+function toggleWishlist(id,event){
+
+  event.stopPropagation();
+
+  if(wishlist.includes(id)){
+
+    wishlist =
+      wishlist.filter(item => item !== id);
+
+  }else{
+
+    wishlist.push(id);
+
+  }
+
+  localStorage.setItem(
+    "arykartWishlist",
+    JSON.stringify(wishlist)
+  );
+
+  displayProducts(products);
+
+}
+
+
+function openWishlist(){
+
+  if(wishlist.length === 0){
+
+    alert("Your wishlist is empty ❤️");
+    return;
+
+  }
+
+  const wishlistProducts =
+    products.filter(product =>
+      wishlist.includes(product.id)
+    );
+
+  showPage("homePage");
+
+  setTimeout(() => {
+
+    displayProducts(wishlistProducts);
+
+    window.scrollTo({
+      top:document.getElementById("products").offsetTop - 10,
+      behavior:"smooth"
+    });
+
+  },100);
+
+}
+
+
+/* ================= SAVED ADDRESS ================= */
+
+function openSavedAddresses(){
+
+  const address =
+    JSON.parse(
+      localStorage.getItem("arykartAddress")
+    );
+
+  if(!address){
+
+    alert(
+      "No saved address yet. Your address will be saved when you place an order 📍"
+    );
+
+    return;
+  }
+
+  alert(
+    "Saved Address:\n\n" +
+    address.name + "\n" +
+    address.mobile + "\n" +
+    address.address + "\n" +
+    address.city + ", " +
+    address.state + "\nPIN: " +
+    address.pincode
+  );
+
+}
+
+
+/* ================= SETTINGS ================= */
+
+function openSettings(){
+
+  document.getElementById("settingsModal").style.display =
+    "block";
+
+}
+
+
+function closeSettings(){
+
+  document.getElementById("settingsModal").style.display =
+    "none";
+
+}
+
+
+function toggleDarkMode(){
+
+  document.body.classList.toggle("dark");
+
+  const isDark =
+    document.body.classList.contains("dark");
+
+  localStorage.setItem(
+    "arykartDarkMode",
+    isDark
+  );
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function searchProducts(){
+
+  const search =
+    document.getElementById("searchInput")
+    .value
+    .toLowerCase();
+
+  const filtered =
+    products.filter(product =>
+      product.name.toLowerCase().includes(search) ||
+      product.category.toLowerCase().includes(search)
+    );
+
+  displayProducts(filtered);
+
+}
+
+
+/* ================= CATEGORY ================= */
+
+function filterCategory(category){
+
+  showPage("homePage");
+
+  const filtered =
+    products.filter(
+      product =>
+        product.category === category
+    );
+
+  displayProducts(filtered);
+
+  setTimeout(() => {
+
+    window.scrollTo({
+      top:
+        document.getElementById("products").offsetTop - 10,
+      behavior:"smooth"
+    });
+
+  },100);
+
+}
+
+
+function showAllProducts(){
+
+  displayProducts(products);
+
+  document.getElementById("searchInput").value = "";
+
+  scrollToProducts();
+
+}
+
+
+function scrollToProducts(){
+
+  document.getElementById("products").scrollIntoView({
+    behavior:"smooth"
+  });
+
+}
+
+
+function scrollToCategories(){
+
+  showPage("homePage");
+
+  setTimeout(() => {
+
+    document.querySelector(".categories")
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+  },100);
+
+}
+
+
+/* ================= PAGE NAVIGATION ================= */
+
+function showPage(pageId){
+
+  document
+    .querySelectorAll(".page")
+    .forEach(page =>
+      page.classList.remove("active-page")
+    );
+
+  document
+    .getElementById(pageId)
+    .classList.add("active-page");
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach(nav =>
+      nav.classList.remove("active")
+    );
+
+  if(pageId === "homePage"){
+
+    document
+      .getElementById("navHome")
+      .classList.add("active");
+
+    displayProducts(products);
+
+  }
+
+  if(pageId === "cartPage"){
+
+    document
+      .getElementById("navCart")
+      .classList.add("active");
+
+    displayCart();
+
+  }
+
+  if(pageId === "ordersPage"){
+
+    document
+      .getElementById("navOrders")
+      .classList.add("active");
+
+    displayOrders();
+
+  }
+
+  if(pageId === "accountPage"){
+
+    document
+      .getElementById("navAccount")
+      .classList.add("active");
+
+  }
+
+  window.scrollTo(0,0);
+
+}
+
+
+/* ================= START APP ================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function(){
+
+    displayProducts(products);
+
+    displayCart();
+
+    displayOrders();
+
+    updateCartCount();
+
+    const savedDarkMode =
+      localStorage.getItem("arykartDarkMode");
+
+    if(savedDarkMode === "true"){
+
+      document.body.classList.add("dark");
+
+      document.getElementById(
+        "darkModeToggle"
+      ).checked = true;
+
+    }
+
+  }
+);
+
+</script>
+
+</body>
+</html>
