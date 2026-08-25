@@ -1398,43 +1398,75 @@ body.dark .modal{
 
 </div> 
   <!-- ================= ARYKART SELLER REGISTRATION ================= -->
+<!-- ================= ARYKART SELLER REGISTRATION ================= -->
 
 <div id="sellerPage" class="page">
 
   <div class="page-header">
-    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <button class="back-btn" onclick="showPage('accountPage')">← Back</button>
     <h2>Sell on ARYKART</h2>
   </div>
 
   <div class="seller-container">
 
     <div class="seller-hero">
-      <h2>Start Selling with ARYKART 🏪</h2>
-      <p>Choose your seller registration type to continue.</p>
+      <div class="seller-badge">🚀 START SELLING</div>
+      <h2>Grow your business with ARYKART</h2>
+      <p>Choose your seller account type and start selling to customers.</p>
     </div>
 
+    <!-- GST SELLER -->
     <button class="seller-option-card" onclick="showPage('gstSellerPage')">
-      <div class="seller-icon">🏢</div>
+      <div class="seller-option-icon">🏪</div>
+
       <div class="seller-option-content">
-        <h3>GST Seller</h3>
-        <p>Register your GST-registered business.</p>
-        <small>GSTIN, PAN and identity verification</small>
+        <h3>GST Registered Seller</h3>
+        <p>For businesses registered with GST.</p>
+
+        <ul>
+          <li>✓ Sell across multiple categories</li>
+          <li>✓ Grow your business faster</li>
+          <li>✓ Manage products and orders</li>
+        </ul>
+
+        <small>GSTIN, PAN and identity verification required</small>
       </div>
-      <strong>›</strong>
+
+      <div class="seller-option-arrow">→</div>
     </button>
 
-    <button class="seller-option-card" onclick="showPage('nonGstSellerPage')">
-      <div class="seller-icon">🏪</div>
+    <!-- NON-GST SELLER -->
+    <button class="seller-option-card non-gst-card"
+            onclick="showPage('nonGstSellerPage')">
+      <div class="seller-option-icon">🛍️</div>
+
       <div class="seller-option-content">
         <h3>Non-GST Seller</h3>
-        <p>Register as an eligible seller without GST.</p>
-        <small>PAN and required verification</small>
+        <p>For eligible small businesses without GST registration.</p>
+
+        <ul>
+          <li>✓ Easy seller registration</li>
+          <li>✓ Start with your first product</li>
+          <li>✓ Manage your products and orders</li>
+        </ul>
+
+        <small>PAN and identity verification required</small>
       </div>
-      <strong>›</strong>
+
+      <div class="seller-option-arrow">→</div>
     </button>
 
+    <div class="seller-help-box">
+      <span>💡</span>
+      <div>
+        <b>Need help starting your business?</b>
+        <p>Complete your seller details and submit your account for verification.</p>
+      </div>
+    </div>
+
   </div>
-</div>
+
+</div> 
 
 
 <!-- ================= GST SELLER REGISTRATION ================= -->
