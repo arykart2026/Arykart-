@@ -996,38 +996,151 @@ body.dark .modal{
 </div>
 
 
-<!-- ================= ACCOUNT PAGE ================= -->
+<!-- ================= PROFESSIONAL ACCOUNT PAGE ================= -->
 
 <div id="accountPage" class="page">
 
-  <div class="page-header">👤 My Account</div>
+  <div class="account-top">
+    <div class="account-user-row">
+      <div class="account-avatar">👤</div>
 
-  <div class="account-container">
-
-    <div class="profile-card">
-      <div class="profile-icon">👤</div>
-      <h2>Arykart User</h2>
-      <p>Welcome to Arykart</p>
+      <div class="account-user-info">
+        <h2>Arykart User</h2>
+        <p>Welcome to Arykart</p>
+      </div>
     </div>
 
-    <button class="account-option" onclick="showPage('ordersPage')">
-      📦 My Orders
+    <div class="account-reward">
+      ⚡ <span>0</span>
+    </div>
+  </div>
+
+
+  <div class="account-quick-grid">
+
+    <button class="account-quick-btn"
+      onclick="showPage('ordersPage')">
+      <span>📦</span>
+      <b>Orders</b>
     </button>
 
-    <button class="account-option" onclick="openSavedAddresses()">
-      📍 Saved Addresses
+    <button class="account-quick-btn"
+      onclick="openWishlist()">
+      <span>♡</span>
+      <b>Wishlist</b>
     </button>
 
-    <button class="account-option" onclick="openWishlist()">
-      ❤️ Wishlist
+    <button class="account-quick-btn"
+      onclick="openCoupons()">
+      <span>🎁</span>
+      <b>Coupons</b>
     </button>
 
-    <button class="account-option" onclick="openSettings()">
-      ⚙️ Settings
+    <button class="account-quick-btn"
+      onclick="alert('Arykart Help Center will be available soon 😊')">
+      <span>🎧</span>
+      <b>Help Center</b>
     </button>
 
-    <button class="account-option" onclick="alert('Help & Support: Arykart team will help you soon 😊')">
-      ❓ Help & Support
+  </div>
+
+
+  <div class="account-section">
+
+    <h2>My Account</h2>
+
+    <button class="account-list-item"
+      onclick="showPage('ordersPage')">
+      <span>📦</span>
+      <div>
+        <b>My Orders</b>
+        <small>Track, cancel or return products</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="account-list-item"
+      onclick="openSavedAddresses()">
+      <span>📍</span>
+      <div>
+        <b>Saved Addresses</b>
+        <small>Manage your delivery addresses</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="account-list-item"
+      onclick="openWishlist()">
+      <span>❤️</span>
+      <div>
+        <b>My Wishlist</b>
+        <small>Products saved for later</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+  </div>
+
+
+  <div class="account-section">
+
+    <h2>Account Settings</h2>
+
+    <button class="account-list-item"
+      onclick="openSettings()">
+      <span>⚙️</span>
+      <div>
+        <b>Settings</b>
+        <small>Manage your Arykart account</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="account-list-item"
+      onclick="alert('Language selection coming soon')">
+      <span>🌐</span>
+      <div>
+        <b>Select Language</b>
+        <small>Choose your preferred language</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="account-list-item"
+      onclick="alert('Notification settings coming soon')">
+      <span>🔔</span>
+      <div>
+        <b>Notifications</b>
+        <small>Manage alerts and updates</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+  </div>
+
+
+  <div class="account-section">
+
+    <h2>Help & Information</h2>
+
+    <button class="account-list-item"
+      onclick="alert('Arykart Help & Support will help you soon 😊')">
+      <span>❓</span>
+      <div>
+        <b>Help & Support</b>
+        <small>Get help with your orders</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="account-list-item"
+      onclick="alert('Arykart Return & Refund Policy: Eligible products can be requested for return according to the seller and product return policy.')">
+      <span>↩️</span>
+      <div>
+        <b>Returns & Refunds</b>
+        <small>View return and refund information</small>
+      </div>
+      <strong>›</strong>
     </button>
 
   </div>
