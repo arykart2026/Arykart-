@@ -3280,8 +3280,265 @@ modal.remove();
 
 });
 
+  } 
+      // Tumhara purana JavaScript yahan khatam ho raha hai
+
+
+    /* ===== YAHAN SELLER ACCOUNT KA NAYA JS PASTE HOGA ===== */
+/* =========================================
+   ARYKART SELLER ACCOUNT SYSTEM
+========================================= */
+
+/* GST Seller Verification */
+function verifyGstIdentity() {
+    const sellerName = document.getElementById("gstSellerName");
+    const gstNumber = document.getElementById("gstNumber");
+    const panNumber = document.getElementById("gstPan");
+
+    if (!sellerName || !gstNumber || !panNumber) {
+        alert("Seller form fields not found!");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        gstNumber.value.trim() === "" ||
+        panNumber.value.trim() === ""
+    ) {
+        alert("Please fill Seller Name, GST Number and PAN Number.");
+        return;
+    }
+
+    if (gstNumber.value.trim().length < 15) {
+        alert("Please enter a valid GST Number.");
+        return;
+    }
+
+    if (panNumber.value.trim().length < 10) {
+        alert("Please enter a valid PAN Number.");
+        return;
+    }
+
+    alert("GST and PAN verification completed successfully!");
+}
+
+
+/* Non-GST Seller Verification */
+function verifyNonGstIdentity() {
+    const sellerName = document.getElementById("nonGstSellerName");
+    const panNumber = document.getElementById("nonGstPan");
+
+    if (!sellerName || !panNumber) {
+        alert("Non-GST seller form fields not found!");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        panNumber.value.trim() === ""
+    ) {
+        alert("Please fill Seller Name and PAN Number.");
+        return;
+    }
+
+    if (panNumber.value.trim().length < 10) {
+        alert("Please enter a valid PAN Number.");
+        return;
+    }
+
+    alert("PAN verification completed successfully!");
+}
+
+
+/* GST Seller Registration */
+function registerGstSeller() {
+    const sellerName = document.getElementById("gstSellerName");
+    const gstNumber = document.getElementById("gstNumber");
+    const panNumber = document.getElementById("gstPan");
+    const pickupAddress = document.getElementById("gstPickupAddress");
+
+    if (!sellerName || !gstNumber || !panNumber || !pickupAddress) {
+        alert("Please complete the seller form first.");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        gstNumber.value.trim() === "" ||
+        panNumber.value.trim() === "" ||
+        pickupAddress.value.trim() === ""
+    ) {
+        alert("Please complete all required details.");
+        return;
+    }
+
+    localStorage.setItem("arykartSellerType", "GST Seller");
+    localStorage.setItem("arykartSellerName", sellerName.value.trim());
+
+    alert("Congratulations! Your GST Seller account has been created.");
+
+    showPage("sellerDashboardPage");
+}
+
+
+/* Non-GST Seller Registration */
+function registerNonGstSeller() {
+    const sellerName = document.getElementById("nonGstSellerName");
+    const panNumber = document.getElementById("nonGstPan");
+    const pickupAddress = document.getElementById("nonGstPickupAddress");
+
+    if (!sellerName || !panNumber || !pickupAddress) {
+        alert("Please complete the seller form first.");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        panNumber.value.trim() === "" ||
+        pickupAddress.value.trim() === ""
+    ) {
+        alert("Please complete all required details.");
+        return;
+    }
+
+    localStorage.setItem("arykartSellerType", "Non-GST Seller");
+    localStorage.setItem("arykartSellerName", sellerName.value.trim());
+
+    alert("Congratulations! Your Non-GST Seller account has been created.");
+
+    showPage("sellerDashboardPage");
+  } 
+  /* ===== SUBMIT GST SELLER ===== */
+function submitGstSeller() {
+    const sellerName = document.getElementById("gstSellerName");
+    const gstNumber = document.getElementById("gstNumber");
+    const panNumber = document.getElementById("gstPan");
+    const mobile = document.getElementById("gstMobile");
+    const email = document.getElementById("gstEmail");
+    const pickupAddress = document.getElementById("gstPickupAddress");
+
+    const productName = document.getElementById("gstProductName");
+    const productCategory = document.getElementById("gstProductCategory");
+    const productPrice = document.getElementById("gstProductPrice");
+    const productStock = document.getElementById("gstProductStock");
+    const productDescription = document.getElementById("gstProductDescription");
+    const productImages = document.getElementById("gstProductImages");
+
+    if (
+        !sellerName || !gstNumber || !panNumber ||
+        !mobile || !email || !pickupAddress
+    ) {
+        alert("Seller form fields not found!");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        gstNumber.value.trim() === "" ||
+        panNumber.value.trim() === "" ||
+        mobile.value.trim() === "" ||
+        email.value.trim() === "" ||
+        pickupAddress.value.trim() === ""
+    ) {
+        alert("Please complete all seller details.");
+        return;
+    }
+
+    if (
+        !productName.value.trim() ||
+        !productCategory.value.trim() ||
+        !productPrice.value ||
+        !productStock.value ||
+        !productDescription.value.trim()
+    ) {
+        alert("Please complete all product details.");
+        return;
+    }
+
+    if (!productImages.files || productImages.files.length < 3) {
+        alert("Please upload at least 3 product images.");
+        return;
+    }
+
+    if (productImages.files.length > 4) {
+        alert("Maximum 4 product images allowed.");
+        return;
+    }
+
+    localStorage.setItem("arykartSellerType", "GST Seller");
+    localStorage.setItem("arykartSellerName", sellerName.value.trim());
+    localStorage.setItem("arykartSellerStatus", "Pending Verification");
+
+    alert("GST Seller application submitted successfully! 🎉");
+
+    showPage("sellerDashboardPage");
+}
+
+
+/* ===== SUBMIT NON-GST SELLER ===== */
+function submitNonGstSeller() {
+    const sellerName = document.getElementById("nonGstSellerName");
+    const panNumber = document.getElementById("nonGstPan");
+    const mobile = document.getElementById("nonGstMobile");
+    const email = document.getElementById("nonGstEmail");
+    const pickupAddress = document.getElementById("nonGstPickupAddress");
+
+    const productName = document.getElementById("nonGstProductName");
+    const productCategory = document.getElementById("nonGstProductCategory");
+    const productPrice = document.getElementById("nonGstProductPrice");
+    const productStock = document.getElementById("nonGstProductStock");
+    const productDescription = document.getElementById("nonGstProductDescription");
+    const productImages = document.getElementById("nonGstProductImages");
+
+    if (
+        !sellerName || !panNumber || !mobile ||
+        !email || !pickupAddress
+    ) {
+        alert("Seller form fields not found!");
+        return;
+    }
+
+    if (
+        sellerName.value.trim() === "" ||
+        panNumber.value.trim() === "" ||
+        mobile.value.trim() === "" ||
+        email.value.trim() === "" ||
+        pickupAddress.value.trim() === ""
+    ) {
+        alert("Please complete all seller details.");
+        return;
+    }
+
+    if (
+        !productName.value.trim() ||
+        !productCategory.value.trim() ||
+        !productPrice.value ||
+        !productStock.value ||
+        !productDescription.value.trim()
+    ) {
+        alert("Please complete all product details.");
+        return;
+    }
+
+    if (!productImages.files || productImages.files.length < 3) {
+        alert("Please upload at least 3 product images.");
+        return;
+    }
+
+    if (productImages.files.length > 4) {
+        alert("Maximum 4 product images allowed.");
+        return;
+    }
+
+    localStorage.setItem("arykartSellerType", "Non-GST Seller");
+    localStorage.setItem("arykartSellerName", sellerName.value.trim());
+    localStorage.setItem("arykartSellerStatus", "Pending Verification");
+
+    alert("Non-GST Seller application submitted successfully! 🎉");
+
+    showPage("sellerDashboardPage");
   }
 </script>
 
 </body>
-</html>
+</html> 
