@@ -279,7 +279,7 @@ body {
 /* PRODUCT IMAGE */
 
 .product-image {
-  height: 135px;
+  height: 90px;
   background: #faf7ff;
   display: flex;
   align-items: center;
@@ -291,7 +291,7 @@ body {
 /* PRODUCT DETAILS */
 
 .product-details {
-  padding: 10px;
+  padding: 8px;
 }
 
 .product-name {
