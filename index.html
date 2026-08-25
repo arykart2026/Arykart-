@@ -1060,7 +1060,7 @@ body.dark .modal{
     </button>
 
     <button class="account-list-item"
-      onclick="openSavedAddresses()">
+      onclick="showPage('addressPage')">
       <span>📍</span>
       <div>
         <b>Saved Addresses</b>
@@ -1096,25 +1096,23 @@ body.dark .modal{
       <strong>›</strong>
     </button>
 
-    <button class="account-list-item"
-      onclick="alert('Language selection coming soon')">
-      <span>🌐</span>
-      <div>
+    <button class="account-list-item" onclick="openLanguagePage()">
+    <span>🌐</span>
+    <div>
         <b>Select Language</b>
-        <small>Choose your preferred language</small>
-      </div>
-      <strong>›</strong>
-    </button>
+        <small id="selectedLanguageText">English</small>
+    </div>
+    <strong>›</strong>
+</button>
 
-    <button class="account-list-item"
-      onclick="alert('Notification settings coming soon')">
-      <span>🔔</span>
-      <div>
+    <button class="account-list-item" onclick="openNotificationsPage()">
+    <span>🔔</span>
+    <div>
         <b>Notifications</b>
-        <small>Manage alerts and updates</small>
-      </div>
-      <strong>›</strong>
-    </button>
+        <small id="notificationStatus">Manage alerts and updates</small>
+    </div>
+    <strong>›</strong>
+</button>
 
   </div>
 
@@ -1146,8 +1144,426 @@ body.dark .modal{
   </div>
 
 </div>
+<!-- ================= CUSTOMER ORDERS & TRACKING PAGE ================= -->
+
+<div id="ordersPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <h2>📦 My Orders</h2>
+  </div>
+
+  <div class="orders-container">
+
+    <!-- ORDER 1 -->
+    <div class="order-card">
+
+      <div class="order-top">
+        <div>
+          <b>Order #ARYK1024</b>
+          <small>Placed on 26 August 2026</small>
+        </div>
+
+        <span class="order-status">Out for Delivery</span>
+      </div>
+
+      <div class="order-product">
+        <div class="order-product-image">📦</div>
+
+        <div class="order-product-info">
+          <h3>Product Name</h3>
+          <p>Quantity: 1</p>
+          <strong>₹999</strong>
+        </div>
+      </div>
+
+      <!-- TRACKING -->
+      <div class="tracking-box">
+
+        <h3>📍 Track Your Order</h3>
+
+        <div class="tracking-item completed">
+          <div class="tracking-dot">✓</div>
+
+          <div>
+            <b>Order Confirmed</b>
+            <p>Your order has been confirmed</p>
+          </div>
+        </div>
+
+        <div class="tracking-item completed">
+          <div class="tracking-dot">✓</div>
+
+          <div>
+            <b>Order Packed</b>
+            <p>Your parcel has been packed</p>
+          </div>
+        </div>
+
+        <div class="tracking-item completed">
+          <div class="tracking-dot">✓</div>
+
+          <div>
+            <b>Shipped</b>
+            <p>Your parcel is on the way</p>
+          </div>
+        </div>
+
+        <div class="tracking-item active">
+          <div class="tracking-dot">🚚</div>
+
+          <div>
+            <b>Out for Delivery</b>
+            <p>Your parcel will arrive soon</p>
+          </div>
+        </div>
+
+        <div class="tracking-item">
+          <div class="tracking-dot">📦</div>
+
+          <div>
+            <b>Delivered</b>
+            <p>Waiting for delivery</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="delivery-info">
+        <b>📍 Delivery Address</b>
+        <p>Customer's saved delivery address will appear here</p>
+      </div>
+
+      <div class="order-actions">
+        <button onclick="viewOrderDetails('ARYK1024')">
+          View Details
+        </button>
+
+        <button onclick="contactSupport('ARYK1024')">
+          Help
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+          </div>
+  <!-- ================= ABOUT ARYKART PAGE ================= -->
+<div id="aboutArykartPage" class="page">
+    <div class="page-header">
+        <button class="back-btn" onclick="showPage('accountPage')">←</button>
+        <h2>About Arykart</h2>
+    </div>
+
+    <div class="about-container">
+        <div class="about-logo">🛒</div>
+
+        <h1>Arykart</h1>
+        <p class="about-tagline">Shop smarter. Sell easier.</p>
+
+        <div class="about-card">
+            <h3>About Us</h3>
+            <p>Arykart is an online shopping platform where customers can discover products and sellers can grow their business.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Our Vision</h3>
+            <p>Our goal is to build a trusted marketplace that connects customers and sellers across India.</p>
+        </div>
+
+        <div class="about-card">
+            <h3>Version</h3>
+            <p>Arykart v1.0</p>
+        </div>
+    </div>
+</div>
+<!-- ================= NOTIFICATIONS PAGE ================= -->
+<div id="notificationsPage" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <h2>🔔 Notifications</h2>
+  </div>
+
+  <div class="notifications-container">
+
+    <div class="notification-card">
+      <div class="notification-icon">📦</div>
+      <div>
+        <b>Order Updates</b>
+        <p>Get updates about your orders, delivery and returns.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="orderNotifications" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="notification-card">
+      <div class="notification-icon">🏷️</div>
+      <div>
+        <b>Offers & Coupons</b>
+        <p>Get notified about new offers and discounts.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="offerNotifications" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="notification-card">
+      <div class="notification-icon">🛍️</div>
+      <div>
+        <b>Product Updates</b>
+        <p>Get updates about products in your wishlist.</p>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="productNotifications">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+  </div>
+</div>
+<!-- ================= PRIVACY & SECURITY PAGE ================= -->
+<div id="privacyPage" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <h2>🔒 Privacy & Security</h2>
+  </div>
+
+  <div class="privacy-container">
+
+    <div class="privacy-card">
+      <h3>🔐 Account Security</h3>
+      <p>Keep your Arykart account secure and protect your personal information.</p>
+      <button onclick="alert('Password change feature will be available soon')">
+        Change Password
+      </button>
+    </div>
+
+    <div class="privacy-card">
+      <h3>📱 Login & Devices</h3>
+      <p>Manage devices that are logged in to your Arykart account.</p>
+      <button onclick="alert('Device management will be available soon')">
+        Manage Devices
+      </button>
+    </div>
+
+    <div class="privacy-card">
+      <h3>🛡️ Privacy</h3>
+      <p>Control how your information is used to improve your Arykart experience.</p>
+    </div>
+
+  </div>
+  </div> 
+  <!-- ================= MANAGE ADDRESSES PAGE ================= -->
+<div id="addressPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <h2>📍 Manage Addresses</h2>
+  </div>
+
+  <div class="address-container">
+
+    <div id="addressList">
+
+      <div class="address-card">
+        <div class="address-top">
+          <b>🏠 Home</b>
+          <span class="default-address">DEFAULT</span>
+        </div>
+
+        <p>
+          Arykart User<br>
+          Add your complete address here<br>
+          City, State - PIN Code<br>
+          India
+        </p>
+
+        <div class="address-actions">
+          <button onclick="editAddress(this)">✏️ Edit</button>
+          <button onclick="deleteAddress(this)">🗑️ Delete</button>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="add-address-btn" onclick="addNewAddress()">
+      ➕ Add New Address
+    </button>
+
+  </div>
+
+</div> 
+  <!-- ================= ARYKART SELLER REGISTRATION ================= -->
+
+<div id="sellerPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('accountPage')">←</button>
+    <h2>Sell on ARYKART</h2>
+  </div>
+
+  <div class="seller-container">
+
+    <div class="seller-hero">
+      <h2>Start Selling with ARYKART 🏪</h2>
+      <p>Choose your seller registration type to continue.</p>
+    </div>
+
+    <button class="seller-option-card" onclick="showPage('gstSellerPage')">
+      <div class="seller-icon">🏢</div>
+      <div class="seller-option-content">
+        <h3>GST Seller</h3>
+        <p>Register your GST-registered business.</p>
+        <small>GSTIN, PAN and identity verification</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+    <button class="seller-option-card" onclick="showPage('nonGstSellerPage')">
+      <div class="seller-icon">🏪</div>
+      <div class="seller-option-content">
+        <h3>Non-GST Seller</h3>
+        <p>Register as an eligible seller without GST.</p>
+        <small>PAN and required verification</small>
+      </div>
+      <strong>›</strong>
+    </button>
+
+  </div>
+</div>
 
 
+<!-- ================= GST SELLER REGISTRATION ================= -->
+
+<div id="gstSellerPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('sellerPage')">←</button>
+    <h2>GST Seller Registration</h2>
+  </div>
+
+  <div class="seller-form-container">
+
+    <h3>Business Details</h3>
+    <p>Complete your seller profile to continue.</p>
+
+    <input type="text" id="gstSellerName"
+           placeholder="Seller / Business Name">
+
+    <input type="text" id="gstNumber"
+           placeholder="GSTIN Number">
+
+    <input type="text" id="gstPan"
+           placeholder="PAN Number">
+
+    <button type="button" onclick="verifyGstIdentity()">
+      Verify PAN & Identity
+    </button>
+
+    <textarea id="gstPickupAddress"
+              placeholder="Complete Pickup Address"></textarea>
+
+    <h3>First Product</h3>
+
+    <input type="text" id="gstProductName"
+           placeholder="Product Name">
+
+    <input type="text" id="gstProductCategory"
+           placeholder="Product Category">
+
+    <input type="number" id="gstProductPrice"
+           placeholder="Selling Price">
+
+    <input type="number" id="gstProductStock"
+           placeholder="Stock Quantity">
+
+    <textarea id="gstProductDescription"
+              placeholder="Product Description"></textarea>
+
+    <label>Upload at least 3 and maximum 4 product images</label>
+
+    <input type="file"
+           id="gstProductImages"
+           accept="image/*"
+           multiple>
+
+    <button class="seller-submit-btn"
+            onclick="submitGstSeller()">
+      Submit for Verification
+    </button>
+
+  </div>
+</div>
+
+
+<!-- ================= NON-GST SELLER REGISTRATION ================= -->
+
+<div id="nonGstSellerPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('sellerPage')">←</button>
+    <h2>Non-GST Seller Registration</h2>
+  </div>
+
+  <div class="seller-form-container">
+
+    <h3>Seller Details</h3>
+    <p>Complete the required details to check eligibility.</p>
+
+    <input type="text" id="nonGstSellerName"
+           placeholder="Seller / Shop Name">
+
+    <input type="text" id="nonGstPan"
+           placeholder="PAN Number">
+
+    <button type="button" onclick="verifyNonGstIdentity()">
+      Verify PAN
+    </button>
+
+    <input type="tel" id="nonGstMobile"
+           placeholder="Mobile Number">
+
+    <input type="email" id="nonGstEmail"
+           placeholder="Email Address">
+
+    <textarea id="nonGstPickupAddress"
+              placeholder="Complete Pickup Address"></textarea>
+
+    <h3>First Product</h3>
+
+    <input type="text" id="nonGstProductName"
+           placeholder="Product Name">
+
+    <input type="text" id="nonGstProductCategory"
+           placeholder="Product Category">
+
+    <input type="number" id="nonGstProductPrice"
+           placeholder="Selling Price">
+
+    <input type="number" id="nonGstProductStock"
+           placeholder="Stock Quantity">
+
+    <textarea id="nonGstProductDescription"
+              placeholder="Product Description"></textarea>
+
+    <label>Upload at least 3 and maximum 4 product images</label>
+
+    <input type="file"
+           id="nonGstProductImages"
+           accept="image/*"
+           multiple>
+
+    <button class="seller-submit-btn"
+            onclick="submitNonGstSeller()">
+      Submit for Verification
+    </button>
+
+  </div>
+</div>
 <!-- ================= PRODUCT DETAILS ================= -->
 
 <div id="productModal" class="modal">
