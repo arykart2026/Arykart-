@@ -833,3 +833,173 @@ body {
     font-size: 21px;
   }
 }
+/* =========================================
+   ARYKART PROFESSIONAL SELLER SYSTEM
+========================================= */
+
+#sellerPage,
+#gstSellerPage,
+#nonGstSellerPage,
+#sellerDashboardPage {
+  background: #f5f7fb;
+  min-height: 100vh;
+  padding-bottom: 90px;
+}
+
+/* Seller Page Header */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  background: linear-gradient(135deg, #2874f0, #1565c0);
+  color: white;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+.page-header h2 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.back-btn {
+  border: none;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Seller Registration Container */
+.seller-form-container {
+  max-width: 650px;
+  margin: 20px auto;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.seller-form-container h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  color: #1f2937;
+}
+
+.seller-form-container p {
+  margin: 0 0 22px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Seller Form Inputs */
+.seller-form-container input,
+.seller-form-container textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 9px 0;
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  background: #fafafa;
+  font-size: 15px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.seller-form-container input:focus,
+.seller-form-container textarea:focus {
+  border-color: #2874f0;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(40,116,240,0.12);
+}
+
+.seller-form-container textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Section Label */
+.seller-form-container label {
+  display: block;
+  margin-top: 18px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Verify Button */
+.seller-form-container button[type="button"] {
+  width: 100%;
+  padding: 14px;
+  margin: 8px 0 14px;
+  border: none;
+  border-radius: 12px;
+  background: #e8f0fe;
+  color: #2874f0;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Submit Seller Button */
+.seller-submit-btn {
+  width: 100%;
+  padding: 16px;
+  margin-top: 18px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2874f0, #1a5fd0);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(40,116,240,0.25);
+  transition: 0.2s;
+}
+
+.seller-submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* File Upload */
+.seller-form-container input[type="file"] {
+  padding: 12px;
+  background: #f8fafc;
+  border: 2px dashed #b8c7e6;
+}
+
+/* Seller Dashboard */
+#sellerDashboardPage {
+  padding: 16px;
+}
+
+#sellerDashboardPage .page-header {
+  margin: -16px -16px 20px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .seller-form-container {
+    margin: 12px;
+    padding: 16px;
+    border-radius: 15px;
+  }
+
+  .page-header {
+    padding: 15px;
+  }
+
+  .page-header h2 {
+    font-size: 19px;
+  }
+
+  .seller-form-container h3 {
+    font-size: 20px;
+  }
+   } 
