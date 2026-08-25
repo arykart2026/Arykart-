@@ -567,3 +567,269 @@ body {
   font-weight: bold;
   color: #6a1b9a;
 }
+/* ================================
+   ARYKART SELLER ACCOUNT SYSTEM
+================================ */
+
+/* Seller Page */
+#sellerPage,
+#gstSellerPage,
+#nonGstSellerPage,
+#sellerDashboardPage {
+  padding-bottom: 100px;
+}
+
+.seller-container {
+  padding: 16px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.seller-hero {
+  text-align: center;
+  padding: 20px 12px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff7ed, #ffffff);
+  border: 1px solid #fed7aa;
+}
+
+.seller-hero h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.seller-hero p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* GST / NON GST Cards */
+.seller-option-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  margin: 14px 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  transition: 0.2s;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.seller-option-card:hover,
+.seller-option-card:active {
+  transform: translateY(-2px);
+  border-color: #ff7a00;
+  box-shadow: 0 8px 20px rgba(255,122,0,0.15);
+}
+
+.seller-icon {
+  width: 50px;
+  height: 50px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: #fff3e6;
+  font-size: 25px;
+}
+
+.seller-option-content {
+  flex: 1;
+}
+
+.seller-option-content h3 {
+  margin: 0 0 5px;
+  font-size: 17px;
+  color: #111827;
+}
+
+.seller-option-content p {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.seller-option-content small {
+  color: #9ca3af;
+}
+
+/* Seller Forms */
+.seller-form-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 16px;
+}
+
+.seller-form-container h3 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+.seller-form-container p {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.seller-form-container input,
+.seller-form-container textarea,
+.seller-form-container select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 8px 0;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #ffffff;
+}
+
+.seller-form-container input:focus,
+.seller-form-container textarea:focus,
+.seller-form-container select:focus {
+  border-color: #ff7a00;
+  box-shadow: 0 0 0 3px rgba(255,122,0,0.12);
+}
+
+.seller-form-container textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Verification Box */
+.seller-verification {
+  padding: 14px;
+  margin: 12px 0;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.seller-verification h4 {
+  margin: 0 0 6px;
+}
+
+.seller-verification p {
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+.seller-primary-btn,
+.seller-form-container button[type="button"],
+.seller-submit-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #ff7a00;
+  color: white;
+}
+
+.seller-primary-btn {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.seller-primary-btn:active,
+.seller-submit-btn:active {
+  transform: scale(0.98);
+}
+
+/* Image Upload */
+.image-upload-box {
+  border: 2px dashed #d1d5db;
+  border-radius: 16px;
+  padding: 25px 15px;
+  text-align: center;
+  margin: 12px 0;
+  background: #fafafa;
+}
+
+.image-upload-box input[type="file"] {
+  border: none;
+  padding: 8px;
+  background: transparent;
+}
+
+.image-upload-box small {
+  display: block;
+  margin-top: 8px;
+  color: #6b7280;
+}
+
+.image-preview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.image-preview img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Seller Dashboard */
+.seller-dashboard {
+  max-width: 900px;
+  margin: auto;
+  padding: 16px;
+}
+
+.seller-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.seller-stat-card {
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.seller-stat-card strong {
+  display: block;
+  font-size: 22px;
+  color: #ff7a00;
+}
+
+.seller-stat-card span {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .seller-container,
+  .seller-form-container,
+  .seller-dashboard {
+    padding: 12px;
+  }
+
+  .seller-option-card {
+    padding: 14px;
+  }
+
+  .seller-hero h2 {
+    font-size: 21px;
+  }
+}
