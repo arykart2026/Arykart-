@@ -2633,30 +2633,6 @@ window.arykartListing = {
     getProducts: getListedProducts,
     deleteProduct: deleteProductListing
 };
-  /* ============ PRODUCT LISTING FORM ============ */
-
-const listingButton = document.createElement("button");
-
-listingButton.innerHTML = "➕ List Your Product";
-
-listingButton.style.cssText = `
-position:fixed;
-right:20px;
-bottom:95px;
-background:#1b76e8;
-color:white;
-border:none;
-border-radius:25px;
-padding:14px 18px;
-font-size:15px;
-font-weight:bold;
-box-shadow:0 4px 15px rgba(0,0,0,0.25);
-z-index:999;
-`;
-
-document.body.appendChild(listingButton);
-
-listingButton.addEventListener("click", openListingForm);
 
 
 function openListingForm(){
