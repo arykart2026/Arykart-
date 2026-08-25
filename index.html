@@ -2582,7 +2582,57 @@ document.addEventListener(
 
   }
 );
+/* ================= PRODUCT LISTING SYSTEM ================= */
 
+let listedProducts =
+    JSON.parse(localStorage.getItem("arykartListedProducts")) || [];
+
+/* Product ko listing me save karne ke liye */
+function addProductListing(name, price, category, image, description) {
+
+    const newProduct = {
+        id: Date.now(),
+        name: name,
+        price: Number(price),
+        category: category,
+        image: image,
+        description: description || ""
+    };
+
+    listedProducts.push(newProduct);
+
+    localStorage.setItem(
+        "arykartListedProducts",
+        JSON.stringify(listedProducts)
+    );
+
+    return newProduct;
+}
+
+/* Saare listed products dekhne ke liye */
+function getListedProducts() {
+    return listedProducts;
+}
+
+/* Product delete karne ke liye */
+function deleteProductListing(productId) {
+
+    listedProducts = listedProducts.filter(
+        product => product.id !== productId
+    );
+
+    localStorage.setItem(
+        "arykartListedProducts",
+        JSON.stringify(listedProducts)
+    );
+}
+
+/* ARYKART listing system */
+window.arykartListing = {
+    addProduct: addProductListing,
+    getProducts: getListedProducts,
+    deleteProduct: deleteProductListing
+};
 </script>
 
 </body>
