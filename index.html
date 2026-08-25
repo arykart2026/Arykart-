@@ -2633,6 +2633,149 @@ window.arykartListing = {
     getProducts: getListedProducts,
     deleteProduct: deleteProductListing
 };
+  /* ============ PRODUCT LISTING FORM ============ */
+
+const listingButton = document.createElement("button");
+
+listingButton.innerHTML = "➕ List Your Product";
+
+listingButton.style.cssText = `
+position:fixed;
+right:20px;
+bottom:95px;
+background:#1b76e8;
+color:white;
+border:none;
+border-radius:25px;
+padding:14px 18px;
+font-size:15px;
+font-weight:bold;
+box-shadow:0 4px 15px rgba(0,0,0,0.25);
+z-index:999;
+`;
+
+document.body.appendChild(listingButton);
+
+listingButton.addEventListener("click", openListingForm);
+
+
+function openListingForm(){
+
+const oldForm = document.getElementById("listingModal");
+
+if(oldForm){
+oldForm.remove();
+}
+
+const modal = document.createElement("div");
+
+modal.id = "listingModal";
+
+modal.style.cssText = `
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.55);
+z-index:2000;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:15px;
+`;
+
+modal.innerHTML = `
+<div style="
+background:white;
+width:100%;
+max-width:420px;
+max-height:90vh;
+overflow:auto;
+border-radius:20px;
+padding:20px;
+box-sizing:border-box;
+">
+
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<h2 style="margin:0 0 15px;">List Your Product</h2>
+
+<button onclick="document.getElementById('listingModal').remove()"
+style="border:none;background:none;font-size:25px;">×</button>
+</div>
+
+<form id="productListingForm">
+
+<input id="listingName"
+placeholder="Product Name"
+required
+style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box;">
+
+<input id="listingPrice"
+type="number"
+placeholder="Price"
+required
+style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box;">
+
+<input id="listingCategory"
+placeholder="Category (Fruits, Vegetables etc.)"
+required
+style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box;">
+
+<input id="listingImage"
+placeholder="Product Image URL (optional)"
+style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box;">
+
+<textarea id="listingDescription"
+placeholder="Product Description"
+style="width:100%;padding:13px;margin:8px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box;height:90px;"></textarea>
+
+<button type="submit"
+style="width:100%;padding:14px;background:#1b76e8;color:white;border:none;border-radius:10px;font-size:16px;font-weight:bold;margin-top:10px;">
+Publish Product
+</button>
+
+</form>
+
+</div>
+`;
+
+document.body.appendChild(modal);
+
+
+document.getElementById("productListingForm")
+.addEventListener("submit", function(e){
+
+e.preventDefault();
+
+const name =
+document.getElementById("listingName").value;
+
+const price =
+document.getElementById("listingPrice").value;
+
+const category =
+document.getElementById("listingCategory").value;
+
+const image =
+document.getElementById("listingImage").value;
+
+const description =
+document.getElementById("listingDescription").value;
+
+
+addProductListing(
+name,
+price,
+category,
+image,
+description
+);
+
+alert("Product successfully listed on ARYKART! 🎉");
+
+modal.remove();
+
+});
+
+  }
 </script>
 
 </body>
