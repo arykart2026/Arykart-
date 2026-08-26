@@ -987,7 +987,6 @@ body.dark .modal{
 
 <!-- ================= ORDERS PAGE ================= -->
 
-<div id="ordersPage" class="page">
 
   <div class="page-header">📦 My Orders</div>
 
@@ -1602,7 +1601,106 @@ body.dark .modal{
 </div> 
   <!-- ================= SELLER DASHBOARD ================= -->
 <div id="sellerDashboardPage" class="page">
+<!-- ================= SELLER DASHBOARD ================= -->
 
+<div id="sellerDashboardPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('sellerPage')">←</button>
+    <h2>Seller Dashboard</h2>
+  </div>
+
+  <div class="seller-dashboard-container">
+
+    <!-- SELLER WELCOME -->
+    <div class="seller-dashboard-hero">
+      <h2>Welcome, <span id="dashboardSellerName">Seller</span> 👋</h2>
+      <p>Manage your products, orders and seller account from one place.</p>
+    </div>
+
+    <!-- VERIFICATION STATUS -->
+    <div class="seller-status-card">
+      <div>
+        <small>Seller Status</small>
+        <h3 id="dashboardSellerStatus">Pending Verification</h3>
+      </div>
+
+      <div class="seller-status-badge">
+        Pending
+      </div>
+    </div>
+
+    <!-- SELLER TYPE -->
+    <div class="seller-info-card">
+      <span>🏪</span>
+
+      <div>
+        <small>Seller Type</small>
+        <h3 id="dashboardSellerType">Seller</h3>
+      </div>
+    </div>
+
+    <!-- DASHBOARD STATS -->
+    <div class="seller-stats">
+
+      <div class="seller-stat-card">
+        <span>📦</span>
+        <strong>0</strong>
+        <small>Products</small>
+      </div>
+
+      <div class="seller-stat-card">
+        <span>🛒</span>
+        <strong>0</strong>
+        <small>Orders</small>
+      </div>
+
+      <div class="seller-stat-card">
+        <span>₹</span>
+        <strong>0</strong>
+        <small>Sales</small>
+      </div>
+
+    </div>
+
+    <!-- DASHBOARD ACTIONS -->
+    <div class="seller-dashboard-actions">
+
+      <button class="seller-dashboard-btn"
+              onclick="alert('Product management will be added next!')">
+        <span>📦</span>
+        <div>
+          <strong>My Products</strong>
+          <small>Manage your listed products</small>
+        </div>
+        <b>›</b>
+      </button>
+
+      <button class="seller-dashboard-btn"
+              onclick="alert('Order management will be added next!')">
+        <span>🛒</span>
+        <div>
+          <strong>Orders</strong>
+          <small>View and manage customer orders</small>
+        </div>
+        <b>›</b>
+      </button>
+
+      <button class="seller-dashboard-btn"
+              onclick="showPage('sellerPage')">
+        <span>🏪</span>
+        <div>
+          <strong>Seller Account</strong>
+          <small>View seller registration details</small>
+        </div>
+        <b>›</b>
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
   <div class="page-header">
     <button class="back-btn" onclick="showPage('sellerPage')">←</button>
     <h2>Seller Dashboard</h2>
