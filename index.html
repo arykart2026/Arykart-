@@ -3170,5 +3170,4427 @@ const translations = {
     suggestedForYou: "आपके लिए सुझाव"
   }
 };
+/* =========================================================
+   ARYKART COMPLETE PROFESSIONAL APP - PART 2
+   CONTINUATION OF PART 1
+========================================================= */
 
-/* PART 2 IS NEXT... */
+
+/* =========================================================
+   HELPERS + STORAGE
+========================================================= */
+
+function akId(){
+  return "ARY" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+
+function esc(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function money(value){
+  return "₹" + Number(value || 0).toLocaleString("en-IN");
+}
+
+function getEl(id){
+  return document.getElementById(id);
+}
+
+function setText(id,text){
+  const el = getEl(id);
+  if(el) el.textContent = text;
+}
+
+function setHTML(id,html){
+  const el = getEl(id);
+  if(el) el.innerHTML = html;
+}
+
+function showToast(message){
+  const toast = getEl("toast");
+  if(!toast){
+    alert(message);
+    return;
+  }
+
+  toast.textContent = message;
+  toast.classList.add("show");
+
+  clearTimeout(window.arykartToastTimer);
+
+  window.arykartToastTimer = setTimeout(function(){
+    toast.classList.remove("show");
+  },2500);
+}
+
+function normalizeState(){
+
+  if(!appState || typeof appState !== "object"){
+    appState = {};
+  }
+
+  appState.language = appState.language || "en";
+
+  appState.customer = appState.customer || {
+    loggedIn:false,
+    name:"",
+    phone:"",
+    email:"",
+    verified:false
+  };
+
+  appState.cart = Array.isArray(appState.cart) ? appState.cart : [];
+  appState.wishlist = Array.isArray(appState.wishlist) ? appState.wishlist : [];
+  appState.addresses = Array.isArray(appState.addresses) ? appState.addresses : [];
+  appState.orders = Array.isArray(appState.orders) ? appState.orders : [];
+  appState.returns = Array.isArray(appState.returns) ? appState.returns : [];
+
+  if(!appState.wallet || typeof appState.wallet !== "object"){
+    appState.wallet = {
+      balance:0,
+      transactions:[]
+    };
+  }
+
+  appState.wallet.balance = Number(appState.wallet.balance || 0);
+  appState.wallet.transactions =
+    Array.isArray(appState.wallet.transactions)
+      ? appState.wallet.transactions
+      : [];
+
+  if(!appState.seller || typeof appState.seller !== "object"){
+    appState.seller = {};
+  }
+
+  appState.seller.registered =
+    Boolean(appState.seller.registered);
+
+  appState.seller.name =
+    appState.seller.name || "";
+
+  appState.seller.type =
+    appState.seller.type || "";
+
+  appState.seller.phone =
+    appState.seller.phone || "";
+
+  appState.seller.email =
+    appState.seller.email || "";
+
+  appState.seller.documents =
+    appState.seller.documents || {};
+
+  appState.seller.products =
+    Array.isArray(appState.seller.products)
+      ? appState.seller.products
+      : [];
+
+  appState.seller.drafts =
+    Array.isArray(appState.seller.drafts)
+      ? appState.seller.drafts
+      : [];
+
+  appState.reviews =
+    appState.reviews || {};
+
+  appState.notifications =
+    appState.notifications || {
+      orders:true,
+      offers:true,
+      products:true
+    };
+
+  appState.settings =
+    appState.settings || {
+      darkMode:false,
+      biometric:false
+    };
+}
+
+function saveAppState(){
+  normalizeState();
+
+  localStorage.setItem(
+    APP_KEY,
+    JSON.stringify(appState)
+  );
+}
+
+function loadAppState(){
+
+  try{
+    const saved =
+      localStorage.getItem(APP_KEY);
+
+    if(saved){
+      const parsed = JSON.parse(saved);
+
+      appState = {
+        ...appState,
+        ...parsed
+      };
+    }
+  }catch(error){
+    console.error("ARYKART storage error:",error);
+  }
+
+  normalizeState();
+}
+
+loadAppState();
+
+
+/* =========================================================
+   CATALOG SYSTEM
+   SUPPORTS 1000+ SELLER PRODUCTS
+========================================================= */
+
+function getBaseProducts(){
+
+  if(typeof products !== "undefined" &&
+     Array.isArray(products)){
+    return products;
+  }
+
+  return [];
+}
+
+function getAllProducts(){
+
+  const base = getBaseProducts();
+
+  const sellerProducts =
+    appState.seller.products || [];
+
+  return [
+    ...base,
+    ...sellerProducts
+  ];
+}
+
+function findProduct(id){
+
+  return getAllProducts().find(function(product){
+    return String(product.id) === String(id);
+  });
+}
+
+function getProductImages(product){
+
+  if(!product) return [];
+
+  if(Array.isArray(product.images) &&
+     product.images.length){
+    return product.images;
+  }
+
+  if(product.image){
+    return [product.image];
+  }
+
+  if(product.img){
+    return [product.img];
+  }
+
+  return [
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=900&q=80"
+  ];
+}
+
+function getProductImage(product){
+  return getProductImages(product)[0];
+}
+
+function getProductCategory(product){
+  return product.category || product.cat || "Other";
+}
+
+function getProductRating(product){
+
+  const reviews =
+    appState.reviews[String(product.id)] || [];
+
+  if(reviews.length){
+
+    const total = reviews.reduce(function(sum,review){
+      return sum + Number(review.rating || 0);
+    },0);
+
+    return (total / reviews.length).toFixed(1);
+  }
+
+  return Number(
+    product.rating || 4.2
+  ).toFixed(1);
+}
+
+function getProductOldPrice(product){
+
+  return Number(
+    product.oldPrice ||
+    product.old ||
+    product.price || 0
+  );
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+========================================================= */
+
+function showPage(pageId){
+
+  const target = getEl(pageId);
+
+  if(!target){
+    console.warn("Page not found:",pageId);
+    return;
+  }
+
+  document
+    .querySelectorAll(".page")
+    .forEach(function(page){
+      page.classList.remove("active");
+      page.classList.remove("active-page");
+    });
+
+  target.classList.add("active");
+  target.classList.add("active-page");
+
+  document
+    .querySelectorAll(".nav-item")
+    .forEach(function(nav){
+      nav.classList.remove("active");
+    });
+
+  const navMap = {
+    homePage:"navHome",
+    categoryPage:"navCategories",
+    ordersPage:"navOrders",
+    cartPage:"navCart",
+    accountPage:"navAccount"
+  };
+
+  if(navMap[pageId]){
+    const nav = getEl(navMap[pageId]);
+
+    if(nav){
+      nav.classList.add("active");
+    }
+  }
+
+  if(pageId === "homePage"){
+    renderHomeProducts();
+  }
+
+  if(pageId === "categoryPage"){
+    renderCategories();
+    renderCategoryProducts(
+      getAllProducts()
+    );
+  }
+
+  if(pageId === "cartPage"){
+    renderCart();
+  }
+
+  if(pageId === "ordersPage"){
+    renderOrders();
+  }
+
+  if(pageId === "accountPage"){
+    renderAccount();
+  }
+
+  if(pageId === "walletPage"){
+    renderWallet();
+  }
+
+  if(pageId === "wishlistPage"){
+    renderWishlist();
+  }
+
+  if(pageId === "sellerDashboardPage"){
+    renderSellerDashboard();
+  }
+
+  if(pageId === "sellerInventoryPage"){
+    renderSellerInventory();
+  }
+
+  if(pageId === "sellerOrdersPage"){
+    renderSellerOrders();
+  }
+
+  if(pageId === "sellerReturnsPage"){
+    renderSellerReturns();
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+   ADD TO CART BUTTON INSIDE PRODUCT
+========================================================= */
+
+function productCard(product){
+
+  const rating =
+    getProductRating(product);
+
+  const reviewCount =
+    (appState.reviews[String(product.id)] || []).length;
+
+  const oldPrice =
+    getProductOldPrice(product);
+
+  const price =
+    Number(product.price || 0);
+
+  const discount =
+    oldPrice > price
+      ? Math.round(
+          ((oldPrice - price) / oldPrice) * 100
+        )
+      : 0;
+
+  const isWishlisted =
+    appState.wishlist.some(function(id){
+      return String(id) === String(product.id);
+    });
+
+  return `
+    <article class="product-card">
+
+      <div class="product-image-wrap">
+
+        <img
+          src="${esc(getProductImage(product))}"
+          alt="${esc(product.name)}"
+          onclick="openProduct('${esc(product.id)}')"
+        >
+
+        <button
+          class="product-heart"
+          onclick="toggleWishlist('${esc(product.id)}');event.stopPropagation();"
+        >
+          ${isWishlisted ? "♥" : "♡"}
+        </button>
+
+      </div>
+
+      <div
+        class="product-info"
+        onclick="openProduct('${esc(product.id)}')"
+      >
+
+        <div class="product-title">
+          ${esc(product.name)}
+        </div>
+
+        <div class="product-meta">
+          <span class="rating-pill">
+            ★ ${rating}
+          </span>
+
+          <span class="review-count">
+            (${reviewCount || product.reviewCount || 0})
+          </span>
+        </div>
+
+        <div class="price-row">
+          <span class="price">
+            ${money(price)}
+          </span>
+
+          ${
+            oldPrice > price
+              ? `<span class="old-price">${money(oldPrice)}</span>`
+              : ""
+          }
+
+          ${
+            discount
+              ? `<span class="discount">${discount}% off</span>`
+              : ""
+          }
+        </div>
+
+        <div class="delivery-text">
+          Free delivery available
+        </div>
+
+        <div class="product-actions">
+
+          <button
+            class="add-cart-btn"
+            onclick="addToCart('${esc(product.id)}');event.stopPropagation();"
+          >
+            🛒 Add to Cart
+          </button>
+
+        </div>
+
+      </div>
+
+    </article>
+  `;
+}
+
+
+/* =========================================================
+   HOME + CATEGORY + SEARCH
+========================================================= */
+
+function renderHomeProducts(list){
+
+  const productsToRender =
+    Array.isArray(list)
+      ? list
+      : getAllProducts();
+
+  const ids = [
+    "suggestedProducts",
+    "homeProducts",
+    "products"
+  ];
+
+  ids.forEach(function(id){
+
+    const container =
+      getEl(id);
+
+    if(container){
+
+      container.innerHTML =
+        productsToRender.length
+          ? productsToRender
+              .map(productCard)
+              .join("")
+          : `
+            <div class="empty-state">
+              <div class="empty-icon">🛍️</div>
+              <h3>No products found</h3>
+            </div>
+          `;
+    }
+  });
+
+  updateCartCount();
+}
+
+function renderCategoryProducts(list){
+
+  const container =
+    getEl("categoryProducts");
+
+  if(!container) return;
+
+  container.innerHTML =
+    list.length
+      ? list.map(productCard).join("")
+      : `
+        <div class="empty-state">
+          <div class="empty-icon">🔎</div>
+          <h3>No products found</h3>
+        </div>
+      `;
+}
+
+function searchProducts(query){
+
+  const q =
+    String(query || "")
+      .trim()
+      .toLowerCase();
+
+  const filtered =
+    getAllProducts().filter(function(product){
+
+      const text = [
+        product.name,
+        getProductCategory(product),
+        product.brand,
+        product.tags
+      ].join(" ").toLowerCase();
+
+      return text.includes(q);
+    });
+
+  const title =
+    getEl("categoryTitle");
+
+  if(title){
+    title.textContent =
+      q
+        ? "Search Results"
+        : "All Products";
+  }
+
+  renderHomeProducts(filtered);
+  renderCategoryProducts(filtered);
+}
+
+function filterCategory(category){
+
+  const filtered =
+    category === "All"
+      ? getAllProducts()
+      : getAllProducts().filter(function(product){
+          return getProductCategory(product) === category;
+        });
+
+  const title =
+    getEl("categoryTitle");
+
+  if(title){
+    title.textContent =
+      category === "All"
+        ? "All Products"
+        : category;
+  }
+
+  showPage("categoryPage");
+  renderCategoryProducts(filtered);
+}
+
+function renderCategories(){
+
+  const categories = [
+    ["All","🛍️"],
+    ["Fashion","👕"],
+    ["Mobiles","📱"],
+    ["Electronics","💻"],
+    ["Beauty","💄"],
+    ["Home","🏠"],
+    ["Grocery","🛒"],
+    ["Sports","⚽"],
+    ["Appliances","🔌"],
+    ["Furniture","🛋️"],
+    ["Books","📚"],
+    ["Toys","🧸"],
+    ["Automotive","🚗"],
+    ["Jewellery","💎"],
+    ["Health","🩺"],
+    ["Baby","👶"]
+  ];
+
+  const html =
+    categories.map(function(item){
+
+      return `
+        <button
+          class="category-card"
+          onclick="filterCategory('${item[0]}')"
+        >
+          <span>${item[1]}</span>
+          <span>${item[0]}</span>
+        </button>
+      `;
+
+    }).join("");
+
+  ["allCategories","homeCategories"]
+    .forEach(function(id){
+
+      const el = getEl(id);
+
+      if(el){
+        el.innerHTML = html;
+      }
+
+    });
+}
+
+
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
+
+function openProduct(id){
+
+  const product =
+    findProduct(id);
+
+  if(!product){
+    showToast("Product not found");
+    return;
+  }
+
+  previousPageId =
+    document.querySelector(".page.active")
+      ?.id || "homePage";
+
+  currentProductId =
+    product.id;
+
+  const images =
+    getProductImages(product);
+
+  setText(
+    "detailProductTitle",
+    product.name
+  );
+
+  setText(
+    "detailProductSubtitle",
+    product.subtitle ||
+    product.description ||
+    getProductCategory(product)
+  );
+
+  setText(
+    "detailRating",
+    "★ " + getProductRating(product)
+  );
+
+  setText(
+    "detailReviewCount",
+    (
+      appState.reviews[String(product.id)] || []
+    ).length + " ratings"
+  );
+
+  setText(
+    "detailPrice",
+    money(product.price)
+  );
+
+  setText(
+    "detailOldPrice",
+    money(getProductOldPrice(product))
+  );
+
+  const oldPrice =
+    getProductOldPrice(product);
+
+  const discount =
+    oldPrice > Number(product.price)
+      ? Math.round(
+          ((oldPrice - product.price) / oldPrice) * 100
+        )
+      : 0;
+
+  setText(
+    "detailDiscount",
+    discount ? discount + "% off" : ""
+  );
+
+  const mainImage =
+    getEl("detailMainImage");
+
+  if(mainImage){
+    mainImage.src = images[0];
+  }
+
+  setHTML(
+    "detailThumbnails",
+    images.map(function(image,index){
+
+      return `
+        <button
+          class="thumbnail ${index === 0 ? "active" : ""}"
+          onclick="changeDetailImage('${esc(image)}',this)"
+        >
+          <img src="${esc(image)}" alt="Product image">
+        </button>
+      `;
+
+    }).join("")
+  );
+
+  setHTML(
+    "detailOffers",
+    `
+      <div>✓ Secure checkout</div>
+      <div>✓ ${product.cod === "no" ? "Online payment" : "Cash on Delivery available"}</div>
+      <div>✓ ${product.returnEligible === "no" ? "Return policy applies" : "7-day return after delivery"}</div>
+    `
+  );
+
+  const highlights =
+    Array.isArray(product.highlights)
+      ? product.highlights
+      : [
+          product.description || "Quality product",
+          "Secure packaging",
+          "Fast delivery",
+          "Easy customer support"
+        ];
+
+  setHTML(
+    "detailHighlights",
+    `
+      <ul style="padding-left:20px;line-height:1.8;">
+        ${highlights.map(function(item){
+          return `<li>${esc(item)}</li>`;
+        }).join("")}
+      </ul>
+    `
+  );
+
+  const specs = [
+    ["Category",getProductCategory(product)],
+    ["Brand",product.brand || "ARYKART Seller"],
+    ["Length",product.length ? product.length + " " + (product.dimensionUnit || "cm") : "—"],
+    ["Width",product.width ? product.width + " " + (product.dimensionUnit || "cm") : "—"],
+    ["Height",product.height ? product.height + " " + (product.dimensionUnit || "cm") : "—"],
+    ["Weight",product.weight ? product.weight + " " + (product.weightUnit || "kg") : "—"],
+    ["Country of Origin",product.origin || "India"],
+    ["Manufacturer",product.manufacturer || "—"],
+    ["Warranty",product.warranty || "—"]
+  ];
+
+  setHTML(
+    "detailSpecs",
+    specs.map(function(row){
+      return `
+        <div class="spec-row">
+          <span>${esc(row[0])}</span>
+          <strong>${esc(row[1])}</strong>
+        </div>
+      `;
+    }).join("")
+  );
+
+  const wishButton =
+    getEl("detailWishlistBtn");
+
+  if(wishButton){
+
+    const wished =
+      appState.wishlist.some(function(wishId){
+        return String(wishId) === String(product.id);
+      });
+
+    wishButton.textContent =
+      wished ? "♥" : "♡";
+  }
+
+  ensureProductDetailActions();
+  renderProductReviews();
+
+  showPage("productDetailPage");
+}
+
+function changeDetailImage(image,button){
+
+  const mainImage =
+    getEl("detailMainImage");
+
+  if(mainImage){
+    mainImage.src = image;
+  }
+
+  document
+    .querySelectorAll(".thumbnail")
+    .forEach(function(item){
+      item.classList.remove("active");
+    });
+
+  if(button){
+    button.classList.add("active");
+  }
+}
+
+function ensureProductDetailActions(){
+
+  let actionBox =
+    getEl("professionalDetailActions");
+
+  if(!actionBox){
+
+    actionBox =
+      document.createElement("div");
+
+    actionBox.id =
+      "professionalDetailActions";
+
+    actionBox.style.cssText =
+      "position:sticky;bottom:0;background:#fff;padding:12px 0 92px;display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #eee;z-index:20;";
+
+    const content =
+      document.querySelector(
+        "#productDetailPage .detail-content"
+      );
+
+    if(content){
+      content.appendChild(actionBox);
+    }
+  }
+
+  if(actionBox){
+
+    actionBox.innerHTML = `
+      <button
+        class="secondary-btn"
+        onclick="addToCart(currentProductId)"
+      >
+        🛒 Add to Cart
+      </button>
+
+      <button
+        class="primary-btn"
+        onclick="buyNow(currentProductId)"
+      >
+        ⚡ Buy Now
+      </button>
+    `;
+  }
+}
+
+function goBackFromProduct(){
+  showPage(
+    previousPageId || "homePage"
+  );
+}
+
+
+/* =========================================================
+   WISHLIST
+========================================================= */
+
+function toggleWishlist(id){
+
+  const index =
+    appState.wishlist.findIndex(function(wishId){
+      return String(wishId) === String(id);
+    });
+
+  if(index >= 0){
+
+    appState.wishlist.splice(index,1);
+    showToast("Removed from wishlist");
+
+  }else{
+
+    appState.wishlist.push(id);
+    showToast("Added to wishlist ♥");
+  }
+
+  saveAppState();
+
+  if(currentProductId &&
+     String(currentProductId) === String(id)){
+    const button =
+      getEl("detailWishlistBtn");
+
+    if(button){
+      button.textContent =
+        index >= 0 ? "♡" : "♥";
+    }
+  }
+
+  renderWishlist();
+  renderHomeProducts();
+}
+
+function renderWishlist(){
+
+  const products =
+    appState.wishlist
+      .map(findProduct)
+      .filter(Boolean);
+
+  setHTML(
+    "wishlistProducts",
+
+    products.length
+      ? products.map(productCard).join("")
+      : `
+        <div class="empty-state">
+          <div class="empty-icon">♡</div>
+          <h3>No wishlisted products</h3>
+        </div>
+      `
+  );
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function addToCart(id){
+
+  const product =
+    findProduct(id);
+
+  if(!product){
+    showToast("Product not found");
+    return;
+  }
+
+  const existing =
+    appState.cart.find(function(item){
+      return String(item.id) === String(id);
+    });
+
+  if(existing){
+    existing.qty =
+      Number(existing.qty || 1) + 1;
+  }else{
+    appState.cart.push({
+      id:id,
+      qty:1
+    });
+  }
+
+  saveAppState();
+  updateCartCount();
+
+  showToast(
+    "Added to Cart 🛒"
+  );
+}
+
+function changeCartQty(id,change){
+
+  const item =
+    appState.cart.find(function(cartItem){
+      return String(cartItem.id) === String(id);
+    });
+
+  if(!item) return;
+
+  item.qty =
+    Number(item.qty || 1) + Number(change);
+
+  if(item.qty <= 0){
+
+    appState.cart =
+      appState.cart.filter(function(cartItem){
+        return String(cartItem.id) !== String(id);
+      });
+  }
+
+  saveAppState();
+  renderCart();
+  updateCartCount();
+}
+
+function removeFromCart(id){
+
+  appState.cart =
+    appState.cart.filter(function(item){
+      return String(item.id) !== String(id);
+    });
+
+  saveAppState();
+  renderCart();
+  updateCartCount();
+
+  showToast("Removed from cart");
+}
+
+function updateCartCount(){
+
+  const count =
+    appState.cart.reduce(function(total,item){
+      return total + Number(item.qty || 0);
+    },0);
+
+  const top =
+    getEl("topCartCount");
+
+  if(top){
+    top.textContent = count;
+  }
+
+  document
+    .querySelectorAll(".cart-count-display")
+    .forEach(function(el){
+      el.textContent = count;
+    });
+}
+
+function renderCart(){
+
+  const container =
+    getEl("cartItems") ||
+    getEl("cartList");
+
+  if(!container) return;
+
+  if(!appState.cart.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <button
+          class="primary-btn"
+          onclick="showPage('homePage')"
+        >
+          Continue Shopping
+        </button>
+      </div>
+    `;
+
+    setText("cartTotal","₹0");
+    updateCartCount();
+    return;
+  }
+
+  let total = 0;
+
+  const html =
+    appState.cart.map(function(item){
+
+      const product =
+        findProduct(item.id);
+
+      if(!product) return "";
+
+      const qty =
+        Number(item.qty || 1);
+
+      const lineTotal =
+        Number(product.price) * qty;
+
+      total += lineTotal;
+
+      return `
+        <div class="cart-item">
+          <img
+            src="${esc(getProductImage(product))}"
+            alt="${esc(product.name)}"
+            onclick="openProduct('${esc(product.id)}')"
+          >
+
+          <div class="cart-item-info">
+
+            <h3>${esc(product.name)}</h3>
+
+            <strong>
+              ${money(product.price)}
+            </strong>
+
+            <div class="qty-controls">
+
+              <button
+                onclick="changeCartQty('${esc(product.id)}',-1)"
+              >
+                −
+              </button>
+
+              <span>${qty}</span>
+
+              <button
+                onclick="changeCartQty('${esc(product.id)}',1)"
+              >
+                +
+              </button>
+
+            </div>
+
+            <button
+              class="text-danger"
+              onclick="removeFromCart('${esc(product.id)}')"
+            >
+              Remove
+            </button>
+
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  container.innerHTML = html;
+
+  setText(
+    "cartTotal",
+    money(total)
+  );
+
+  setText(
+    "cartDelivery",
+    "FREE"
+  );
+
+  updateCartCount();
+}
+
+
+/* =========================================================
+   CUSTOMER LOGIN / DEMO OTP
+========================================================= */
+
+function openCustomerLogin(){
+
+  openAryModal(
+    "Login / Create Account",
+
+    `
+      <form onsubmit="customerLogin(event)">
+
+        <div class="field">
+          <label>Full Name</label>
+          <input
+            name="name"
+            required
+            value="${esc(appState.customer.name || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Mobile Number</label>
+          <input
+            name="phone"
+            inputmode="numeric"
+            pattern="[0-9]{10}"
+            required
+            value="${esc(appState.customer.phone || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Email / Gmail</label>
+          <input
+            name="email"
+            type="email"
+            value="${esc(appState.customer.email || "")}"
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;margin-top:15px;"
+        >
+          Verify & Continue
+        </button>
+
+      </form>
+
+      <p style="font-size:12px;color:#6b7280;margin-top:12px;">
+        Demo HTML version: real SMS/email OTP requires a secure backend,
+        Firebase, Twilio or another verified authentication service.
+      </p>
+    `
+  );
+}
+
+function customerLogin(event){
+
+  event.preventDefault();
+
+  const form =
+    new FormData(event.target);
+
+  const phone =
+    String(form.get("phone") || "")
+      .replace(/\D/g,"");
+
+  if(phone.length !== 10){
+    showToast("Enter valid 10 digit mobile number");
+    return;
+  }
+
+  appState.customer = {
+    loggedIn:true,
+    name:String(form.get("name") || "").trim(),
+    phone:phone,
+    email:String(form.get("email") || "").trim(),
+    verified:true
+  };
+
+  saveAppState();
+  closeAryModal();
+
+  renderAccount();
+
+  showToast(
+    "Account verified successfully ✓"
+  );
+}
+
+
+/* =========================================================
+   ADDRESS SYSTEM
+========================================================= */
+
+function openAddressModal(index){
+
+  const address =
+    typeof index === "number"
+      ? appState.addresses[index]
+      : {};
+
+  openAryModal(
+    address && address.id
+      ? "Edit Address"
+      : "Add New Address",
+
+    `
+      <form onsubmit="saveAddress(event,${typeof index === "number" ? index : -1})">
+
+        <div class="field">
+          <label>Full Name</label>
+          <input
+            name="name"
+            required
+            value="${esc(address.name || appState.customer.name || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Mobile Number</label>
+          <input
+            name="phone"
+            required
+            value="${esc(address.phone || appState.customer.phone || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>House / Flat / Building</label>
+          <input
+            name="line1"
+            required
+            value="${esc(address.line1 || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Area / Locality</label>
+          <input
+            name="line2"
+            value="${esc(address.line2 || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>City</label>
+          <input
+            name="city"
+            required
+            value="${esc(address.city || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>State</label>
+          <input
+            name="state"
+            required
+            value="${esc(address.state || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>PIN Code</label>
+          <input
+            name="pin"
+            inputmode="numeric"
+            required
+            value="${esc(address.pin || "")}"
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;margin-top:15px;"
+        >
+          Save Address
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function saveAddress(event,index){
+
+  event.preventDefault();
+
+  const data =
+    new FormData(event.target);
+
+  const address = {
+    id:index >= 0
+      ? appState.addresses[index].id
+      : akId(),
+    name:String(data.get("name") || "").trim(),
+    phone:String(data.get("phone") || "").trim(),
+    line1:String(data.get("line1") || "").trim(),
+    line2:String(data.get("line2") || "").trim(),
+    city:String(data.get("city") || "").trim(),
+    state:String(data.get("state") || "").trim(),
+    pin:String(data.get("pin") || "").trim()
+  };
+
+  if(index >= 0){
+    appState.addresses[index] = address;
+  }else{
+    appState.addresses.push(address);
+  }
+
+  saveAppState();
+  closeAryModal();
+
+  renderAccount();
+  renderCheckoutAddresses();
+
+  showToast("Address saved");
+}
+
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function openCheckout(){
+
+  if(!appState.cart.length){
+    showToast("Your cart is empty");
+    return;
+  }
+
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  if(!appState.addresses.length){
+    showToast("Add a delivery address first");
+    openAddressModal();
+    return;
+  }
+
+  renderCheckoutAddresses();
+  renderCheckout();
+
+  showPage("checkoutPage");
+}
+
+function renderCheckoutAddresses(){
+
+  const container =
+    getEl("checkoutAddressList");
+
+  if(!container) return;
+
+  if(!appState.addresses.length){
+
+    container.innerHTML = `
+      <div class="seller-note">
+        No address saved yet.
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    appState.addresses.map(function(address,index){
+
+      return `
+        <label
+          class="address-card"
+          style="display:block;cursor:pointer;margin-bottom:12px;"
+        >
+          <input
+            type="radio"
+            name="checkoutAddress"
+            value="${esc(address.id)}"
+            ${index === 0 ? "checked" : ""}
+          >
+
+          <strong>
+            ${esc(address.name)}
+          </strong>
+
+          <div>
+            ${esc(address.line1)},
+            ${esc(address.line2)}<br>
+            ${esc(address.city)},
+            ${esc(address.state)}
+            - ${esc(address.pin)}
+          </div>
+        </label>
+      `;
+
+    }).join("");
+}
+
+function renderCheckout(){
+
+  const container =
+    getEl("checkoutItems");
+
+  let total = 0;
+
+  const html =
+    appState.cart.map(function(item){
+
+      const product =
+        findProduct(item.id);
+
+      if(!product) return "";
+
+      const amount =
+        Number(product.price) *
+        Number(item.qty || 1);
+
+      total += amount;
+
+      return `
+        <div
+          style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;"
+        >
+          <span>
+            ${esc(product.name)}
+            × ${Number(item.qty || 1)}
+          </span>
+
+          <strong>
+            ${money(amount)}
+          </strong>
+        </div>
+      `;
+    }).join("");
+
+  if(container){
+    container.innerHTML = html;
+  }
+
+  setText(
+    "checkoutTotal",
+    money(total)
+  );
+}
+
+function buyNow(id){
+
+  const product =
+    findProduct(id);
+
+  if(!product) return;
+
+  const oldCart =
+    appState.cart;
+
+  appState.cart = [{
+    id:id,
+    qty:1
+  }];
+
+  saveAppState();
+
+  openCheckout();
+
+  if(
+    !getEl("checkoutPage")
+      ?.classList.contains("active")
+  ){
+    appState.cart = oldCart;
+    saveAppState();
+  }
+}
+
+function placeOrder(){
+
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  if(!appState.cart.length){
+    showToast("No products to order");
+    return;
+  }
+
+  const selectedAddress =
+    document.querySelector(
+      'input[name="checkoutAddress"]:checked'
+    );
+
+  if(!selectedAddress){
+    showToast("Select delivery address");
+    return;
+  }
+
+  const address =
+    appState.addresses.find(function(item){
+      return item.id === selectedAddress.value;
+    });
+
+  if(!address){
+    showToast("Address not found");
+    return;
+  }
+
+  const items =
+    appState.cart.map(function(item){
+      return {
+        id:item.id,
+        qty:Number(item.qty || 1)
+      };
+    });
+
+  const total =
+    items.reduce(function(sum,item){
+
+      const product =
+        findProduct(item.id);
+
+      return sum +
+        Number(product?.price || 0) *
+        item.qty;
+
+    },0);
+
+  const payment =
+    getEl("paymentMethod")?.value || "cod";
+
+  if(payment === "wallet"){
+
+    if(appState.wallet.balance < total){
+      showToast(
+        "Insufficient Refund Wallet balance"
+      );
+      return;
+    }
+
+    appState.wallet.balance -= total;
+
+    appState.wallet.transactions.unshift({
+      id:akId(),
+      type:"debit",
+      amount:total,
+      title:"Order payment",
+      date:new Date().toISOString()
+    });
+  }
+
+  const order = {
+    id:akId(),
+    customerId:appState.customer.phone,
+    customerName:appState.customer.name,
+    items:items,
+    total:total,
+    payment:payment,
+    address:{...address},
+    status:"Order Placed",
+    history:[
+      {
+        status:"Order Placed",
+        date:new Date().toISOString()
+      }
+    ],
+    createdAt:new Date().toISOString(),
+    deliveredAt:null,
+    cancelledAt:null,
+    returnStatus:null
+  };
+
+  appState.orders.unshift(order);
+  appState.cart = [];
+
+  saveAppState();
+
+  updateCartCount();
+
+  showToast(
+    "Order placed successfully 🎉"
+  );
+
+  currentOrderId = order.id;
+
+  showPage("ordersPage");
+}
+
+
+/* =========================================================
+   CUSTOMER ORDER SYSTEM
+   RETURN ONLY AFTER DELIVERY
+========================================================= */
+
+function getCustomerOrders(){
+
+  if(!appState.customer.phone){
+    return [];
+  }
+
+  return appState.orders.filter(function(order){
+    return order.customerId === appState.customer.phone;
+  });
+}
+
+function filterOrders(filter,button){
+
+  document
+    .querySelectorAll(".order-tab")
+    .forEach(function(tab){
+      tab.classList.remove("active");
+    });
+
+  if(button){
+    button.classList.add("active");
+  }
+
+  renderOrders(filter);
+}
+
+function renderOrders(filter){
+
+  const container =
+    getEl("ordersList");
+
+  if(!container) return;
+
+  if(!appState.customer.loggedIn){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>Login to see your orders</h3>
+
+        <button
+          class="primary-btn"
+          onclick="openCustomerLogin()"
+        >
+          Login / Create Account
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  let orders =
+    getCustomerOrders();
+
+  if(filter && filter !== "all"){
+
+    orders =
+      orders.filter(function(order){
+
+        if(filter === "active"){
+          return ![
+            "Delivered",
+            "Cancelled"
+          ].includes(order.status);
+        }
+
+        if(filter === "delivered"){
+          return order.status === "Delivered";
+        }
+
+        if(filter === "returns"){
+          return Boolean(order.returnStatus);
+        }
+
+        if(filter === "cancelled"){
+          return order.status === "Cancelled";
+        }
+
+        return true;
+      });
+  }
+
+  if(!orders.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No orders found</h3>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    orders.map(function(order){
+
+      const firstProduct =
+        findProduct(
+          order.items[0]?.id
+        );
+
+      const image =
+        firstProduct
+          ? getProductImage(firstProduct)
+          : "";
+
+      const itemCount =
+        order.items.reduce(function(total,item){
+          return total + Number(item.qty || 1);
+        },0);
+
+      return `
+        <article
+          class="seller-form-card"
+          style="margin-bottom:14px;"
+          onclick="openOrderDetail('${esc(order.id)}')"
+        >
+
+          <div
+            style="display:flex;gap:12px;cursor:pointer;"
+          >
+
+            ${
+              image
+                ? `
+                  <img
+                    src="${esc(image)}"
+                    style="width:82px;height:82px;border-radius:12px;object-fit:cover;"
+                  >
+                `
+                : ""
+            }
+
+            <div style="flex:1;">
+
+              <strong>
+                ${esc(
+                  firstProduct?.name ||
+                  "Order Product"
+                )}
+              </strong>
+
+              <p style="margin:5px 0;color:var(--muted);font-size:13px;">
+                ${itemCount} item(s)
+              </p>
+
+              <strong>
+                ${money(order.total)}
+              </strong>
+
+              <p style="margin:7px 0 0;">
+                <span class="rating-pill">
+                  ${esc(
+                    order.returnStatus ||
+                    order.status
+                  )}
+                </span>
+              </p>
+
+            </div>
+
+          </div>
+
+          <p
+            style="font-size:12px;color:var(--muted);margin-top:12px;"
+          >
+            Order ID: ${esc(order.id)}
+            · Tap to track your order
+          </p>
+
+        </article>
+      `;
+    }).join("");
+}
+
+function openOrderDetail(id){
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  currentOrderId = id;
+
+  const flow = [
+    "Order Placed",
+    "Seller Accepted",
+    "Shipped",
+    "Out for Delivery",
+    "Delivered"
+  ];
+
+  const statusIndex =
+    flow.indexOf(order.status);
+
+  const productsHtml =
+    order.items.map(function(item){
+
+      const product =
+        findProduct(item.id);
+
+      if(!product) return "";
+
+      return `
+        <div
+          style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #eee;"
+        >
+          <img
+            src="${esc(getProductImage(product))}"
+            style="width:70px;height:70px;border-radius:10px;object-fit:cover;"
+          >
+
+          <div>
+            <strong>
+              ${esc(product.name)}
+            </strong>
+
+            <div>
+              Qty: ${item.qty}
+            </div>
+
+            <strong>
+              ${money(
+                Number(product.price) *
+                Number(item.qty || 1)
+              )}
+            </strong>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  const timeline =
+    flow.map(function(status,index){
+
+      const active =
+        statusIndex >= index;
+
+      const current =
+        order.status === status;
+
+      return `
+        <div
+          style="display:flex;gap:10px;align-items:flex-start;margin:12px 0;"
+        >
+          <div
+            style="
+              width:28px;
+              height:28px;
+              border-radius:50%;
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              background:${active ? "var(--primary)" : "#e5e7eb"};
+              color:${active ? "#fff" : "#777"};
+              flex:none;
+            "
+          >
+            ${active ? "✓" : index + 1}
+          </div>
+
+          <div>
+            <strong>
+              ${esc(status)}
+            </strong>
+
+            ${
+              current
+                ? `<div style="font-size:12px;color:var(--primary);">Current status</div>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  let actionHtml = "";
+
+  /*
+    IMPORTANT USER RULE:
+    RETURN BUTTON DELIVERY SE PEHLE NAHI DIKHNA CHAHIYE
+  */
+
+  if(
+    !["Shipped","Out for Delivery","Delivered","Cancelled"]
+      .includes(order.status)
+  ){
+
+    actionHtml += `
+      <button
+        class="secondary-btn"
+        style="width:100%;margin-top:10px;"
+        onclick="editOrderAddress('${esc(order.id)}')"
+      >
+        📍 Edit Delivery Address
+      </button>
+
+      <button
+        class="danger-btn"
+        style="width:100%;margin-top:10px;"
+        onclick="cancelOrder('${esc(order.id)}')"
+      >
+        Cancel Order
+      </button>
+    `;
+  }
+
+  if(order.status === "Delivered"){
+
+    const deliveredTime =
+      new Date(
+        order.deliveredAt ||
+        order.createdAt
+      ).getTime();
+
+    const daysPassed =
+      (Date.now() - deliveredTime) /
+      (1000 * 60 * 60 * 24);
+
+    const canReturn =
+      daysPassed <= 7 &&
+      !order.returnStatus;
+
+    if(canReturn){
+
+      actionHtml += `
+        <button
+          class="primary-btn"
+          style="width:100%;margin-top:10px;"
+          onclick="openReturnRequest('${esc(order.id)}')"
+        >
+          ↩️ Return Product (within 7 days)
+        </button>
+      `;
+    }
+
+    if(order.returnStatus){
+
+      actionHtml += `
+        <div
+          class="seller-note"
+          style="margin-top:12px;"
+        >
+          Return Status:
+          <strong>
+            ${esc(order.returnStatus)}
+          </strong>
+        </div>
+      `;
+    }
+  }
+
+  openAryModal(
+    "Track Order",
+
+    `
+      <div class="seller-note">
+        Order ID:
+        <strong>${esc(order.id)}</strong>
+      </div>
+
+      <h3 style="margin-top:18px;">
+        Delivery Tracking
+      </h3>
+
+      ${timeline}
+
+      <hr style="border:none;border-top:1px solid #eee;margin:18px 0;">
+
+      <h3>Your Products</h3>
+
+      ${productsHtml}
+
+      <div style="margin-top:15px;">
+        <strong>Total: ${money(order.total)}</strong>
+      </div>
+
+      ${actionHtml}
+    `
+  );
+}
+
+function editOrderAddress(id){
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  if([
+    "Shipped",
+    "Out for Delivery",
+    "Delivered",
+    "Cancelled"
+  ].includes(order.status)){
+
+    showToast(
+      "Address can no longer be edited"
+    );
+
+    return;
+  }
+
+  closeAryModal();
+
+  const address =
+    order.address || {};
+
+  openAryModal(
+    "Edit Delivery Address",
+
+    `
+      <form onsubmit="saveOrderAddress(event,'${esc(id)}')">
+
+        <div class="field">
+          <label>Full Name</label>
+          <input
+            name="name"
+            required
+            value="${esc(address.name || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Mobile</label>
+          <input
+            name="phone"
+            required
+            value="${esc(address.phone || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Address</label>
+          <input
+            name="line1"
+            required
+            value="${esc(address.line1 || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Area</label>
+          <input
+            name="line2"
+            value="${esc(address.line2 || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>City</label>
+          <input
+            name="city"
+            required
+            value="${esc(address.city || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>State</label>
+          <input
+            name="state"
+            required
+            value="${esc(address.state || "")}"
+          >
+        </div>
+
+        <div class="field">
+          <label>PIN</label>
+          <input
+            name="pin"
+            required
+            value="${esc(address.pin || "")}"
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;"
+        >
+          Save Address
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function saveOrderAddress(event,id){
+
+  event.preventDefault();
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  const data =
+    new FormData(event.target);
+
+  order.address = {
+    name:String(data.get("name") || ""),
+    phone:String(data.get("phone") || ""),
+    line1:String(data.get("line1") || ""),
+    line2:String(data.get("line2") || ""),
+    city:String(data.get("city") || ""),
+    state:String(data.get("state") || ""),
+    pin:String(data.get("pin") || "")
+  };
+
+  saveAppState();
+  closeAryModal();
+
+  showToast(
+    "Delivery address updated"
+  );
+
+  openOrderDetail(id);
+}
+
+function cancelOrder(id){
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  if([
+    "Shipped",
+    "Out for Delivery",
+    "Delivered"
+  ].includes(order.status)){
+
+    showToast(
+      "This order can no longer be cancelled"
+    );
+
+    return;
+  }
+
+  if(!confirm("Cancel this order?")){
+    return;
+  }
+
+  order.status = "Cancelled";
+  order.cancelledAt =
+    new Date().toISOString();
+
+  order.history.push({
+    status:"Cancelled",
+    date:new Date().toISOString()
+  });
+
+  saveAppState();
+  closeAryModal();
+
+  renderOrders();
+
+  showToast(
+    "Order cancelled successfully"
+  );
+}
+
+
+/* =========================================================
+   RETURN + INSPECTION + REFUND WALLET
+========================================================= */
+
+function openReturnRequest(id){
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  if(order.status !== "Delivered"){
+    showToast(
+      "Return is available only after delivery"
+    );
+
+    return;
+  }
+
+  closeAryModal();
+
+  openAryModal(
+    "Return Product",
+
+    `
+      <div class="seller-note">
+        Return request will be inspected before approval.
+        Approved refund will be added to your ARYKART Refund Wallet.
+      </div>
+
+      <form
+        onsubmit="submitReturnRequest(event,'${esc(id)}')"
+      >
+
+        <div class="field">
+          <label>Reason for Return</label>
+
+          <select
+            name="reason"
+            required
+          >
+            <option value="">
+              Select reason
+            </option>
+
+            <option>
+              Damaged product
+            </option>
+
+            <option>
+              Wrong product received
+            </option>
+
+            <option>
+              Missing parts
+            </option>
+
+            <option>
+              Product not as described
+            </option>
+
+            <option>
+              Other
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Additional Details</label>
+
+          <textarea
+            name="details"
+            rows="4"
+            placeholder="Describe the issue"
+          ></textarea>
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;"
+        >
+          Submit Return Request
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function submitReturnRequest(event,id){
+
+  event.preventDefault();
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  const data =
+    new FormData(event.target);
+
+  const returnRequest = {
+    id:akId(),
+    orderId:order.id,
+    customerId:order.customerId,
+    amount:Number(order.total),
+    reason:String(data.get("reason") || ""),
+    details:String(data.get("details") || ""),
+    status:"Return Requested",
+    createdAt:new Date().toISOString(),
+    inspection:"Pending"
+  };
+
+  appState.returns.unshift(
+    returnRequest
+  );
+
+  order.returnStatus =
+    "Return Requested";
+
+  saveAppState();
+
+  closeAryModal();
+
+  renderOrders();
+
+  showToast(
+    "Return request submitted for inspection"
+  );
+}
+
+
+/* =========================================================
+   SELLER RETURN INSPECTION
+========================================================= */
+
+function renderSellerReturns(){
+
+  const container =
+    getEl("sellerReturnsList");
+
+  if(!container) return;
+
+  if(!appState.returns.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">↩️</div>
+        <h3>No return requests</h3>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    appState.returns.map(function(request){
+
+      const order =
+        appState.orders.find(function(item){
+          return item.id === request.orderId;
+        });
+
+      return `
+        <article
+          class="seller-form-card"
+          style="margin-bottom:14px;"
+        >
+
+          <strong>
+            Return Request
+          </strong>
+
+          <p>
+            Order:
+            ${esc(request.orderId)}
+          </p>
+
+          <p>
+            Reason:
+            ${esc(request.reason)}
+          </p>
+
+          <p>
+            Amount:
+            ${money(request.amount)}
+          </p>
+
+          <p>
+            Status:
+            <strong>
+              ${esc(request.status)}
+            </strong>
+          </p>
+
+          ${
+            request.status === "Return Requested"
+              ? `
+                <button
+                  class="primary-btn"
+                  style="width:100%;margin-top:8px;"
+                  onclick="approveReturn('${esc(request.id)}')"
+                >
+                  ✓ Inspection Passed & Approve Refund
+                </button>
+
+                <button
+                  class="secondary-btn"
+                  style="width:100%;margin-top:8px;"
+                  onclick="rejectReturn('${esc(request.id)}')"
+                >
+                  Reject After Inspection
+                </button>
+              `
+              : ""
+          }
+
+        </article>
+      `;
+    }).join("");
+}
+
+function approveReturn(returnId){
+
+  const request =
+    appState.returns.find(function(item){
+      return item.id === returnId;
+    });
+
+  if(!request) return;
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === request.orderId;
+    });
+
+  request.status =
+    "Return Approved";
+
+  request.inspection =
+    "Passed";
+
+  request.approvedAt =
+    new Date().toISOString();
+
+  if(order){
+
+    order.returnStatus =
+      "Refunded";
+
+    order.history.push({
+      status:"Return Approved",
+      date:new Date().toISOString()
+    });
+  }
+
+  appState.wallet.balance +=
+    Number(request.amount);
+
+  appState.wallet.transactions.unshift({
+    id:akId(),
+    type:"credit",
+    amount:Number(request.amount),
+    title:"Approved return refund",
+    orderId:request.orderId,
+    date:new Date().toISOString()
+  });
+
+  request.status =
+    "Refunded to Wallet";
+
+  saveAppState();
+
+  renderSellerReturns();
+  renderOrders();
+  renderWallet();
+
+  showToast(
+    "Return approved. Refund added to customer wallet ✓"
+  );
+}
+
+function rejectReturn(returnId){
+
+  const request =
+    appState.returns.find(function(item){
+      return item.id === returnId;
+    });
+
+  if(!request) return;
+
+  const reason =
+    prompt(
+      "Reason for rejection after inspection:"
+    );
+
+  request.status =
+    "Return Rejected";
+
+  request.inspection =
+    "Rejected";
+
+  request.rejectionReason =
+    reason || "Inspection requirements not met";
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === request.orderId;
+    });
+
+  if(order){
+    order.returnStatus =
+      "Return Rejected";
+  }
+
+  saveAppState();
+
+  renderSellerReturns();
+  renderOrders();
+
+  showToast(
+    "Return request rejected"
+  );
+}
+
+
+/* =========================================================
+   SELLER ORDER MANAGEMENT
+========================================================= */
+
+function getSellerOrders(){
+
+  return appState.orders.filter(function(order){
+
+    return order.items.some(function(item){
+
+      return appState.seller.products.some(
+        function(product){
+          return String(product.id) ===
+            String(item.id);
+        }
+      );
+    });
+  });
+}
+
+function renderSellerOrders(){
+
+  const container =
+    getEl("sellerOrdersList");
+
+  if(!container) return;
+
+  const orders =
+    getSellerOrders();
+
+  if(!orders.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🚚</div>
+        <h3>No seller orders yet</h3>
+      </div>
+    `;
+
+    return;
+  }
+
+  const flow = [
+    "Order Placed",
+    "Seller Accepted",
+    "Shipped",
+    "Out for Delivery",
+    "Delivered"
+  ];
+
+  container.innerHTML =
+    orders.map(function(order){
+
+      const index =
+        flow.indexOf(order.status);
+
+      const nextStatus =
+        flow[Math.min(
+          index + 1,
+          flow.length - 1
+        )];
+
+      return `
+        <article
+          class="seller-form-card"
+          style="margin-bottom:14px;"
+        >
+
+          <strong>
+            ${esc(order.id)}
+          </strong>
+
+          <p>
+            Customer:
+            ${esc(order.customerName)}
+          </p>
+
+          <p>
+            Status:
+            <strong>
+              ${esc(order.status)}
+            </strong>
+          </p>
+
+          <p>
+            Total:
+            ${money(order.total)}
+          </p>
+
+          ${
+            order.status !== "Delivered" &&
+            order.status !== "Cancelled"
+              ? `
+                <button
+                  class="primary-btn"
+                  style="width:100%;"
+                  onclick="sellerAdvanceOrder('${esc(order.id)}')"
+                >
+                  Update to ${esc(nextStatus)}
+                </button>
+              `
+              : ""
+          }
+
+        </article>
+      `;
+    }).join("");
+}
+
+function sellerAdvanceOrder(id){
+
+  const order =
+    appState.orders.find(function(item){
+      return item.id === id;
+    });
+
+  if(!order) return;
+
+  const flow = [
+    "Order Placed",
+    "Seller Accepted",
+    "Shipped",
+    "Out for Delivery",
+    "Delivered"
+  ];
+
+  const index =
+    flow.indexOf(order.status);
+
+  if(index < 0 ||
+     index >= flow.length - 1){
+    return;
+  }
+
+  order.status =
+    flow[index + 1];
+
+  const now =
+    new Date().toISOString();
+
+  order.history.push({
+    status:order.status,
+    date:now
+  });
+
+  if(order.status === "Delivered"){
+    order.deliveredAt = now;
+  }
+
+  saveAppState();
+
+  renderSellerOrders();
+  renderOrders();
+
+  showToast(
+    "Order updated: " +
+    order.status
+  );
+}
+
+
+/* =========================================================
+   WALLET
+========================================================= */
+
+function renderWallet(){
+
+  setText(
+    "walletBalance",
+    money(appState.wallet.balance)
+  );
+
+  const container =
+    getEl("walletTransactions");
+
+  if(!container) return;
+
+  if(!appState.wallet.transactions.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">💳</div>
+        <h3>No wallet transactions</h3>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    appState.wallet.transactions.map(
+      function(transaction){
+
+        return `
+          <div
+            class="seller-form-card"
+            style="margin-bottom:10px;"
+          >
+
+            <div
+              style="display:flex;justify-content:space-between;gap:10px;"
+            >
+
+              <div>
+
+                <strong>
+                  ${esc(transaction.title)}
+                </strong>
+
+                <div
+                  style="font-size:12px;color:var(--muted);"
+                >
+                  ${new Date(
+                    transaction.date
+                  ).toLocaleString("en-IN")}
+                </div>
+
+              </div>
+
+              <strong
+                style="
+                  color:
+                    ${transaction.type === "credit"
+                      ? "green"
+                      : "red"};
+                "
+              >
+                ${transaction.type === "credit" ? "+" : "-"}
+                ${money(transaction.amount)}
+              </strong>
+
+            </div>
+
+          </div>
+        `;
+      }
+    ).join("");
+}
+
+
+/* =========================================================
+   REVIEWS + CUSTOMER PHOTO UPLOAD
+========================================================= */
+
+function ensureReviewSection(){
+
+  let section =
+    getEl("arykartReviewSection");
+
+  if(section) return section;
+
+  const detailContent =
+    document.querySelector(
+      "#productDetailPage .detail-content"
+    );
+
+  if(!detailContent) return null;
+
+  section =
+    document.createElement("div");
+
+  section.id =
+    "arykartReviewSection";
+
+  section.className =
+    "detail-section";
+
+  section.style.margin =
+    "20px -18px";
+
+  detailContent.appendChild(section);
+
+  return section;
+}
+
+function renderProductReviews(){
+
+  const section =
+    ensureReviewSection();
+
+  if(!section ||
+     !currentProductId){
+    return;
+  }
+
+  const reviews =
+    appState.reviews[
+      String(currentProductId)
+    ] || [];
+
+  section.innerHTML = `
+    <h2>Customer Ratings & Reviews</h2>
+
+    ${
+      reviews.length
+        ? reviews.map(function(review){
+
+            return `
+              <div
+                class="seller-form-card"
+                style="margin:10px 0;"
+              >
+
+                <strong>
+                  ★ ${Number(review.rating).toFixed(1)}
+                </strong>
+
+                <p>
+                  ${esc(review.text)}
+                </p>
+
+                ${
+                  review.photos?.length
+                    ? `
+                      <div
+                        style="display:flex;gap:8px;overflow:auto;"
+                      >
+                        ${review.photos.map(function(photo){
+                          return `
+                            <img
+                              src="${esc(photo)}"
+                              style="
+                                width:80px;
+                                height:80px;
+                                border-radius:10px;
+                                object-fit:cover;
+                              "
+                            >
+                          `;
+                        }).join("")}
+                      </div>
+                    `
+                    : ""
+                }
+
+                <small>
+                  ${esc(review.name || "ARYKART Customer")}
+                </small>
+
+              </div>
+            `;
+          }).join("")
+        : `
+          <p style="color:var(--muted);">
+            No reviews yet.
+          </p>
+        `
+    }
+
+    <button
+      class="secondary-btn"
+      style="width:100%;margin-top:12px;"
+      onclick="openReviewForm()"
+    >
+      ⭐ Rate this Product
+    </button>
+  `;
+}
+
+function openReviewForm(){
+
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  openAryModal(
+    "Rate Product",
+
+    `
+      <form
+        onsubmit="submitReview(event)"
+      >
+
+        <div class="field">
+
+          <label>Rating</label>
+
+          <select
+            name="rating"
+            required
+          >
+            <option value="5">★★★★★ - Excellent</option>
+            <option value="4">★★★★ - Very Good</option>
+            <option value="3">★★★ - Good</option>
+            <option value="2">★★ - Average</option>
+            <option value="1">★ - Poor</option>
+          </select>
+
+        </div>
+
+        <div class="field">
+
+          <label>Your Review</label>
+
+          <textarea
+            name="text"
+            rows="5"
+            required
+            placeholder="Share your experience"
+          ></textarea>
+
+        </div>
+
+        <div class="field">
+
+          <label>Add Product Photos</label>
+
+          <input
+            id="reviewPhotoInput"
+            type="file"
+            accept="image/*"
+            multiple
+          >
+
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;"
+        >
+          Submit Review
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function submitReview(event){
+
+  event.preventDefault();
+
+  if(!currentProductId) return;
+
+  const form =
+    new FormData(event.target);
+
+  const fileInput =
+    getEl("reviewPhotoInput");
+
+  const files =
+    Array.from(
+      fileInput?.files || []
+    ).slice(0,5);
+
+  const photos = [];
+
+  let completed = 0;
+
+  function finish(){
+
+    completed++;
+
+    if(completed < files.length){
+      return;
+    }
+
+    saveReview(photos,form);
+  }
+
+  if(!files.length){
+    saveReview(photos,form);
+    return;
+  }
+
+  files.forEach(function(file){
+
+    const reader =
+      new FileReader();
+
+    reader.onload = function(){
+
+      photos.push(reader.result);
+      finish();
+    };
+
+    reader.onerror = finish;
+
+    reader.readAsDataURL(file);
+  });
+}
+
+function saveReview(photos,form){
+
+  const productId =
+    String(currentProductId);
+
+  appState.reviews[productId] =
+    appState.reviews[productId] || [];
+
+  appState.reviews[productId].unshift({
+    id:akId(),
+    rating:Number(
+      form.get("rating") || 5
+    ),
+    text:String(
+      form.get("text") || ""
+    ).trim(),
+    photos:photos,
+    name:appState.customer.name ||
+      "ARYKART Customer",
+    date:new Date().toISOString()
+  });
+
+  saveAppState();
+
+  closeAryModal();
+
+  renderProductReviews();
+
+  const product =
+    findProduct(currentProductId);
+
+  if(product){
+    openProduct(product.id);
+  }
+
+  showToast(
+    "Review submitted successfully ✓"
+  );
+}
+
+
+/* =========================================================
+   SELLER REGISTRATION
+   DOCUMENTS ONLY - NO ADDRESS REQUIRED
+========================================================= */
+
+function selectSellerType(type){
+
+  currentSellerType = type;
+
+  const individual =
+    getEl("sellerTypeIndividual");
+
+  const gst =
+    getEl("sellerTypeGst");
+
+  if(individual){
+    individual.classList.toggle(
+      "active",
+      type === "individual"
+    );
+  }
+
+  if(gst){
+    gst.classList.toggle(
+      "active",
+      type === "gst"
+    );
+  }
+
+  const gstWrap =
+    getEl("gstFieldWrap");
+
+  if(gstWrap){
+
+    gstWrap.style.display =
+      type === "gst"
+        ? ""
+        : "none";
+  }
+}
+
+function registerSeller(){
+
+  const name =
+    getEl("sellerNameInput")?.value.trim();
+
+  const phone =
+    getEl("sellerPhoneInput")?.value.trim();
+
+  const email =
+    getEl("sellerEmailInput")?.value.trim();
+
+  const pan =
+    getEl("sellerPanInput")
+      ?.value
+      .trim()
+      .toUpperCase();
+
+  const gst =
+    getEl("sellerGstInput")
+      ?.value
+      .trim()
+      .toUpperCase();
+
+  const businessType =
+    getEl("sellerBusinessType")?.value;
+
+  const idType =
+    getEl("sellerIdType")?.value;
+
+  const idNumber =
+    getEl("sellerIdNumber")
+      ?.value
+      .trim();
+
+  if(
+    !name ||
+    !phone ||
+    !email ||
+    !pan ||
+    !idNumber
+  ){
+    showToast(
+      "Please complete all required seller documents"
+    );
+
+    return;
+  }
+
+  if(
+    !/^[A-Z]{5}[0-9]{4}[A-Z]$/
+      .test(pan)
+  ){
+
+    showToast(
+      "Enter valid PAN number"
+    );
+
+    return;
+  }
+
+  if(
+    currentSellerType === "gst" &&
+    !/^[0-9A-Z]{15}$/.test(gst || "")
+  ){
+
+    showToast(
+      "Enter valid 15 character GST number"
+    );
+
+    return;
+  }
+
+  appState.seller = {
+    ...appState.seller,
+
+    registered:true,
+
+    name:name,
+
+    phone:phone,
+
+    email:email,
+
+    type:
+      currentSellerType === "gst"
+        ? "GST Seller"
+        : "Individual Seller",
+
+    businessType:
+      businessType,
+
+    documents:{
+      pan:pan,
+      gst:
+        currentSellerType === "gst"
+          ? gst
+          : "",
+      idType:idType,
+      idNumber:idNumber,
+      status:"Pending Verification"
+    }
+  };
+
+  saveAppState();
+
+  renderSellerDashboard();
+
+  showToast(
+    "Seller account created successfully"
+  );
+
+  showPage(
+    "sellerDashboardPage"
+  );
+}
+
+
+/* =========================================================
+   SELLER PRODUCT LISTING
+   1000+ PRODUCT SUPPORT
+========================================================= */
+
+function addVariantRow(){
+
+  const container =
+    getEl("variantContainer");
+
+  if(!container) return;
+
+  const id =
+    akId();
+
+  const row =
+    document.createElement("div");
+
+  row.className =
+    "form-grid";
+
+  row.dataset.variantId =
+    id;
+
+  row.innerHTML = `
+    <div class="field">
+      <label>Variant Name</label>
+      <input
+        class="variant-name"
+        placeholder="Example: Red / XL"
+      >
+    </div>
+
+    <div class="field">
+      <label>SKU</label>
+      <input
+        class="variant-sku"
+        placeholder="SKU"
+      >
+    </div>
+
+    <div class="field">
+      <label>Price</label>
+      <input
+        class="variant-price"
+        type="number"
+        min="0"
+      >
+    </div>
+
+    <div class="field">
+      <label>Stock</label>
+      <input
+        class="variant-stock"
+        type="number"
+        min="0"
+      >
+    </div>
+
+    <div class="field full">
+      <button
+        type="button"
+        class="secondary-btn"
+        onclick="this.closest('.form-grid').remove()"
+      >
+        Remove Variant
+      </button>
+    </div>
+  `;
+
+  container.appendChild(row);
+}
+
+function collectListingVariants(){
+
+  return Array.from(
+    document.querySelectorAll(
+      "#variantContainer .form-grid"
+    )
+  ).map(function(row){
+
+    return {
+      name:
+        row.querySelector(".variant-name")
+          ?.value.trim() || "",
+      sku:
+        row.querySelector(".variant-sku")
+          ?.value.trim() || "",
+      price:Number(
+        row.querySelector(".variant-price")
+          ?.value || 0
+      ),
+      stock:Number(
+        row.querySelector(".variant-stock")
+          ?.value || 0
+      )
+    };
+
+  }).filter(function(variant){
+    return variant.name;
+  });
+}
+
+function getInputValue(id){
+  return getEl(id)?.value?.trim() || "";
+}
+
+function getNumberValue(id){
+  return Number(
+    getEl(id)?.value || 0
+  );
+}
+
+function collectListingData(){
+
+  return {
+    id:akId(),
+
+    name:
+      getInputValue("listingName"),
+
+    brand:
+      getInputValue("listingBrand"),
+
+    category:
+      getInputValue("listingCategory"),
+
+    price:
+      getNumberValue("listingPrice"),
+
+    oldPrice:
+      getNumberValue("listingMrp") ||
+      getNumberValue("listingPrice"),
+
+    stock:
+      getNumberValue("listingStock"),
+
+    sku:
+      getInputValue("listingSku"),
+
+    description:
+      getInputValue("listingDescription"),
+
+    image:
+      getInputValue("listingImage") ||
+      getInputValue("listingImageUrl"),
+
+    images:
+      getInputValue("listingImage")
+        ? [getInputValue("listingImage")]
+        : [],
+
+    weight:
+      getNumberValue("listingWeight"),
+
+    weightUnit:
+      getEl("listingWeightUnit")
+        ?.value || "kg",
+
+    length:
+      getNumberValue("listingLength"),
+
+    width:
+      getNumberValue("listingWidth"),
+
+    height:
+      getNumberValue("listingHeight"),
+
+    dimensionUnit:
+      getEl("listingDimensionUnit")
+        ?.value || "cm",
+
+    origin:
+      getInputValue("listingOrigin") ||
+      "India",
+
+    manufacturer:
+      getInputValue("listingManufacturer"),
+
+    warranty:
+      getInputValue("listingWarranty"),
+
+    expiry:
+      getInputValue("listingExpiry"),
+
+    cod:
+      getEl("listingCod")
+        ?.value || "yes",
+
+    returnEligible:
+      getEl("listingReturnEligible")
+        ?.value || "yes",
+
+    tags:
+      getInputValue("listingTags"),
+
+    variants:
+      collectListingVariants(),
+
+    rating:4.2,
+
+    createdAt:
+      new Date().toISOString(),
+
+    sellerId:
+      appState.seller.phone ||
+      "seller"
+  };
+}
+
+function publishProduct(event){
+
+  if(event){
+    event.preventDefault();
+  }
+
+  if(!appState.seller.registered){
+
+    showToast(
+      "Create seller account first"
+    );
+
+    showPage("sellerPage");
+
+    return;
+  }
+
+  if(
+    appState.seller.products.length >=
+    1000
+  ){
+
+    showToast(
+      "1000 product listing limit reached"
+    );
+
+    return;
+  }
+
+  const product =
+    collectListingData();
+
+  if(
+    !product.name ||
+    !product.category ||
+    !product.price
+  ){
+
+    showToast(
+      "Product name, category and price are required"
+    );
+
+    return;
+  }
+
+  appState.seller.products.unshift(
+    product
+  );
+
+  saveAppState();
+
+  const form =
+    getEl("sellerProductListingForm") ||
+    getEl("productListingForm");
+
+  if(form){
+    form.reset();
+  }
+
+  const variants =
+    getEl("variantContainer");
+
+  if(variants){
+    variants.innerHTML = "";
+  }
+
+  renderSellerDashboard();
+  renderSellerInventory();
+  renderHomeProducts();
+
+  showToast(
+    "Product published successfully 🎉"
+  );
+
+  showPage(
+    "sellerInventoryPage"
+  );
+}
+
+function saveListingDraft(){
+
+  const product =
+    collectListingData();
+
+  if(!product.name){
+    showToast(
+      "Enter product name first"
+    );
+
+    return;
+  }
+
+  appState.seller.drafts.unshift(
+    product
+  );
+
+  saveAppState();
+
+  showToast(
+    "Product saved as draft"
+  );
+}
+
+function renderSellerInventory(){
+
+  const container =
+    getEl("sellerInventoryList");
+
+  if(!container) return;
+
+  const products =
+    appState.seller.products;
+
+  if(!products.length){
+
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No products listed yet</h3>
+
+        <button
+          class="primary-btn"
+          onclick="showPage('sellerListingPage')"
+        >
+          List Your First Product
+        </button>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML =
+    products.map(function(product){
+
+      return `
+        <article
+          class="seller-form-card"
+          style="margin-bottom:12px;"
+        >
+
+          <div
+            style="display:flex;gap:12px;"
+          >
+
+            <img
+              src="${esc(getProductImage(product))}"
+              style="
+                width:75px;
+                height:75px;
+                border-radius:12px;
+                object-fit:cover;
+              "
+            >
+
+            <div style="flex:1;">
+
+              <strong>
+                ${esc(product.name)}
+              </strong>
+
+              <div>
+                ${money(product.price)}
+              </div>
+
+              <div
+                style="font-size:12px;color:var(--muted);"
+              >
+                Stock:
+                ${Number(product.stock || 0)}
+                · SKU:
+                ${esc(product.sku || "—")}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div
+            style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;"
+          >
+
+            <button
+              class="secondary-btn"
+              onclick="editSellerProduct('${esc(product.id)}')"
+            >
+              Edit
+            </button>
+
+            <button
+              class="danger-btn"
+              onclick="deleteSellerProduct('${esc(product.id)}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </article>
+      `;
+    }).join("");
+}
+
+function editSellerProduct(id){
+
+  const product =
+    appState.seller.products.find(
+      function(item){
+        return String(item.id) === String(id);
+      }
+    );
+
+  if(!product) return;
+
+  openAryModal(
+    "Edit Product",
+
+    `
+      <form
+        onsubmit="saveEditedSellerProduct(event,'${esc(id)}')"
+      >
+
+        <div class="field">
+          <label>Product Name</label>
+          <input
+            name="name"
+            required
+            value="${esc(product.name)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Price</label>
+          <input
+            name="price"
+            type="number"
+            required
+            value="${Number(product.price || 0)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Stock</label>
+          <input
+            name="stock"
+            type="number"
+            required
+            value="${Number(product.stock || 0)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Image URL</label>
+          <input
+            name="image"
+            value="${esc(getProductImage(product))}"
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;"
+        >
+          Save Changes
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function saveEditedSellerProduct(event,id){
+
+  event.preventDefault();
+
+  const product =
+    appState.seller.products.find(
+      function(item){
+        return String(item.id) === String(id);
+      }
+    );
+
+  if(!product) return;
+
+  const data =
+    new FormData(event.target);
+
+  product.name =
+    String(data.get("name") || "").trim();
+
+  product.price =
+    Number(data.get("price") || 0);
+
+  product.stock =
+    Number(data.get("stock") || 0);
+
+  product.image =
+    String(data.get("image") || "").trim();
+
+  if(product.images?.length){
+    product.images[0] =
+      product.image;
+  }
+
+  saveAppState();
+
+  closeAryModal();
+
+  renderSellerInventory();
+  renderHomeProducts();
+
+  showToast(
+    "Product updated successfully"
+  );
+}
+
+function deleteSellerProduct(id){
+
+  if(!confirm("Delete this product?")){
+    return;
+  }
+
+  appState.seller.products =
+    appState.seller.products.filter(
+      function(product){
+        return String(product.id) !==
+          String(id);
+      }
+    );
+
+  saveAppState();
+
+  renderSellerInventory();
+  renderSellerDashboard();
+  renderHomeProducts();
+
+  showToast(
+    "Product deleted"
+  );
+}
+
+
+/* =========================================================
+   SELLER DASHBOARD
+========================================================= */
+
+function renderSellerDashboard(){
+
+  setText(
+    "sellerDashboardName",
+    appState.seller.name ||
+    "Your Store"
+  );
+
+  setText(
+    "sellerDashboardType",
+    appState.seller.registered
+      ? (
+          appState.seller.type +
+          " · " +
+          (
+            appState.seller.documents?.status ||
+            "Verified"
+          )
+        )
+      : "Create your seller account"
+  );
+
+  setText(
+    "sellerProductCount",
+    String(
+      appState.seller.products.length
+    )
+  );
+
+  const sellerOrders =
+    getSellerOrders();
+
+  setText(
+    "sellerOrderCount",
+    String(sellerOrders.length)
+  );
+
+  const sellerReturns =
+    appState.returns.filter(
+      function(request){
+
+        const order =
+          appState.orders.find(
+            function(item){
+              return item.id ===
+                request.orderId;
+            }
+          );
+
+        return Boolean(order);
+      }
+    );
+
+  setText(
+    "sellerReturnCount",
+    String(sellerReturns.length)
+  );
+
+  const revenue =
+    sellerOrders
+      .filter(function(order){
+        return order.status ===
+          "Delivered";
+      })
+      .reduce(function(sum,order){
+        return sum + Number(order.total || 0);
+      },0);
+
+  setText(
+    "sellerRevenue",
+    money(revenue)
+  );
+}
+
+
+/* =========================================================
+   ACCOUNT + SETTINGS
+========================================================= */
+
+function renderAccount(){
+
+  const loggedIn =
+    appState.customer.loggedIn;
+
+  const name =
+    loggedIn
+      ? appState.customer.name
+      : "Welcome to ARYKART";
+
+  const phone =
+    loggedIn
+      ? (
+          appState.customer.phone +
+          (
+            appState.customer.email
+              ? " · " +
+                appState.customer.email
+              : ""
+          )
+        )
+      : "Create or login to your customer account";
+
+  [
+    "accountName",
+    "accountWelcomeName"
+  ].forEach(function(id){
+    setText(id,name);
+  });
+
+  [
+    "accountPhone",
+    "accountSubtitle"
+  ].forEach(function(id){
+    setText(id,phone);
+  });
+
+  setText(
+    "refundWalletBalance",
+    money(appState.wallet.balance)
+  );
+
+  updateCartCount();
+}
+
+function setLanguage(language){
+
+  appState.language =
+    language === "hi"
+      ? "hi"
+      : "en";
+
+  saveAppState();
+
+  const en =
+    getEl("englishLanguage");
+
+  const hi =
+    getEl("hindiLanguage");
+
+  if(en){
+    en.classList.toggle(
+      "active",
+      appState.language === "en"
+    );
+  }
+
+  if(hi){
+    hi.classList.toggle(
+      "active",
+      appState.language === "hi"
+    );
+  }
+
+  const t =
+    translations[appState.language];
+
+  setText(
+    "heroTitle",
+    t.heroTitle
+  );
+
+  setText(
+    "heroText",
+    t.heroText
+  );
+
+  showToast(
+    language === "hi"
+      ? "भाषा हिंदी में बदल दी गई"
+      : "Language changed to English"
+  );
+}
+
+function toggleDarkMode(){
+
+  appState.settings.darkMode =
+    !appState.settings.darkMode;
+
+  document.body.classList.toggle(
+    "dark",
+    appState.settings.darkMode
+  );
+
+  saveAppState();
+}
+
+function logoutCustomer(){
+
+  appState.customer = {
+    loggedIn:false,
+    name:"",
+    phone:"",
+    email:"",
+    verified:false
+  };
+
+  saveAppState();
+
+  renderAccount();
+
+  showToast(
+    "Logged out successfully"
+  );
+}
+
+
+/* =========================================================
+   SHARE PRODUCT
+========================================================= */
+
+function shareCurrentProduct(){
+
+  const product =
+    findProduct(currentProductId);
+
+  if(!product) return;
+
+  const text =
+    `${product.name} - ${money(product.price)} on ARYKART`;
+
+  if(navigator.share){
+
+    navigator.share({
+      title:product.name,
+      text:text
+    }).catch(function(){});
+
+  }else{
+
+    navigator.clipboard
+      ?.writeText(text)
+      .then(function(){
+        showToast(
+          "Product details copied"
+        );
+      })
+      .catch(function(){
+        showToast(text);
+      });
+  }
+}
+
+
+/* =========================================================
+   PROFESSIONAL MODAL SYSTEM
+========================================================= */
+
+function ensureAryModal(){
+
+  let modal =
+    getEl("arykartProfessionalModal");
+
+  if(modal) return modal;
+
+  modal =
+    document.createElement("div");
+
+  modal.id =
+    "arykartProfessionalModal";
+
+  modal.style.cssText = `
+    position:fixed;
+    inset:0;
+    z-index:5000;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+    padding:15px;
+  `;
+
+  modal.innerHTML = `
+    <div
+      id="arykartProfessionalModalBox"
+      style="
+        width:min(680px,100%);
+        max-height:88vh;
+        overflow:auto;
+        background:#fff;
+        border-radius:24px;
+        padding:20px;
+        box-sizing:border-box;
+      "
+    ></div>
+  `;
+
+  modal.addEventListener(
+    "click",
+    function(event){
+
+      if(event.target === modal){
+        closeAryModal();
+      }
+    }
+  );
+
+  document.body.appendChild(modal);
+
+  return modal;
+}
+
+function openAryModal(title,html){
+
+  const modal =
+    ensureAryModal();
+
+  const box =
+    getEl(
+      "arykartProfessionalModalBox"
+    );
+
+  if(box){
+
+    box.innerHTML = `
+      <div
+        style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:15px;
+          margin-bottom:18px;
+        "
+      >
+
+        <h2 style="margin:0;">
+          ${esc(title)}
+        </h2>
+
+        <button
+          class="icon-btn"
+          style="
+            width:40px;
+            height:40px;
+            flex:none;
+          "
+          onclick="closeAryModal()"
+        >
+          ×
+        </button>
+
+      </div>
+
+      ${html}
+    `;
+  }
+
+  modal.style.display =
+    "flex";
+}
+
+function closeAryModal(){
+
+  const modal =
+    getEl(
+      "arykartProfessionalModal"
+    );
+
+  if(modal){
+    modal.style.display =
+      "none";
+  }
+}
+
+
+/* =========================================================
+   COMPATIBILITY ALIASES
+   PURANE HTML BUTTONS BHI KAAM KARENGE
+========================================================= */
+
+function displayProducts(list){
+  renderHomeProducts(
+    list || getAllProducts()
+  );
+}
+
+function displayCart(){
+  renderCart();
+}
+
+function displayOrders(){
+  renderOrders();
+}
+
+function updateCartCountDisplay(){
+  updateCartCount();
+}
+
+function openWallet(){
+  renderWallet();
+  showPage("walletPage");
+}
+
+function openAddressBook(){
+
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  openAryModal(
+    "Saved Addresses",
+
+    `
+      ${
+        appState.addresses.length
+          ? appState.addresses.map(
+              function(address,index){
+
+                return `
+                  <div
+                    class="seller-form-card"
+                    style="margin-bottom:10px;"
+                  >
+
+                    <strong>
+                      ${esc(address.name)}
+                    </strong>
+
+                    <p>
+                      ${esc(address.line1)}
+                      ${esc(address.line2)}<br>
+                      ${esc(address.city)},
+                      ${esc(address.state)}
+                      - ${esc(address.pin)}
+                    </p>
+
+                    <button
+                      class="secondary-btn"
+                      onclick="closeAryModal();openAddressModal(${index})"
+                    >
+                      Edit
+                    </button>
+
+                  </div>
+                `;
+              }
+            ).join("")
+          : `
+            <p>No saved address yet.</p>
+          `
+      }
+
+      <button
+        class="primary-btn"
+        style="width:100%;margin-top:10px;"
+        onclick="closeAryModal();openAddressModal()"
+      >
+        + Add New Address
+      </button>
+    `
+  );
+}
+
+function openProfile(){
+
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  openAryModal(
+    "My Profile",
+
+    `
+      <form
+        onsubmit="updateCustomerProfile(event)"
+      >
+
+        <div class="field">
+          <label>Name</label>
+          <input
+            name="name"
+            required
+            value="${esc(appState.customer.name)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Mobile</label>
+          <input
+            name="phone"
+            required
+            value="${esc(appState.customer.phone)}"
+          >
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input
+            name="email"
+            type="email"
+            value="${esc(appState.customer.email)}"
+          >
+        </div>
+
+        <button
+          class="primary-btn"
+          style="width:100%;"
+        >
+          Save Profile
+        </button>
+
+      </form>
+    `
+  );
+}
+
+function updateCustomerProfile(event){
+
+  event.preventDefault();
+
+  const data =
+    new FormData(event.target);
+
+  appState.customer.name =
+    String(data.get("name") || "").trim();
+
+  appState.customer.phone =
+    String(data.get("phone") || "").trim();
+
+  appState.customer.email =
+    String(data.get("email") || "").trim();
+
+  saveAppState();
+
+  closeAryModal();
+  renderAccount();
+
+  showToast(
+    "Profile updated"
+  );
+}
+
+
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+
+function initializeArykart(){
+
+  normalizeState();
+
+  if(appState.settings.darkMode){
+    document.body.classList.add("dark");
+  }
+
+  const form =
+    getEl("sellerProductListingForm") ||
+    getEl("productListingForm");
+
+  if(form){
+
+    form.addEventListener(
+      "submit",
+      publishProduct
+    );
+  }
+
+  const homeSearch =
+    getEl("homeSearch");
+
+  if(homeSearch){
+
+    homeSearch.addEventListener(
+      "input",
+      function(){
+        searchProducts(
+          this.value
+        );
+      }
+    );
+  }
+
+  const categorySearch =
+    getEl("categorySearch");
+
+  if(categorySearch){
+
+    categorySearch.addEventListener(
+      "input",
+      function(){
+        searchProducts(
+          this.value
+        );
+      }
+    );
+  }
+
+  renderCategories();
+  renderHomeProducts();
+  renderCart();
+  renderOrders();
+  renderAccount();
+  renderWallet();
+  renderSellerDashboard();
+  renderSellerInventory();
+  renderSellerOrders();
+  renderSellerReturns();
+  updateCartCount();
+
+  setLanguage(
+    appState.language || "en"
+  );
+}
+
+if(
+  document.readyState ===
+  "loading"
+){
+
+  document.addEventListener(
+    "DOMContentLoaded",
+    initializeArykart
+  );
+
+}else{
+
+  initializeArykart();
+}
+
+
+/* =========================================================
+   FINAL SAVE BEFORE APP CLOSE
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  function(){
+    saveAppState();
+  }
+);
+
+</script>
+
+</body>
+</html>
