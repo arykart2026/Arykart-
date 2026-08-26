@@ -1495,7 +1495,11 @@ body.dark .modal{
     <button type="button" onclick="verifyGstIdentity()">
       Verify PAN & Identity
     </button>
+<input type="tel" id="gstMobile"
+       placeholder="Mobile Number">
 
+<input type="email" id="gstEmail"
+       placeholder="Email Address">
     <textarea id="gstPickupAddress"
               placeholder="Complete Pickup Address"></textarea>
 
@@ -1595,7 +1599,62 @@ body.dark .modal{
     </button>
 
   </div>
-</div>
+</div> 
+  <!-- ================= SELLER DASHBOARD ================= -->
+<div id="sellerDashboardPage" class="page">
+
+  <div class="page-header">
+    <button class="back-btn" onclick="showPage('sellerPage')">←</button>
+    <h2>Seller Dashboard</h2>
+  </div>
+
+  <div class="seller-dashboard">
+
+    <div class="seller-dashboard-hero">
+      <h2>Welcome to ARYKART Seller 🚀</h2>
+      <p>Manage your products and grow your business.</p>
+    </div>
+
+    <div class="seller-status-card">
+      <h3>Seller Account Status</h3>
+      <p><strong>Status:</strong> Pending Verification</p>
+      <small>Your seller account will be reviewed by ARYKART.</small>
+    </div>
+
+    <div class="seller-stats">
+
+      <div class="seller-stat-card">
+        <span>📦</span>
+        <h3>0</h3>
+        <p>Total Products</p>
+      </div>
+
+      <div class="seller-stat-card">
+        <span>🛒</span>
+        <h3>0</h3>
+        <p>Total Orders</p>
+      </div>
+
+      <div class="seller-stat-card">
+        <span>₹</span>
+        <h3>₹0</h3>
+        <p>Total Earnings</p>
+      </div>
+
+    </div>
+
+    <button class="seller-submit-btn" onclick="showPage('sellerPage')">
+      + Add Another Product
+    </button>
+
+    <button class="seller-submit-btn" onclick="showPage('homePage')">
+      Continue Shopping
+    </button>
+
+  </div>
+
+</div> 
+  
 <!-- ================= PRODUCT DETAILS ================= -->
 
 <div id="productModal" class="modal">
