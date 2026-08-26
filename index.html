@@ -1,67 +1,3174 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ARYKART</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ARYKART - Shop Everything</title>
+
 <style>
-:root{--b:#2874f0;--p:#6d28d9;--bg:#f1f3f6;--c:#fff;--t:#172033;--m:#667085;--l:#e5e7eb;--g:#16803c}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--t);padding-bottom:72px}body.dark{--bg:#111827;--c:#1f2937;--t:#f9fafb;--m:#9ca3af;--l:#374151}.page{display:none}.page.active{display:block}.top{background:linear-gradient(135deg,var(--b),var(--p));color:#fff;padding:14px;position:sticky;top:0;z-index:5}.topin,.wrap{max-width:1100px;margin:auto}.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.logo{font-size:28px;font-weight:900}.logo span{color:#ffe15a}.search{background:#fff;border-radius:14px;margin-top:12px;padding:0 14px;display:flex;align-items:center;color:#111}.search input{border:0;outline:0;width:100%;padding:15px;font-size:16px}.chips{display:flex;gap:8px;overflow:auto;margin-top:10px}.chip,.tab{border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.16);color:#fff;padding:8px 12px;border-radius:20px;white-space:nowrap}.wrap{padding:14px}.hero{margin:0 0 24px;background:linear-gradient(135deg,#182848,#7b2ff7);border-radius:24px;color:#fff;padding:28px;display:flex;justify-content:space-between;align-items:center}.hero h1{font-size:44px;margin:0}.hero p{font-size:17px;max-width:480px}.art{font-size:90px}.btn{border:0;border-radius:10px;padding:12px 16px;background:var(--b);color:#fff;font-weight:800}.btn.gold{background:#ff9f00;color:#111}.btn.alt{background:var(--c);color:var(--t);border:1px solid var(--l)}h2{margin:10px 0 14px}.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.cat{background:var(--c);color:var(--t);border:0;border-radius:16px;padding:15px 6px;box-shadow:0 5px 20px #0001;font-weight:700}.cat b{display:block;font-size:34px;margin-bottom:6px}.products{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.prod{background:var(--c);border-radius:16px;overflow:hidden;box-shadow:0 5px 20px #0001;position:relative}.prod img{width:100%;height:170px;object-fit:cover}.pi{padding:10px}.name{font-weight:700;height:40px;overflow:hidden}.rate{display:inline-block;background:var(--g);color:#fff;border-radius:6px;padding:4px 6px;font-size:12px;margin:6px 0}.price{font-size:19px;font-weight:900}.old{font-size:13px;color:var(--m);text-decoration:line-through;margin-left:5px}.wish{position:absolute;right:9px;top:9px;border:0;border-radius:50%;width:36px;height:36px;background:#fffd;font-size:18px}.add{width:100%;margin-top:8px}.bottom{position:fixed;bottom:0;left:0;right:0;height:68px;background:var(--c);border-top:1px solid var(--l);display:flex;justify-content:center;z-index:10}.nav{display:flex;justify-content:space-around;width:min(700px,100%)}.nav button{background:none;border:0;color:var(--m);font-size:12px;min-width:64px}.nav button.on{color:var(--b);font-weight:800}.ico{display:block;font-size:23px}.panel,.item,.stat{background:var(--c);border-radius:16px;padding:14px;box-shadow:0 5px 20px #0001;margin-bottom:12px}.item{display:flex;gap:12px}.item img{width:82px;height:82px;border-radius:10px;object-fit:cover}.grow{flex:1}.qty button{width:30px;height:30px;border:0;border-radius:7px;background:var(--bg);color:var(--t);font-weight:900}.field{width:100%;padding:13px;margin:7px 0;border-radius:10px;border:1px solid var(--l);background:var(--c);color:var(--t)}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.account{background:linear-gradient(135deg,var(--b),var(--p));color:#fff;padding:24px;border-radius:0 0 22px 22px}.menu button{width:100%;padding:16px;text-align:left;background:var(--c);color:var(--t);border:0;border-bottom:1px solid var(--l);font-weight:700}.badge{position:absolute;background:#e33;color:#fff;border-radius:50%;padding:3px 6px;margin-left:14px}.modal{position:fixed;inset:0;background:#0008;z-index:50;display:flex;align-items:flex-end;justify-content:center}.sheet{background:var(--c);color:var(--t);width:min(720px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px}.close{float:right;border:0;border-radius:50%;width:36px;height:36px;background:var(--bg);color:var(--t);font-size:22px}.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:12px 17px;border-radius:10px;z-index:99}.hidden{display:none!important}.empty{text-align:center;padding:55px;color:var(--m)}.seller{background:linear-gradient(135deg,#0f172a,#334155);color:#fff;border-radius:18px;padding:20px}.notice{padding:10px;background:#fff3cd;color:#765a00;border-radius:9px;margin:8px 0}.ok{padding:9px;background:#e7f8ed;color:#176b35;border-radius:8px;margin:7px 0}@media(max-width:800px){.products{grid-template-columns:repeat(2,1fr)}.prod img{height:145px}.hero h1{font-size:36px}.art{font-size:68px}}
-</style></head><body>
-<div id="toast" class="toast hidden"></div><div id="modal"></div>
 
-<section id="home" class="page active"><header class="top"><div class="topin"><div class="row"><div class="logo">Ary<span>kart</span></div><button class="chip" onclick="locationBox()">📍 <span id="loc">Select Location</span></button></div><div class="search">🔍<input id="search" oninput="searchP()" placeholder="Search for products, brands and more"></div><div class="chips" id="chips"></div></div></header><main class="wrap"><div class="hero"><div><h1>Shop Everything<br>You Need</h1><p>Best products, great deals and a complete ARYKART shopping experience.</p><button class="btn gold" onclick="document.getElementById('grid').scrollIntoView()">Shop Now</button></div><div class="art">🛍️</div></div><h2>Shop by Category</h2><div id="cats" class="cats"></div><div class="row" style="margin-top:25px"><h2 id="ptitle">Suggested for You</h2><button class="btn alt" onclick="filterP('All')">View All</button></div><div id="grid" class="products"></div></main></section>
+/* =========================================================
+   ARYKART COMPLETE PROFESSIONAL APP - PART 1
+========================================================= */
 
-<section id="categories" class="page"><main class="wrap"><button class="btn alt" onclick="go('home')">← Back</button><h2>All Categories</h2><div id="cats2" class="cats"></div><h2 style="margin-top:25px">Products</h2><div id="grid2" class="products"></div></main></section>
+:root{
+  --primary:#2f67c7;
+  --primary-dark:#1f4f9f;
+  --secondary:#ff5a5f;
+  --green:#138a62;
+  --orange:#ff8a00;
+  --purple:#7d2ea8;
+  --red:#d93025;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --bg:#f5f7fb;
+  --white:#ffffff;
+  --shadow:0 8px 25px rgba(31,41,55,.08);
+  --radius:18px;
+}
 
-<section id="cart" class="page"><main class="wrap"><h2>My Cart</h2><div id="cartList"></div><div id="checkoutBar" class="panel row hidden"><div><b id="total">₹0</b><div style="color:var(--m);font-size:12px">Inclusive of all taxes</div></div><button class="btn gold" onclick="checkout()">Place Order</button></div></main></section>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
 
-<section id="account" class="page"><div class="account"><div class="wrap row"><div><h2 id="an">Welcome to ARYKART!</h2><div id="ap">Create your account</div></div><button class="chip" onclick="profileBox()">Edit</button></div></div><main class="wrap"><div class="grid2"><div class="panel" onclick="go('orders')">📦<br><b>Orders</b><br><small>Track your orders</small></div><div class="panel" onclick="wishlistBox()">❤️<br><b>Wishlist</b><br><small>Saved products</small></div></div><div class="menu panel"><button onclick="profileBox()">👤 My Profile ›</button><button onclick="go('orders')">📦 My Orders ›</button><button onclick="addressBox()">📍 Saved Addresses ›</button><button onclick="notifyBox()">🔔 Notifications ›</button><button onclick="go(S.seller?'seller':'sellstart')">🏪 Sell on ARYKART ›</button><button onclick="dark()">🌙 Toggle Dark Mode ›</button><button onclick="aboutBox()">ℹ️ Help & About ›</button></div></main></section>
+html{
+  scroll-behavior:smooth;
+}
 
-<section id="orders" class="page"><main class="wrap"><button class="btn alt" onclick="go('account')">← Account</button><h2>My Orders</h2><div id="ordersList"></div></main></section>
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:90px;
+}
 
-<section id="sellstart" class="page"><main class="wrap"><button class="btn alt" onclick="go('account')">← Account</button><h2>Start Selling on ARYKART</h2><div class="seller"><h2>Grow your business 🚀</h2><p>Choose your seller account type and submit your business details.</p></div><div class="panel"><h3>🧾 GST Seller</h3><p>For sellers with a valid GSTIN.</p><button class="btn gold" onclick="sellerForm('GST Seller')">Register as GST Seller</button></div><div class="panel"><h3>🛍️ Non-GST Seller</h3><p>For eligible sellers where applicable.</p><button class="btn" onclick="sellerForm('Non-GST Seller')">Register as Non-GST Seller</button></div><div class="notice">Demo app: real PAN/GST verification, KYC and compliance require a secure backend.</div></main></section>
+button,
+input,
+select,
+textarea{
+  font:inherit;
+}
 
-<section id="seller" class="page"><main class="wrap"><button class="btn alt" onclick="go('account')">← Account</button><div class="seller"><div class="row"><div><small>ARYKART SELLER</small><h2 id="sw">Welcome, Seller</h2><span id="st"></span></div><button class="chip" onclick="go('sellstart')">Edit</button></div></div><div class="grid2" style="margin-top:14px"><div class="stat">Products<b id="spc"></b></div><div class="stat">Orders<b id="soc"></b></div><div class="stat">Listed Value<b id="ssc"></b></div><div class="stat">Status<b style="font-size:16px;color:var(--g)">Active</b></div></div><div class="row"><h2>Seller Products</h2><button class="btn" onclick="addProductBox()">+ Add Product</button></div><div id="sellerProducts"></div><h2>Seller Orders</h2><div id="sellerOrders"></div></main></section>
+button{
+  cursor:pointer;
+}
 
-<nav class="bottom"><div class="nav"><button id="n-home" class="on" onclick="go('home')"><span class="ico">⌂</span>Home</button><button id="n-categories" onclick="go('categories')"><span class="ico">▦</span>Categories</button><button id="n-cart" onclick="go('cart')" style="position:relative"><span id="badge" class="badge hidden">0</span><span class="ico">🛒</span>Cart</button><button id="n-account" onclick="go('account')"><span class="ico">♙</span>Account</button></div></nav>
+img{
+  max-width:100%;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.page{
+  display:none;
+  min-height:100vh;
+}
+
+.page.active{
+  display:block;
+}
+
+.container{
+  width:min(100%,1200px);
+  margin:auto;
+  padding:16px;
+}
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.app-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+
+.header-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px 16px;
+  max-width:1200px;
+  margin:auto;
+}
+
+.icon-btn{
+  width:48px;
+  height:48px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+}
+
+.icon-btn:active{
+  transform:scale(.96);
+}
+
+.search-box{
+  flex:1;
+  min-width:0;
+  height:48px;
+  border:1px solid var(--border);
+  background:#f7f8fc;
+  border-radius:15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 14px;
+}
+
+.search-box input{
+  width:100%;
+  border:none;
+  outline:none;
+  background:transparent;
+  font-size:16px;
+  color:var(--text);
+}
+
+.cart-top-btn{
+  position:relative;
+}
+
+.badge{
+  position:absolute;
+  right:-5px;
+  top:-7px;
+  min-width:22px;
+  height:22px;
+  padding:0 6px;
+  border-radius:20px;
+  background:var(--secondary);
+  color:#fff;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  z-index:200;
+  background:#fff;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:space-around;
+  padding:7px 4px max(7px,env(safe-area-inset-bottom));
+  box-shadow:0 -8px 30px rgba(0,0,0,.06);
+}
+
+.nav-item{
+  border:none;
+  background:transparent;
+  color:#6b7280;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  min-width:60px;
+  padding:5px 4px;
+  font-size:12px;
+}
+
+.nav-icon{
+  font-size:24px;
+}
+
+.nav-item.active{
+  color:var(--primary);
+  font-weight:bold;
+}
+
+/* =========================================================
+   HOME PAGE
+========================================================= */
+
+.hero{
+  background:linear-gradient(135deg,#2f67c7,#6f9df0);
+  border-radius:24px;
+  color:#fff;
+  padding:24px;
+  margin:16px 0;
+  overflow:hidden;
+  position:relative;
+  min-height:190px;
+  display:flex;
+  align-items:center;
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  width:250px;
+  height:250px;
+  border-radius:50%;
+  background:rgba(255,255,255,.12);
+  right:-100px;
+  top:-100px;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:65%;
+}
+
+.hero h1{
+  font-size:28px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  opacity:.92;
+  line-height:1.5;
+}
+
+.hero button{
+  margin-top:16px;
+  background:#fff;
+  color:var(--primary);
+  border:none;
+  border-radius:12px;
+  padding:11px 17px;
+  font-weight:bold;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:24px 0 14px;
+}
+
+.section-head h2{
+  font-size:23px;
+}
+
+.view-all{
+  border:1px solid var(--primary);
+  background:#fff;
+  color:var(--primary);
+  padding:9px 14px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+.category-scroll{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding-bottom:5px;
+  scrollbar-width:none;
+}
+
+.category-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+.category-card{
+  flex:0 0 95px;
+  min-height:105px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 4px 12px rgba(0,0,0,.03);
+  font-size:13px;
+  font-weight:bold;
+}
+
+.category-card span:first-child{
+  font-size:30px;
+}
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+
+.product-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 5px 18px rgba(31,41,55,.06);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+
+.product-image-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:1/1;
+  background:#f3f4f6;
+  overflow:hidden;
+}
+
+.product-image-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.product-heart{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:42px;
+  height:42px;
+  border:none;
+  background:rgba(255,255,255,.95);
+  border-radius:50%;
+  font-size:21px;
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
+}
+
+.product-info{
+  padding:13px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+
+.product-title{
+  font-size:15px;
+  line-height:1.35;
+  font-weight:700;
+  min-height:41px;
+  overflow:hidden;
+}
+
+.product-meta{
+  margin-top:9px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.rating-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:5px 8px;
+  background:var(--green);
+  color:#fff;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.review-count{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.price-row{
+  margin-top:10px;
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  flex-wrap:wrap;
+}
+
+.price{
+  font-size:21px;
+  font-weight:800;
+}
+
+.old-price{
+  color:#9ca3af;
+  text-decoration:line-through;
+  font-size:13px;
+}
+
+.discount{
+  color:var(--green);
+  font-size:12px;
+  font-weight:bold;
+}
+
+.delivery-text{
+  color:#6b7280;
+  font-size:11px;
+  margin-top:7px;
+}
+
+.product-actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+  margin-top:13px;
+}
+
+.add-cart-btn{
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  padding:12px;
+  border-radius:11px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+.buy-now-small{
+  border:1px solid var(--primary);
+  color:var(--primary);
+  background:#fff;
+  padding:10px;
+  border-radius:11px;
+  font-weight:bold;
+}
+
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
+
+.product-detail-wrap{
+  background:#fff;
+  min-height:100vh;
+}
+
+.detail-gallery{
+  position:relative;
+  background:#f4f4f5;
+}
+
+.detail-main-image{
+  width:100%;
+  height:min(60vw,550px);
+  object-fit:cover;
+  display:block;
+}
+
+.detail-gallery-actions{
+  position:absolute;
+  top:12px;
+  left:12px;
+  right:12px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.circle-action{
+  width:48px;
+  height:48px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.95);
+  font-size:22px;
+}
+
+.thumbnail-row{
+  display:flex;
+  gap:8px;
+  padding:10px;
+  overflow-x:auto;
+  background:#fff;
+}
+
+.thumb{
+  width:62px;
+  height:62px;
+  flex:none;
+  border:2px solid transparent;
+  border-radius:10px;
+  overflow:hidden;
+  background:#eee;
+}
+
+.thumb.active{
+  border-color:var(--primary);
+}
+
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.detail-content{
+  padding:18px;
+}
+
+.detail-title{
+  font-size:23px;
+  line-height:1.35;
+}
+
+.detail-sub{
+  color:var(--muted);
+  margin-top:8px;
+  line-height:1.5;
+}
+
+.detail-price{
+  margin-top:15px;
+  display:flex;
+  align-items:baseline;
+  gap:9px;
+  flex-wrap:wrap;
+}
+
+.detail-price strong{
+  font-size:32px;
+}
+
+.offer-box{
+  background:#f5f9ff;
+  border:1px solid #cfe0ff;
+  border-radius:14px;
+  padding:14px;
+  margin-top:16px;
+}
+
+.offer-box h4{
+  margin-bottom:7px;
+}
+
+.highlight-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0;
+  border:1px solid #e6d4ef;
+  border-radius:15px;
+  margin:18px 0;
+  overflow:hidden;
+}
+
+.highlight-item{
+  padding:14px 8px;
+  text-align:center;
+  border-right:1px solid #e6d4ef;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.highlight-item:last-child{
+  border-right:none;
+}
+
+.detail-section{
+  border-top:8px solid var(--bg);
+  padding:22px 18px;
+}
+
+.detail-section h2{
+  margin-bottom:15px;
+}
+
+.spec-table{
+  display:grid;
+  grid-template-columns:1fr;
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.spec-row{
+  display:grid;
+  grid-template-columns:42% 58%;
+  border-bottom:1px solid var(--border);
+}
+
+.spec-row:last-child{
+  border-bottom:none;
+}
+
+.spec-row div{
+  padding:12px;
+}
+
+.spec-row div:first-child{
+  background:#fafafa;
+  color:var(--muted);
+}
+
+.review-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:14px;
+  margin-bottom:12px;
+}
+
+.review-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+}
+
+.review-photo-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-top:10px;
+}
+
+.review-photo-row img{
+  width:75px;
+  height:75px;
+  border-radius:10px;
+  object-fit:cover;
+}
+
+.write-review-btn{
+  width:100%;
+  border:1px solid var(--primary);
+  background:#fff;
+  color:var(--primary);
+  padding:13px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+.product-bottom-bar{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  z-index:250;
+  background:#fff;
+  padding:10px 14px max(10px,env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.product-bottom-bar button{
+  min-height:52px;
+  border-radius:12px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.bottom-add{
+  background:#fff;
+  color:var(--purple);
+  border:1px solid var(--purple);
+}
+
+.bottom-buy{
+  background:var(--purple);
+  color:#fff;
+  border:none;
+}
+
+/* =========================================================
+   ACCOUNT
+========================================================= */
+
+.account-hero{
+  background:linear-gradient(135deg,#eef4ff,#f8f4ff);
+  border:1px solid #dde5f4;
+  border-radius:24px;
+  padding:22px;
+  margin-top:16px;
+}
+
+.account-hero-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+}
+
+.login-account-btn{
+  border:1px solid var(--primary);
+  color:var(--primary);
+  background:#fff;
+  border-radius:15px;
+  padding:12px 16px;
+  font-weight:bold;
+}
+
+.account-quick{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:18px;
+}
+
+.quick-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  text-align:center;
+}
+
+.quick-card strong{
+  display:block;
+  margin-top:7px;
+}
+
+.settings-box{
+  margin-top:20px;
+  background:#fff;
+  border-radius:22px;
+  border:1px solid var(--border);
+  overflow:hidden;
+}
+
+.settings-item{
+  width:100%;
+  border:none;
+  background:#fff;
+  padding:17px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  text-align:left;
+  border-bottom:1px solid var(--border);
+}
+
+.settings-item:last-child{
+  border-bottom:none;
+}
+
+.settings-item .setting-icon{
+  width:34px;
+  text-align:center;
+  font-size:22px;
+}
+
+.settings-item .setting-text{
+  flex:1;
+}
+
+.settings-item .setting-title{
+  font-size:16px;
+  font-weight:700;
+}
+
+.settings-item .setting-sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
+
+.settings-item .arrow{
+  color:#9ca3af;
+  font-size:22px;
+}
+
+.settings-heading{
+  padding:20px 17px 8px;
+  font-size:20px;
+}
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+.order-tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin:15px 0;
+}
+
+.order-tab{
+  white-space:nowrap;
+  padding:9px 14px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:#fff;
+}
+
+.order-tab.active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+}
+
+.order-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 4px 14px rgba(0,0,0,.04);
+}
+
+.order-card-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.order-status{
+  color:var(--green);
+  font-weight:bold;
+}
+
+.order-product{
+  display:flex;
+  gap:12px;
+}
+
+.order-product img{
+  width:82px;
+  height:82px;
+  object-fit:cover;
+  border-radius:12px;
+}
+
+.order-product-info{
+  flex:1;
+}
+
+.order-product-info h4{
+  line-height:1.4;
+}
+
+.order-actions{
+  display:flex;
+  gap:9px;
+  margin-top:14px;
+}
+
+.order-actions button{
+  flex:1;
+  border-radius:10px;
+  padding:11px;
+  font-weight:bold;
+}
+
+.primary-outline{
+  border:1px solid var(--primary);
+  color:var(--primary);
+  background:#fff;
+}
+
+.danger-outline{
+  border:1px solid var(--red);
+  color:var(--red);
+  background:#fff;
+}
+
+/* =========================================================
+   TRACKING
+========================================================= */
+
+.tracking-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+  margin:16px 0;
+}
+
+.timeline{
+  position:relative;
+  padding-left:30px;
+}
+
+.timeline-item{
+  position:relative;
+  padding-bottom:24px;
+}
+
+.timeline-item:last-child{
+  padding-bottom:0;
+}
+
+.timeline-item:before{
+  content:"";
+  position:absolute;
+  left:-22px;
+  top:4px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#d1d5db;
+}
+
+.timeline-item:after{
+  content:"";
+  position:absolute;
+  left:-16px;
+  top:18px;
+  bottom:0;
+  width:2px;
+  background:#e5e7eb;
+}
+
+.timeline-item:last-child:after{
+  display:none;
+}
+
+.timeline-item.done:before{
+  background:var(--green);
+}
+
+.timeline-item.active:before{
+  background:var(--primary);
+  box-shadow:0 0 0 5px rgba(47,103,199,.12);
+}
+
+.timeline-title{
+  font-weight:bold;
+}
+
+.timeline-desc{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px;
+}
+
+/* =========================================================
+   RETURN SYSTEM
+========================================================= */
+
+.return-banner{
+  background:#fff8e8;
+  border:1px solid #ffd78d;
+  color:#7a5000;
+  border-radius:15px;
+  padding:14px;
+  line-height:1.5;
+}
+
+.return-allowed{
+  background:#ecfdf5;
+  border-color:#a7f3d0;
+  color:#065f46;
+}
+
+.return-form{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:7px;
+  font-weight:bold;
+  font-size:14px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  border:1px solid #d1d5db;
+  border-radius:12px;
+  padding:13px;
+  outline:none;
+  background:#fff;
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.file-preview{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
+.file-preview img{
+  width:70px;
+  height:70px;
+  object-fit:cover;
+  border-radius:10px;
+}
+
+/* =========================================================
+   WALLET
+========================================================= */
+
+.wallet-balance{
+  background:linear-gradient(135deg,#1d6b57,#138a62);
+  color:#fff;
+  padding:24px;
+  border-radius:24px;
+  margin:16px 0;
+}
+
+.wallet-balance small{
+  opacity:.8;
+}
+
+.wallet-balance h1{
+  margin-top:8px;
+  font-size:34px;
+}
+
+.wallet-action-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.wallet-action{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+}
+
+.transaction{
+  background:#fff;
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:15px;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.transaction small{
+  color:var(--muted);
+}
+
+/* =========================================================
+   SELLER
+========================================================= */
+
+.seller-hero{
+  background:linear-gradient(135deg,#54218f,#9b2e9b);
+  color:#fff;
+  border-radius:24px;
+  padding:24px;
+  margin:16px 0;
+}
+
+.seller-hero p{
+  opacity:.9;
+  margin-top:8px;
+  line-height:1.5;
+}
+
+.seller-choice-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+
+.seller-choice{
+  background:#fff;
+  border:2px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  text-align:left;
+}
+
+.seller-choice.active{
+  border-color:var(--purple);
+  background:#faf5ff;
+}
+
+.seller-choice h3{
+  margin:8px 0;
+}
+
+.seller-choice p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.seller-form-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+  margin-top:18px;
+}
+
+.seller-note{
+  background:#f3f7ff;
+  border:1px solid #cbdcfb;
+  padding:12px;
+  border-radius:12px;
+  color:#244d8d;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.dashboard-stats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin:16px 0;
+}
+
+.stat-card{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:16px;
+}
+
+.stat-card small{
+  color:var(--muted);
+}
+
+.stat-card h2{
+  margin-top:7px;
+}
+
+.seller-menu{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.seller-menu button{
+  background:#fff;
+  border:1px solid var(--border);
+  padding:18px 12px;
+  border-radius:18px;
+  font-weight:bold;
+  min-height:105px;
+}
+
+.listing-section{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:18px;
+}
+
+.listing-section h2{
+  margin-bottom:15px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.form-grid .full{
+  grid-column:1/-1;
+}
+
+.variant-row{
+  background:#fafafa;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+}
+
+.variant-row-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr auto;
+  gap:8px;
+}
+
+.remove-variant{
+  border:none;
+  background:#fee2e2;
+  color:var(--red);
+  border-radius:10px;
+  padding:8px;
+}
+
+/* =========================================================
+   MODALS
+========================================================= */
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(17,24,39,.55);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+}
+
+.modal{
+  width:min(100%,650px);
+  max-height:92vh;
+  overflow-y:auto;
+  background:#fff;
+  border-radius:25px 25px 0 0;
+  padding:20px;
+}
+
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.close-modal{
+  width:42px;
+  height:42px;
+  border:none;
+  background:#f3f4f6;
+  border-radius:50%;
+  font-size:22px;
+}
+
+.primary-btn{
+  width:100%;
+  border:none;
+  background:var(--primary);
+  color:#fff;
+  padding:14px;
+  border-radius:13px;
+  font-weight:bold;
+  margin-top:5px;
+}
+
+.secondary-btn{
+  width:100%;
+  border:1px solid var(--primary);
+  color:var(--primary);
+  background:#fff;
+  padding:13px;
+  border-radius:13px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+.danger-btn{
+  width:100%;
+  border:none;
+  background:var(--red);
+  color:#fff;
+  padding:13px;
+  border-radius:13px;
+  font-weight:bold;
+  margin-top:10px;
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.login-box{
+  width:min(100%,500px);
+  margin:35px auto;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+
+.login-logo{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.login-logo h1{
+  color:var(--primary);
+  letter-spacing:1px;
+}
+
+.login-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  border-radius:13px;
+  overflow:hidden;
+  margin-bottom:18px;
+}
+
+.login-tab{
+  border:none;
+  background:#fff;
+  padding:12px;
+}
+
+.login-tab.active{
+  background:var(--primary);
+  color:#fff;
+}
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+.language-option{
+  width:100%;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:15px;
+  padding:16px;
+  margin-bottom:10px;
+  text-align:left;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.language-option.active{
+  border-color:var(--primary);
+  background:#f3f7ff;
+}
+
+/* =========================================================
+   EMPTY STATES
+========================================================= */
+
+.empty-state{
+  text-align:center;
+  padding:45px 20px;
+  color:var(--muted);
+}
+
+.empty-state .empty-icon{
+  font-size:55px;
+  margin-bottom:12px;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:95px;
+  transform:translateX(-50%) translateY(30px);
+  z-index:3000;
+  background:#111827;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:13px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  width:max-content;
+  max-width:90%;
+  text-align:center;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(min-width:700px){
+
+  body{
+    padding-bottom:0;
+  }
+
+  .bottom-nav{
+    position:fixed;
+    width:min(680px,100%);
+    left:50%;
+    transform:translateX(-50%);
+    border-radius:20px 20px 0 0;
+  }
+
+  .container{
+    padding:20px;
+  }
+
+  .product-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .seller-choice-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+
+  .dashboard-stats{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+  .product-detail-wrap{
+    width:min(900px,100%);
+    margin:auto;
+  }
+
+}
+
+@media(max-width:380px){
+
+  .header-row{
+    gap:8px;
+    padding:8px;
+  }
+
+  .icon-btn{
+    width:44px;
+    height:44px;
+  }
+
+  .search-box{
+    height:44px;
+  }
+
+  .product-title{
+    font-size:14px;
+  }
+
+  .price{
+    font-size:18px;
+  }
+
+  .highlight-item{
+    font-size:11px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     TOAST
+===================================================== -->
+
+<div id="toast" class="toast"></div>
+
+
+<!-- =====================================================
+     HOME PAGE
+===================================================== -->
+
+<div id="homePage" class="page active">
+
+  <header class="app-header">
+    <div class="header-row">
+
+      <button class="icon-btn" onclick="showPage('homePage')" aria-label="Home">
+        🏠
+      </button>
+
+      <div class="search-box">
+        🔎
+        <input
+          id="homeSearch"
+          type="text"
+          placeholder="Search for products, brands..."
+          oninput="searchProducts(this.value)"
+        >
+      </div>
+
+      <button class="icon-btn cart-top-btn" onclick="showPage('cartPage')" aria-label="Cart">
+        🛒
+        <span id="topCartCount" class="badge">0</span>
+      </button>
+
+    </div>
+  </header>
+
+
+  <main class="container">
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1 data-i18n="heroTitle">Everything you need, in one place.</h1>
+        <p data-i18n="heroText">
+          Shop from thousands of products and get fast delivery with ARYKART.
+        </p>
+        <button onclick="document.getElementById('productsSection').scrollIntoView({behavior:'smooth'})">
+          Shop Now
+        </button>
+      </div>
+    </section>
+
+
+    <div class="section-head">
+      <h2 data-i18n="shopByCategory">Shop by Category</h2>
+    </div>
+
+    <div id="categoryList" class="category-scroll"></div>
+
+
+    <div class="section-head">
+      <h2 data-i18n="suggestedForYou">Suggested for You</h2>
+      <button class="view-all" onclick="showPage('categoryPage')">
+        View All
+      </button>
+    </div>
+
+    <div id="searchResultInfo"></div>
+
+    <div id="productsSection" class="product-grid"></div>
+
+
+    <div class="section-head">
+      <h2>Popular Deals</h2>
+      <button class="view-all" onclick="loadMoreProducts()">View More</button>
+    </div>
+
+    <div id="moreProducts" class="product-grid"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     CATEGORY PAGE
+===================================================== -->
+
+<div id="categoryPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+
+      <button class="icon-btn" onclick="showPage('homePage')">←</button>
+
+      <div class="search-box">
+        🔎
+        <input
+          id="categorySearch"
+          type="text"
+          placeholder="Search products..."
+          oninput="searchProducts(this.value)"
+        >
+      </div>
+
+      <button class="icon-btn cart-top-btn" onclick="showPage('cartPage')">
+        🛒
+        <span class="badge cart-count-display">0</span>
+      </button>
+
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="section-head">
+      <h2>Categories</h2>
+    </div>
+
+    <div id="allCategories" class="category-scroll" style="flex-wrap:wrap;overflow:visible;"></div>
+
+    <div class="section-head">
+      <h2 id="categoryTitle">All Products</h2>
+    </div>
+
+    <div id="categoryProducts" class="product-grid"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     PRODUCT DETAIL PAGE
+===================================================== -->
+
+<div id="productDetailPage" class="page product-detail-wrap">
+
+  <div class="detail-gallery">
+
+    <img
+      id="detailMainImage"
+      class="detail-main-image"
+      src=""
+      alt="Product"
+    >
+
+    <div class="detail-gallery-actions">
+      <button class="circle-action" onclick="goBackFromProduct()">←</button>
+
+      <div style="display:flex;gap:8px;">
+        <button
+          id="detailWishlistBtn"
+          class="circle-action"
+          onclick="toggleWishlist(currentProductId)"
+        >
+          ♡
+        </button>
+
+        <button
+          class="circle-action"
+          onclick="shareCurrentProduct()"
+        >
+          ↗
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="detailThumbnails" class="thumbnail-row"></div>
+
+
+  <div class="detail-content">
+
+    <h1 id="detailProductTitle" class="detail-title"></h1>
+
+    <p id="detailProductSubtitle" class="detail-sub"></p>
+
+    <div class="product-meta">
+      <span id="detailRating" class="rating-pill"></span>
+      <span id="detailReviewCount" class="review-count"></span>
+    </div>
+
+
+    <div class="detail-price">
+      <strong id="detailPrice"></strong>
+      <span id="detailOldPrice" class="old-price"></span>
+      <span id="detailDiscount" class="discount"></span>
+    </div>
+
+
+    <div id="detailOfferBox" class="offer-box">
+      <h4>🏷️ Offers & Savings</h4>
+      <div id="detailOffers"></div>
+    </div>
+
+
+    <div class="highlight-grid">
+      <div class="highlight-item">
+        📦<br>7 Days<br>Easy Return
+      </div>
+
+      <div class="highlight-item">
+        💵<br>Cash on<br>Delivery
+      </div>
+
+      <div class="highlight-item">
+        🔖<br>Best<br>Price
+      </div>
+    </div>
+
+
+    <div class="detail-section" style="margin:0 -18px 0;">
+      <h2>Product Highlights</h2>
+      <div id="detailHighlights"></div>
+    </div>
+
+
+    <div class="detail-section" style="margin:0 -18px;">
+      <h2>Additional Details</h2>
+      <div id="detailSpecs" class="spec-table"></div>
+    </div>
+
+
+    <div class="detail-section" style="margin:0 -18px;">
+      <div class="section-head">
+        <h2>Customer Ratings & Reviews</h2>
+        <span id="reviewAverage"></span>
+      </div>
+
+      <div id="ratingSummary"></div>
+
+      <button
+        class="write-review-btn"
+        onclick="openReviewModal()"
+      >
+        ⭐ Rate this product & add photos
+      </button>
+
+      <div id="reviewList" style="margin-top:16px;"></div>
+
+    </div>
+
+
+    <div class="detail-section" style="margin:0 -18px;">
+      <div class="section-head">
+        <h2>You might also like</h2>
+      </div>
+
+      <div id="relatedProducts" class="product-grid"></div>
+    </div>
+
+  </div>
+
+
+  <!-- Product ke andar fixed buttons -->
+  <div class="product-bottom-bar">
+    <button
+      class="bottom-add"
+      onclick="addToCart(currentProductId)"
+    >
+      🛒 Add to Cart
+    </button>
+
+    <button
+      class="bottom-buy"
+      onclick="buyNow(currentProductId)"
+    >
+      ▶ Buy Now
+    </button>
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART PAGE
+===================================================== -->
+
+<div id="cartPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('homePage')">←</button>
+
+      <div style="flex:1;">
+        <h2>Your Cart</h2>
+      </div>
+
+      <button class="icon-btn" onclick="showPage('wishlistPage')">♡</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div id="cartList"></div>
+
+    <div id="cartSummary" class="hidden">
+      <div class="seller-form-card">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">₹0</strong>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span>Delivery</span>
+          <strong id="cartDelivery">FREE</strong>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+
+        <div style="display:flex;justify-content:space-between;font-size:20px;">
+          <strong>Total</strong>
+          <strong id="cartTotal">₹0</strong>
+        </div>
+
+        <button class="primary-btn" onclick="openCheckout()">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     CHECKOUT PAGE
+===================================================== -->
+
+<div id="checkoutPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('cartPage')">←</button>
+      <h2 style="flex:1;">Checkout</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-form-card">
+
+      <h2 style="margin-bottom:16px;">Delivery Address</h2>
+
+      <div id="checkoutAddressList"></div>
+
+      <button
+        class="secondary-btn"
+        onclick="openAddressModal()"
+      >
+        + Add New Address
+      </button>
+
+    </div>
+
+
+    <div class="seller-form-card">
+
+      <h2 style="margin-bottom:16px;">Payment Method</h2>
+
+      <div class="field">
+        <select id="paymentMethod">
+          <option value="cod">Cash on Delivery</option>
+          <option value="upi">UPI</option>
+          <option value="wallet">ARYKART Refund Wallet</option>
+        </select>
+      </div>
+
+    </div>
+
+
+    <div class="seller-form-card">
+
+      <h2 style="margin-bottom:16px;">Order Summary</h2>
+
+      <div id="checkoutItems"></div>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:15px 0;">
+
+      <div style="display:flex;justify-content:space-between;font-size:20px;">
+        <strong>Total</strong>
+        <strong id="checkoutTotal">₹0</strong>
+      </div>
+
+      <button class="primary-btn" onclick="placeOrder()">
+        Place Order
+      </button>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     MY ORDERS PAGE
+===================================================== -->
+
+<div id="ordersPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('homePage')">←</button>
+      <h2 style="flex:1;">My Orders</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="order-tabs">
+      <button class="order-tab active" onclick="filterOrders('all',this)">All</button>
+      <button class="order-tab" onclick="filterOrders('active',this)">Active</button>
+      <button class="order-tab" onclick="filterOrders('delivered',this)">Delivered</button>
+      <button class="order-tab" onclick="filterOrders('returns',this)">Returns</button>
+      <button class="order-tab" onclick="filterOrders('cancelled',this)">Cancelled</button>
+    </div>
+
+    <div id="ordersList"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     ORDER DETAIL / TRACKING PAGE
+===================================================== -->
+
+<div id="orderDetailPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('ordersPage')">←</button>
+      <h2 style="flex:1;">Order Details</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div id="orderDetailContent"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     RETURN PAGE
+===================================================== -->
+
+<div id="returnPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('orderDetailPage')">←</button>
+      <h2 style="flex:1;">Return Product</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="return-banner return-allowed">
+      <strong>✓ 7 Days Easy Return</strong><br>
+      Your return request will be checked first. Refund will be added to your ARYKART Refund Wallet only after inspection and approval.
+    </div>
+
+
+    <div class="return-form" style="margin-top:16px;">
+
+      <div id="returnProductPreview"></div>
+
+      <div class="field">
+        <label>Reason for return</label>
+
+        <select id="returnReason">
+          <option value="">Select a reason</option>
+          <option>Wrong product received</option>
+          <option>Damaged product</option>
+          <option>Product is defective</option>
+          <option>Missing parts or accessories</option>
+          <option>Different from description</option>
+          <option>Size or fit issue</option>
+          <option>Quality issue</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+
+      <div class="field">
+        <label>Describe the problem</label>
+        <textarea
+          id="returnDescription"
+          placeholder="Please explain the issue with the product..."
+        ></textarea>
+      </div>
+
+
+      <div class="field">
+        <label>Add photos for verification</label>
+
+        <input
+          id="returnPhotos"
+          type="file"
+          accept="image/*"
+          multiple
+          onchange="previewReturnPhotos(this)"
+        >
+
+        <div id="returnPhotoPreview" class="file-preview"></div>
+      </div>
+
+
+      <button class="primary-btn" onclick="submitReturnRequest()">
+        Submit Return Request
+      </button>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     ACCOUNT PAGE
+===================================================== -->
+
+<div id="accountPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('homePage')">←</button>
+      <h2 style="flex:1;">Account</h2>
+      <button class="icon-btn" onclick="showPage('cartPage')">🛒</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="account-hero">
+
+      <div class="account-hero-row">
+
+        <div>
+          <h1 id="accountWelcome">Welcome to ARYKART</h1>
+          <p id="accountWelcomeText" style="color:var(--muted);margin-top:7px;">
+            Create or login to your customer account
+          </p>
+        </div>
+
+        <button
+          id="loginAccountButton"
+          class="login-account-btn"
+          onclick="openLoginModal()"
+        >
+          Login / Account
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <div class="account-quick">
+
+      <button
+        class="quick-card"
+        onclick="showPage('ordersPage')"
+      >
+        📦
+        <strong>Orders</strong>
+        <small style="color:var(--muted);">Track your orders</small>
+      </button>
+
+      <button
+        class="quick-card"
+        onclick="showPage('walletPage')"
+      >
+        💳
+        <strong>Refund Wallet</strong>
+        <small id="accountWalletBalance" style="color:var(--muted);">
+          ₹0 balance
+        </small>
+      </button>
+
+    </div>
+
+
+    <div class="settings-box">
+
+      <button class="settings-item" onclick="openProfileModal()">
+        <span class="setting-icon">👤</span>
+        <span class="setting-text">
+          <span class="setting-title">My Profile</span>
+          <span class="setting-sub">Name, phone and account details</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('ordersPage')">
+        <span class="setting-icon">📦</span>
+        <span class="setting-text">
+          <span class="setting-title">My Orders</span>
+          <span class="setting-sub">Track, cancel and manage orders</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('addressPage')">
+        <span class="setting-icon">📍</span>
+        <span class="setting-text">
+          <span class="setting-title">Saved Addresses</span>
+          <span class="setting-sub">Manage delivery addresses</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('sellerPage')">
+        <span class="setting-icon">🏪</span>
+        <span class="setting-text">
+          <span class="setting-title">Sell on ARYKART</span>
+          <span class="setting-sub">Create your seller account</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('wishlistPage')">
+        <span class="setting-icon">❤️</span>
+        <span class="setting-text">
+          <span class="setting-title">Wishlisted Products</span>
+          <span class="setting-sub">Products saved by you</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('walletPage')">
+        <span class="setting-icon">💰</span>
+        <span class="setting-text">
+          <span class="setting-title">Payment & Refund</span>
+          <span class="setting-sub">Refund wallet and transactions</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+    </div>
+
+
+    <h2 class="settings-heading">My Activity</h2>
+
+    <div class="settings-box">
+
+      <button class="settings-item" onclick="showPage('languagePage')">
+        <span class="setting-icon">🌐</span>
+        <span class="setting-text">
+          <span class="setting-title">Change Language</span>
+          <span id="currentLanguageText" class="setting-sub">English</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('wishlistPage')">
+        <span class="setting-icon">❤️</span>
+        <span class="setting-text">
+          <span class="setting-title">Wishlisted Products</span>
+          <span class="setting-sub">Your saved products</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('notificationsPage')">
+        <span class="setting-icon">🔔</span>
+        <span class="setting-text">
+          <span class="setting-title">Notifications</span>
+          <span class="setting-sub">Order and product updates</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showToast('Followed shops feature is ready for future seller connections.')">
+        <span class="setting-icon">🏬</span>
+        <span class="setting-text">
+          <span class="setting-title">Followed Shops</span>
+          <span class="setting-sub">Shops you follow</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+    </div>
+
+
+    <h2 class="settings-heading">Security & Others</h2>
+
+    <div class="settings-box">
+
+      <button class="settings-item" onclick="showPage('privacyPage')">
+        <span class="setting-icon">🔒</span>
+        <span class="setting-text">
+          <span class="setting-title">Privacy & Security</span>
+          <span class="setting-sub">Password, login and privacy</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="openAppSettings()">
+        <span class="setting-icon">⚙️</span>
+        <span class="setting-text">
+          <span class="setting-title">Settings</span>
+          <span class="setting-sub">App preferences</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showToast('Thanks! Rating option opened.')">
+        <span class="setting-icon">⭐</span>
+        <span class="setting-text">
+          <span class="setting-title">Rate ARYKART</span>
+          <span class="setting-sub">Share your feedback</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="showPage('legalPage')">
+        <span class="setting-icon">⚖️</span>
+        <span class="setting-text">
+          <span class="setting-title">Legal & Policies</span>
+          <span class="setting-sub">Terms, privacy and return policy</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+
+      <button class="settings-item" onclick="logoutCustomer()">
+        <span class="setting-icon">🚪</span>
+        <span class="setting-text">
+          <span class="setting-title">Logout</span>
+          <span class="setting-sub">Sign out of your account</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+    </div>
+
+
+    <div style="text-align:center;color:var(--muted);padding:28px 0 10px;">
+      <strong>ARYKART</strong><br>
+      <small>Made for Bharat • Professional Marketplace</small>
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     ADDRESS PAGE
+===================================================== -->
+
+<div id="addressPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Manage Addresses</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div id="addressList"></div>
+
+    <button class="primary-btn" onclick="openAddressModal()">
+      + Add New Address
+    </button>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     WALLET PAGE
+===================================================== -->
+
+<div id="walletPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Refund Wallet</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="wallet-balance">
+      <small>Available Refund Balance</small>
+      <h1 id="walletBalance">₹0</h1>
+      <p style="opacity:.85;margin-top:8px;">
+        Approved return refunds are added here.
+      </p>
+    </section>
+
+
+    <div class="wallet-action-grid">
+
+      <div class="wallet-action">
+        <div style="font-size:26px;">📥</div>
+        <strong>Refund Received</strong>
+        <p style="color:var(--muted);font-size:12px;margin-top:5px;">
+          Track approved refunds
+        </p>
+      </div>
+
+      <div class="wallet-action">
+        <div style="font-size:26px;">💳</div>
+        <strong>Use at Checkout</strong>
+        <p style="color:var(--muted);font-size:12px;margin-top:5px;">
+          Pay using wallet balance
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="section-head">
+      <h2>Transactions</h2>
+    </div>
+
+    <div id="walletTransactions"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     WISHLIST PAGE
+===================================================== -->
+
+<div id="wishlistPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Wishlisted Products</h2>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="wishlistProducts" class="product-grid"></div>
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     LANGUAGE PAGE
+===================================================== -->
+
+<div id="languagePage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Change Language</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <button
+      id="englishLanguage"
+      class="language-option active"
+      onclick="setLanguage('en')"
+    >
+      <span>
+        <strong>English</strong><br>
+        <small>Use ARYKART in English</small>
+      </span>
+      <span>✓</span>
+    </button>
+
+    <button
+      id="hindiLanguage"
+      class="language-option"
+      onclick="setLanguage('hi')"
+    >
+      <span>
+        <strong>हिंदी</strong><br>
+        <small>ARYKART को हिंदी में इस्तेमाल करें</small>
+      </span>
+      <span>✓</span>
+    </button>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     NOTIFICATIONS PAGE
+===================================================== -->
+
+<div id="notificationsPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Notifications</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-form-card">
+      <h3>Order Updates</h3>
+      <p style="color:var(--muted);margin:7px 0 15px;">
+        Get updates about shipping, delivery, cancellation and returns.
+      </p>
+      <label>
+        <input type="checkbox" id="orderNotifications" checked>
+        Enable order notifications
+      </label>
+    </div>
+
+    <div class="seller-form-card">
+      <h3>Product Updates</h3>
+      <p style="color:var(--muted);margin:7px 0 15px;">
+        Get price drops and wishlist product updates.
+      </p>
+      <label>
+        <input type="checkbox" id="productNotifications" checked>
+        Enable product notifications
+      </label>
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     PRIVACY PAGE
+===================================================== -->
+
+<div id="privacyPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Privacy & Security</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-form-card">
+      <h3>🔐 Account Security</h3>
+      <p style="color:var(--muted);margin:8px 0 14px;">
+        Keep your account secure with a strong password and verified phone number.
+      </p>
+      <button class="secondary-btn" onclick="openChangePasswordModal()">
+        Change Password
+      </button>
+    </div>
+
+    <div class="seller-form-card">
+      <h3>📱 Login & Devices</h3>
+      <p style="color:var(--muted);margin-top:8px;">
+        Manage devices signed into your ARYKART account.
+      </p>
+      <button class="secondary-btn" onclick="showToast('Current device management is active in this demo app.')">
+        Manage Devices
+      </button>
+    </div>
+
+    <div class="seller-form-card">
+      <h3>🛡️ Privacy</h3>
+      <p style="color:var(--muted);margin-top:8px;">
+        Control how your personal information and shopping activity are used.
+      </p>
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     LEGAL PAGE
+===================================================== -->
+
+<div id="legalPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Legal & Policies</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-form-card">
+      <h3>Terms & Conditions</h3>
+      <p style="color:var(--muted);line-height:1.6;">
+        ARYKART provides a marketplace for customers and sellers. Orders, payments, deliveries and returns are subject to the applicable policies.
+      </p>
+    </div>
+
+    <div class="seller-form-card">
+      <h3>7-Day Return Policy</h3>
+      <p style="color:var(--muted);line-height:1.6;">
+        Return is available only after the order status becomes Delivered and only within the eligible return period. Return requests are inspected before approval. Approved refunds are credited to the ARYKART Refund Wallet.
+      </p>
+    </div>
+
+    <div class="seller-form-card">
+      <h3>Privacy Policy</h3>
+      <p style="color:var(--muted);line-height:1.6;">
+        Customer information is used to provide account, order and delivery services.
+      </p>
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER REGISTRATION PAGE
+===================================================== -->
+
+<div id="sellerPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Sell on ARYKART</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="seller-hero">
+      <div style="font-size:12px;font-weight:bold;">🚀 START SELLING</div>
+      <h1 style="margin-top:10px;">Grow your business with ARYKART</h1>
+      <p>
+        Create your seller account, complete document verification and list a large number of products.
+      </p>
+    </section>
+
+
+    <div class="seller-note">
+      <strong>Important:</strong> Seller registration ke time address compulsory nahi hai.
+      Seller ko pehle documents aur business details complete karni hain.
+      Pickup/warehouse details product logistics setup ke time future mein add ki ja sakti hain.
+    </div>
+
+
+    <div class="section-head">
+      <h2>Choose Seller Type</h2>
+    </div>
+
+    <div class="seller-choice-grid">
+
+      <button
+        id="sellerTypeIndividual"
+        class="seller-choice active"
+        onclick="selectSellerType('individual')"
+      >
+        👤
+        <h3>Individual</h3>
+        <p>Personal seller / small business</p>
+      </button>
+
+      <button
+        id="sellerTypeNonGst"
+        class="seller-choice"
+        onclick="selectSellerType('nonGst')"
+      >
+        📄
+        <h3>Non-GST Seller</h3>
+        <p>Eligible products without GST registration</p>
+      </button>
+
+      <button
+        id="sellerTypeGst"
+        class="seller-choice"
+        onclick="selectSellerType('gst')"
+      >
+        🏢
+        <h3>GST Seller</h3>
+        <p>Registered business with GST details</p>
+      </button>
+
+    </div>
+
+
+    <div class="seller-form-card">
+
+      <h2 style="margin-bottom:16px;">Seller Documents</h2>
+
+      <div class="form-grid">
+
+        <div class="field full">
+          <label>Seller / Business Name</label>
+          <input id="sellerNameInput" placeholder="Enter seller or business name">
+        </div>
+
+        <div class="field">
+          <label>Mobile Number</label>
+          <input id="sellerPhoneInput" type="tel" placeholder="10 digit mobile number">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="sellerEmailInput" type="email" placeholder="Email address">
+        </div>
+
+        <div class="field">
+          <label>PAN Number</label>
+          <input id="sellerPanInput" placeholder="PAN number">
+        </div>
+
+        <div id="gstFieldWrap" class="field">
+          <label>GST Number</label>
+          <input id="sellerGstInput" placeholder="GST number if applicable">
+        </div>
+
+        <div class="field">
+          <label>Business Type</label>
+          <select id="sellerBusinessType">
+            <option>Individual</option>
+            <option>Proprietorship</option>
+            <option>Partnership</option>
+            <option>Private Limited Company</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Government ID Type</label>
+          <select id="sellerIdType">
+            <option>Aadhaar Card</option>
+            <option>Driving License</option>
+            <option>Voter ID</option>
+            <option>Passport</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label>Government ID Number</label>
+          <input id="sellerIdNumber" placeholder="Enter document number">
+        </div>
+
+        <div class="field">
+          <label>PAN Document Photo</label>
+          <input id="sellerPanPhoto" type="file" accept="image/*,.pdf">
+        </div>
+
+        <div class="field">
+          <label>ID Document Photo</label>
+          <input id="sellerIdPhoto" type="file" accept="image/*,.pdf">
+        </div>
+
+      </div>
+
+      <button class="primary-btn" onclick="registerSeller()">
+        Verify Documents & Create Seller Account
+      </button>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER DASHBOARD PAGE
+===================================================== -->
+
+<div id="sellerDashboardPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">Seller Dashboard</h2>
+      <button class="icon-btn" onclick="showPage('sellerListingPage')">＋</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="seller-hero">
+      <div>Seller Account</div>
+      <h1 id="sellerDashboardName">Your Store</h1>
+      <p id="sellerDashboardType">Verified Seller</p>
+    </section>
+
+
+    <div class="dashboard-stats">
+
+      <div class="stat-card">
+        <small>Total Products</small>
+        <h2 id="sellerProductCount">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <small>Total Orders</small>
+        <h2 id="sellerOrderCount">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <small>Returns</small>
+        <h2 id="sellerReturnCount">0</h2>
+      </div>
+
+      <div class="stat-card">
+        <small>Revenue</small>
+        <h2 id="sellerRevenue">₹0</h2>
+      </div>
+
+    </div>
+
+
+    <div class="seller-menu">
+
+      <button onclick="showPage('sellerListingPage')">
+        ➕<br><br>List Product
+      </button>
+
+      <button onclick="showPage('sellerInventoryPage')">
+        📦<br><br>Inventory
+      </button>
+
+      <button onclick="showPage('sellerOrdersPage')">
+        🚚<br><br>Manage Orders
+      </button>
+
+      <button onclick="showPage('sellerReturnsPage')">
+        ↩️<br><br>Returns
+      </button>
+
+      <button onclick="showToast('Analytics are calculated from seller orders.')">
+        📊<br><br>Analytics
+      </button>
+
+      <button onclick="showToast('Seller payment section is ready for future payment gateway connection.')">
+        💰<br><br>Payments
+      </button>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER PRODUCT LISTING PAGE
+===================================================== -->
+
+<div id="sellerListingPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button>
+      <h2 style="flex:1;">List Your Product</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <form id="advancedListingForm" class="listing-section">
+
+      <h2>Basic Product Details</h2>
+
+      <div class="form-grid">
+
+        <div class="field full">
+          <label>Product Name *</label>
+          <input id="listingName" required placeholder="Example: Premium Cotton T-Shirt">
+        </div>
+
+        <div class="field">
+          <label>Brand</label>
+          <input id="listingBrand" placeholder="Brand name">
+        </div>
+
+        <div class="field">
+          <label>Category *</label>
+          <select id="listingCategory" required>
+            <option value="">Select category</option>
+            <option>Mobiles</option>
+            <option>Electronics</option>
+            <option>Fashion</option>
+            <option>Beauty</option>
+            <option>Home</option>
+            <option>Grocery</option>
+            <option>Sports</option>
+            <option>Books</option>
+            <option>Kids</option>
+            <option>Automotive</option>
+            <option>Health</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>SKU / Seller SKU</label>
+          <input id="listingSku" placeholder="Unique SKU">
+        </div>
+
+        <div class="field">
+          <label>MRP *</label>
+          <input id="listingMrp" type="number" required placeholder="MRP">
+        </div>
+
+        <div class="field">
+          <label>Selling Price *</label>
+          <input id="listingPrice" type="number" required placeholder="Selling price">
+        </div>
+
+        <div class="field">
+          <label>Stock Quantity *</label>
+          <input id="listingStock" type="number" required placeholder="Available stock">
+        </div>
+
+        <div class="field">
+          <label>GST %</label>
+          <input id="listingGst" type="number" value="0" placeholder="GST percentage">
+        </div>
+
+        <div class="field full">
+          <label>Product Description</label>
+          <textarea id="listingDescription" placeholder="Write complete product description"></textarea>
+        </div>
+
+      </div>
+
+
+      <h2 style="margin:25px 0 15px;">Product Photos</h2>
+
+      <div class="field">
+        <label>Add multiple product photos</label>
+        <input
+          id="listingImages"
+          type="file"
+          accept="image/*"
+          multiple
+          onchange="previewListingImages(this)"
+        >
+        <div id="listingImagePreview" class="file-preview"></div>
+      </div>
+
+
+      <h2 style="margin:25px 0 15px;">Package Weight & Dimensions</h2>
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Product Weight (kg) *</label>
+          <input id="listingWeight" type="number" step="0.01" required placeholder="Example: 0.5">
+        </div>
+
+        <div class="field">
+          <label>Package Weight (kg)</label>
+          <input id="listingPackageWeight" type="number" step="0.01" placeholder="Packed weight">
+        </div>
+
+        <div class="field">
+          <label>Length (cm) *</label>
+          <input id="listingLength" type="number" step="0.1" required placeholder="Length">
+        </div>
+
+        <div class="field">
+          <label>Width (cm) *</label>
+          <input id="listingWidth" type="number" step="0.1" required placeholder="Width">
+        </div>
+
+        <div class="field">
+          <label>Height (cm) *</label>
+          <input id="listingHeight" type="number" step="0.1" required placeholder="Height">
+        </div>
+
+        <div class="field">
+          <label>Package Dimensions Unit</label>
+          <select id="listingDimensionUnit">
+            <option>cm</option>
+            <option>inch</option>
+          </select>
+        </div>
+
+      </div>
+
+
+      <div class="seller-note">
+        Volumetric weight automatically calculate ki ja sakti hai:
+        Length × Width × Height ÷ 5000.
+        Delivery/logistics ke liye actual aur package dimensions dono important hain.
+      </div>
+
+
+      <h2 style="margin:25px 0 15px;">Variants</h2>
+
+      <div id="variantContainer"></div>
+
+      <button
+        type="button"
+        class="secondary-btn"
+        onclick="addVariantRow()"
+      >
+        + Add Size / Color / Variant
+      </button>
+
+
+      <h2 style="margin:25px 0 15px;">Additional Information</h2>
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Country of Origin</label>
+          <input id="listingOrigin" value="India">
+        </div>
+
+        <div class="field">
+          <label>Manufacturer Name</label>
+          <input id="listingManufacturer" placeholder="Manufacturer">
+        </div>
+
+        <div class="field">
+          <label>Warranty</label>
+          <input id="listingWarranty" placeholder="Example: 1 Year">
+        </div>
+
+        <div class="field">
+          <label>Expiry Date</label>
+          <input id="listingExpiry" type="date">
+        </div>
+
+        <div class="field">
+          <label>COD Available?</label>
+          <select id="listingCod">
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Return Eligible?</label>
+          <select id="listingReturnEligible">
+            <option value="yes">Yes - 7 Days</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="field full">
+          <label>Search Keywords / Tags</label>
+          <input id="listingTags" placeholder="shirt, cotton, men, fashion">
+        </div>
+
+      </div>
+
+
+      <button type="submit" class="primary-btn">
+        🚀 Publish Product
+      </button>
+
+      <button
+        type="button"
+        class="secondary-btn"
+        onclick="saveListingDraft()"
+      >
+        Save as Draft
+      </button>
+
+    </form>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER INVENTORY PAGE
+===================================================== -->
+
+<div id="sellerInventoryPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button>
+      <h2 style="flex:1;">Inventory</h2>
+      <button class="icon-btn" onclick="showPage('sellerListingPage')">＋</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-note">
+      ARYKART structure supports large catalogs and can manage 1000+ product listings through the product data system.
+    </div>
+
+    <div id="sellerInventoryList" style="margin-top:15px;"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER ORDERS PAGE
+===================================================== -->
+
+<div id="sellerOrdersPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button>
+      <h2 style="flex:1;">Seller Orders</h2>
+    </div>
+  </header>
+
+  <main class="container">
+    <div id="sellerOrdersList"></div>
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     SELLER RETURNS PAGE
+===================================================== -->
+
+<div id="sellerReturnsPage" class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button>
+      <h2 style="flex:1;">Return Requests</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <div class="seller-note">
+      Seller/Admin return inspection system: customer request → product check → approve or reject → approved refund goes to customer Refund Wallet.
+    </div>
+
+    <div id="sellerReturnsList" style="margin-top:15px;"></div>
+
+  </main>
+
+</div>
+
+
+<!-- =====================================================
+     BOTTOM NAV
+===================================================== -->
+
+<nav class="bottom-nav">
+
+  <button
+    id="navHome"
+    class="nav-item active"
+    onclick="showPage('homePage')"
+  >
+    <span class="nav-icon">⌂</span>
+    <span>Home</span>
+  </button>
+
+  <button
+    id="navCategories"
+    class="nav-item"
+    onclick="showPage('categoryPage')"
+  >
+    <span class="nav-icon">▦</span>
+    <span>Categories</span>
+  </button>
+
+  <button
+    id="navOrders"
+    class="nav-item"
+    onclick="showPage('ordersPage')"
+  >
+    <span class="nav-icon">📦</span>
+    <span>My Orders</span>
+  </button>
+
+  <button
+    id="navCart"
+    class="nav-item"
+    onclick="showPage('cartPage')"
+  >
+    <span class="nav-icon">🛒</span>
+    <span>Cart</span>
+  </button>
+
+  <button
+    id="navAccount"
+    class="nav-item"
+    onclick="showPage('accountPage')"
+  >
+    <span class="nav-icon">♙</span>
+    <span>Account</span>
+  </button>
+
+</nav>
+
+
+<!-- =====================================================
+     JAVASCRIPT START
+     PART 2 YAHAN SE CONTINUE HOGA
+===================================================== -->
 
 <script>
-const P=[['Sierra Classic White T-Shirt','Fashion',531,1599,4.1,'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80'],['ASICS Style Running Shoes','Fashion',3639,4999,4.4,'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80'],['Premium Sports Shoes','Fashion',2397,4999,4.4,'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?auto=format&fit=crop&w=600&q=80'],['Wireless Bluetooth Headphones','Electronics',1299,2499,4.3,'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80'],['Smartphone 5G','Mobiles',14999,18999,4.2,'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80'],['Smart Watch Pro','Electronics',1999,3999,4.5,'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=600&q=80'],['Beauty Care Kit','Beauty',799,1499,4.3,'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80'],['Home Decor Lamp','Home',999,1799,4.4,'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80'],['Fresh Grocery Combo','Grocery',499,799,4.1,'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80'],['Football Training Ball','Sports',699,1199,4.2,'https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=600&q=80']].map((x,i)=>({id:i+1,name:x[0],cat:x[1],price:x[2],old:x[3],rating:x[4],img:x[5]}));
-const C=[['All','🛍️'],['Fashion','👕'],['Mobiles','📱'],['Electronics','🎧'],['Beauty','💄'],['Home','🏠'],['Grocery','🛒'],['Sports','⚽']];
-let S=JSON.parse(localStorage.getItem('arykart_complete')||'null')||{cart:[],orders:[],wish:[],profile:{},addresses:[],seller:null,sellerProducts:[],loc:'Select Location',dark:false};
-if(S.dark)document.body.classList.add('dark');const all=()=>P.concat(S.sellerProducts),save=()=>localStorage.setItem('arykart_complete',JSON.stringify(S)),rs=n=>'₹'+Number(n||0).toLocaleString('en-IN'),find=id=>all().find(x=>x.id==id);
-function toast(x){let e=document.getElementById('toast');e.textContent=x;e.classList.remove('hidden');setTimeout(()=>e.classList.add('hidden'),1800)}
-function go(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('on'));let n=document.getElementById('n-'+id);if(n)n.classList.add('on');if(id=='cart')cart();if(id=='orders')orders();if(id=='account')account();if(id=='categories')catPage();if(id=='seller')seller();scrollTo(0,0)}
-function card(p){return `<div class="prod"><button class="wish" onclick="wish(${p.id})">${S.wish.includes(p.id)?'❤️':'♡'}</button><img src="${p.img}" onclick="product(${p.id})"><div class="pi"><div class="name">${p.name}</div><span class="rate">★ ${p.rating}</span><div><span class="price">${rs(p.price)}</span><span class="old">${rs(p.old)}</span></div><button class="btn add" onclick="add(${p.id})">Add to Cart</button></div></div>`}
-function render(a=all()){grid.innerHTML=a.map(card).join('')||'<div class="empty">No products found.</div>'}
-function cats(id){document.getElementById(id).innerHTML=C.map(x=>`<button class="cat" onclick="filterP('${x[0]}');go('home')"><b>${x[1]}</b>${x[0]}</button>`).join('')}
-function filterP(c){let a=c=='All'?all():all().filter(x=>x.cat==c);ptitle.textContent=c=='All'?'Suggested for You':c+' Products';render(a)}
-function searchP(){let q=search.value.toLowerCase();ptitle.textContent=q?'Search Results':'Suggested for You';render(all().filter(x=>(x.name+x.cat).toLowerCase().includes(q)))}
-function catPage(){cats('cats2');grid2.innerHTML=all().map(card).join('')}
-function add(id){let x=S.cart.find(x=>x.id==id);x?x.qty++:S.cart.push({id,qty:1});save();badgeUpdate();toast('Added to cart 🛒')}
-function badgeUpdate(){let n=S.cart.reduce((a,x)=>a+x.qty,0);badge.textContent=n;badge.classList.toggle('hidden',!n)}
-function wish(id){S.wish=S.wish.includes(id)?S.wish.filter(x=>x!=id):S.wish.concat(id);save();render();toast('Wishlist updated ❤️')}
-function cart(){let a=S.cart.map(x=>({...x,p:find(x.id)})).filter(x=>x.p);if(!a.length){cartList.innerHTML='<div class="empty">🛒<h3>Your cart is empty</h3><button class="btn" onclick="go(\'home\')">Continue Shopping</button></div>';checkoutBar.classList.add('hidden');return}cartList.innerHTML=a.map(x=>`<div class="item"><img src="${x.p.img}"><div class="grow"><b>${x.p.name}</b><div class="price">${rs(x.p.price)}</div><div class="qty"><button onclick="qty(${x.id},-1)">−</button> <b>${x.qty}</b> <button onclick="qty(${x.id},1)">+</button> <button class="btn alt" onclick="remove(${x.id})">Remove</button></div></div></div>`).join('');total.textContent=rs(a.reduce((s,x)=>s+x.p.price*x.qty,0));checkoutBar.classList.remove('hidden')}
-function qty(id,d){let x=S.cart.find(x=>x.id==id);x.qty+=d;if(x.qty<1)S.cart=S.cart.filter(x=>x.id!=id);save();cart();badgeUpdate()}
-function remove(id){S.cart=S.cart.filter(x=>x.id!=id);save();cart();badgeUpdate()}
-function modal(x){document.getElementById('modal').innerHTML=`<div class="modal" onclick="if(event.target==this)closeM()"><div class="sheet">${x}</div></div>`}function closeM(){document.getElementById('modal').innerHTML=''}
-function product(id){let p=find(id);modal(`<button class="close" onclick="closeM()">×</button><img src="${p.img}" style="width:100%;max-height:360px;object-fit:cover;border-radius:14px"><h2>${p.name}</h2><span class="rate">★ ${p.rating}</span><p>Category: ${p.cat}</p><div class="price">${rs(p.price)} <span class="old">${rs(p.old)}</span></div><p>Quality product with ARYKART support.</p><button class="btn gold" style="width:100%" onclick="add(${p.id});closeM()">Add to Cart</button>`)}
-function checkout(){if(!S.cart.length)return;modal(`<button class="close" onclick="closeM()">×</button><h2>Checkout</h2><div class="notice">Demo checkout only. No real payment is processed.</div><select id="ca" class="field"><option value="">Select Address</option>${S.addresses.map((x,i)=>`<option value="${i}">${x}</option>`).join('')}</select><select id="pm" class="field"><option>Cash on Delivery</option><option>UPI (Demo)</option><option>Card (Demo)</option></select><button class="btn gold" style="width:100%" onclick="place()">Confirm Order</button>`)}
-function place(){if(S.addresses.length&&ca.value==='')return toast('Select an address');let items=S.cart.map(x=>({...x})),t=items.reduce((s,x)=>s+find(x.id).price*x.qty,0);S.orders.unshift({id:'ARY'+Date.now().toString().slice(-8),items,total:t,date:new Date().toLocaleDateString('en-IN'),status:'Order Confirmed'});S.cart=[];save();closeM();badgeUpdate();toast('Order placed successfully 🎉');go('orders')}
-function orders(){ordersList.innerHTML=S.orders.length?S.orders.map(o=>{let p=find(o.items[0].id);return `<div class="item"><img src="${p.img}"><div class="grow"><b>${p.name}</b><div>${o.items.reduce((a,x)=>a+x.qty,0)} item(s) • ${o.date}</div><div class="price">${rs(o.total)}</div><div class="ok">● ${o.status}</div><button class="btn alt" onclick="track('${o.id}')">Track Order</button></div></div>`}).join(''):'<div class="empty">📦<h3>No orders yet</h3><button class="btn" onclick="go(\'home\')">Start Shopping</button></div>'}
-function track(id){modal(`<button class="close" onclick="closeM()">×</button><h2>Track Order</h2><div class="ok">✓ Order Confirmed</div><div class="panel">📦 Packed</div><div class="panel">🚚 Shipped</div><div class="panel">🏠 Delivered</div><small>Order ID: ${id}</small>`)}
-function account(){an.textContent=S.profile.name||'Welcome to ARYKART!';ap.textContent=S.profile.phone||'Create your account'}
-function profileBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>My Profile</h2><input id="pn" class="field" placeholder="Full Name" value="${S.profile.name||''}"><input id="pp" class="field" placeholder="Mobile Number" value="${S.profile.phone||''}"><input id="pe" class="field" placeholder="Email" value="${S.profile.email||''}"><button class="btn" style="width:100%" onclick="saveProfile()">Save Profile</button>`)}
-function saveProfile(){S.profile={name:pn.value.trim(),phone:pp.value.trim(),email:pe.value.trim()};save();account();closeM();toast('Profile saved')}
-function addressBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>Saved Addresses</h2>${S.addresses.map((x,i)=>`<div class="panel">${x}<button style="float:right" onclick="delAddr(${i})">Delete</button></div>`).join('')}<textarea id="na" class="field" rows="3" placeholder="House / Village / Road / City / PIN"></textarea><button class="btn" onclick="addAddr()">Save Address</button>`)}
-function addAddr(){if(!na.value.trim())return;S.addresses.push(na.value.trim());save();addressBox()}function delAddr(i){S.addresses.splice(i,1);save();addressBox()}
-function wishlistBox(){let a=all().filter(x=>S.wish.includes(x.id));modal(`<button class="close" onclick="closeM()">×</button><h2>❤️ My Wishlist</h2><div class="products">${a.map(card).join('')||'<div class="empty">No saved products.</div>'}</div>`)}
-function notifyBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>🔔 Notifications</h2><div class="panel"><b>Welcome to ARYKART</b><p>Your shopping dashboard is ready.</p></div>${S.orders.length?'<div class="panel">You have '+S.orders.length+' order(s).</div>':''}`)}
-function aboutBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>ARYKART</h2><p>A professional Flipkart-style marketplace demo.</p><div class="notice">For a real marketplace you need a backend for authentication, database, payments, KYC/GST verification, inventory and delivery.</div>`)}
-function dark(){S.dark=!S.dark;save();document.body.classList.toggle('dark',S.dark)}
-function locationBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>Select Location</h2><input id="li" class="field" placeholder="City or PIN" value="${S.loc=='Select Location'?'':S.loc}"><button class="btn" style="width:100%" onclick="saveLoc()">Save Location</button>`)}function saveLoc(){S.loc=li.value.trim()||'Select Location';save();loc.textContent=S.loc;closeM()}
-function sellerForm(type){modal(`<button class="close" onclick="closeM()">×</button><h2>${type} Registration</h2><div class="notice">Demo only: real verification must be done by a secure backend.</div><input id="sn" class="field" placeholder="Seller / Business Name">${type=='GST Seller'?'<input id="sg" class="field" placeholder="15-character GSTIN">':''}<input id="spa" class="field" placeholder="10-character PAN"><input id="sph" class="field" placeholder="Mobile Number"><textarea id="sa" class="field" rows="3" placeholder="Pickup Address"></textarea><button class="btn gold" style="width:100%" onclick="submitSeller('${type}')">Create Seller Account</button>`)}
-function submitSeller(type){let name=sn.value.trim(),pan=spa.value.trim().toUpperCase(),phone=sph.value.trim(),addr=sa.value.trim(),gst=type=='GST Seller'?sg.value.trim().toUpperCase():'';if(!name||!phone||!addr||!pan)return toast('Complete all fields');if(!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan))return toast('Enter valid PAN format');if(type=='GST Seller'&&!/^[0-9A-Z]{15}$/.test(gst))return toast('GSTIN must be 15 characters');S.seller={type,name,pan,phone,addr,gst,status:'Pending Verification'};save();closeM();toast('Seller account created');go('seller')}
-function seller(){if(!S.seller)return go('sellstart');sw.textContent='Welcome, '+S.seller.name;st.textContent=S.seller.type+' • '+S.seller.status;spc.textContent=S.sellerProducts.length;soc.textContent=S.orders.length;ssc.textContent=rs(S.sellerProducts.reduce((a,x)=>a+x.price,0));sellerProducts.innerHTML=S.sellerProducts.length?S.sellerProducts.map(p=>`<div class="item"><img src="${p.img}"><div class="grow"><b>${p.name}</b><div>${p.cat} • Stock: ${p.stock}</div><div class="price">${rs(p.price)}</div></div><button onclick="delSP(${p.id})">Delete</button></div>`).join(''):'<div class="empty">No products listed yet.</div>';sellerOrders.innerHTML=S.orders.length?S.orders.map(o=>`<div class="panel"><b>${o.id}</b><div>${o.date} • ${rs(o.total)}</div><div class="ok">● ${o.status}</div></div>`).join(''):'<div class="empty">No seller orders yet.</div>'}
-function addProductBox(){modal(`<button class="close" onclick="closeM()">×</button><h2>Add Product</h2><input id="xname" class="field" placeholder="Product Name"><select id="xcat" class="field">${C.slice(1).map(x=>'<option>'+x[0]+'</option>').join('')}</select><input id="xprice" type="number" class="field" placeholder="Selling Price"><input id="xold" type="number" class="field" placeholder="MRP"><input id="xstock" type="number" class="field" placeholder="Stock Quantity"><input id="ximg" class="field" placeholder="Image URL (optional)"><button class="btn gold" style="width:100%" onclick="submitSP()">List Product</button>`)}
-function submitSP(){let n=xname.value.trim(),pr=+xprice.value,st=+xstock.value;if(!n||!pr||st<0)return toast('Enter product name, price and stock');S.sellerProducts.push({id:Date.now(),name:n,cat:xcat.value,price:pr,old:+xold.value||pr,stock:st,rating:5,img:ximg.value.trim()||'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80'});save();closeM();seller();render();toast('Product listed 🎉')}
-function delSP(id){S.sellerProducts=S.sellerProducts.filter(x=>x.id!=id);save();seller();render()}
-cats('cats');render();account();badgeUpdate();loc.textContent=S.loc;
-</script></body></html>
+
+/* =========================================================
+   ARYKART COMPLETE PROFESSIONAL APP - PART 2 CONTINUES HERE
+========================================================= */
+
+/* IMPORTANT:
+   Bhai abhi </script>, </body>, </html> MAT likhna.
+   PART 2 ka pura code isi line ke niche paste hoga.
+*/
+
+const APP_KEY = "arykart_complete_app_v1";
+
+let currentProductId = null;
+let currentOrderId = null;
+let previousPageId = "homePage";
+let currentSellerType = "individual";
+
+let appState = {
+  language: "en",
+  customer: {
+    loggedIn: false,
+    name: "",
+    phone: "",
+    email: "",
+    verified: false
+  },
+  cart: [],
+  wishlist: [],
+  addresses: [],
+  orders: [],
+  returns: [],
+  wallet: {
+    balance: 0,
+    transactions: []
+  },
+  seller: {
+    registered: false,
+    name: "",
+    type: "",
+    products: [],
+    drafts: []
+  },
+  reviews: {}
+};
+
+const translations = {
+  en: {
+    heroTitle: "Everything you need, in one place.",
+    heroText: "Shop from thousands of products and get fast delivery with ARYKART.",
+    shopByCategory: "Shop by Category",
+    suggestedForYou: "Suggested for You"
+  },
+  hi: {
+    heroTitle: "आपकी हर जरूरत, एक ही जगह।",
+    heroText: "हजारों प्रोडक्ट खरीदें और ARYKART के साथ तेज डिलीवरी पाएं।",
+    shopByCategory: "कैटेगरी से खरीदें",
+    suggestedForYou: "आपके लिए सुझाव"
+  }
+};
+
+/* PART 2 IS NEXT... */
