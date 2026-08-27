@@ -1292,7 +1292,12 @@
       <button onclick="renderAdminSection('sellers')">🏪<br><br>Sellers</button>
       <button onclick="renderAdminSection('products')">📦<br><br>Products</button>
       <button onclick="renderAdminSection('orders')">🧾<br><br>Orders</button>
+      <button onclick="renderAdminSection('delivery')">🚚<br><br>Delivery</button>
+      <button onclick="renderAdminSection('partners')">🛵<br><br>Delivery Partners</button>
+      <button onclick="renderAdminSection('tracking')">📍<br><br>Live Tracking</button>
+      <button onclick="renderAdminSection('payments')">💰<br><br>Payments</button>
       <button onclick="renderAdminSection('returns')">↩️<br><br>Returns</button>
+      <button onclick="renderAdminSection('settings')">⚙️<br><br>Settings</button>
       <button onclick="syncAppStateToFirebase()">☁️<br><br>Sync Data</button>
     </div>
     <div class="seller-form-card" style="margin-top:16px;">
@@ -1937,6 +1942,8 @@ function normalizeState(){
 
   appState.admin =
     appState.admin || {enabled:false,lastSection:"overview"};
+
+  appState.deliveryPartners = Array.isArray(appState.deliveryPartners) ? appState.deliveryPartners : [];
 
   appState.firebase =
     appState.firebase || {configured:false,phoneOtpEnabled:false};
@@ -3393,11 +3400,17 @@ function placeOrder(){
     payment:payment,
     address:{...address},
     status:"Order Placed",
+    shipment:{
+      id:"AK"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase(),
+      status:"Shipment Created",
+      partnerId:null,
+      partnerName:"Unassigned",
+      bookedAt:new Date().toISOString(),
+      lastUpdated:new Date().toISOString()
+    },
     history:[
-      {
-        status:"Order Placed",
-        date:new Date().toISOString()
-      }
+      { status:"Order Placed", date:new Date().toISOString() },
+      { status:"Shipment Created", date:new Date().toISOString(), note:"ARYKART internal shipment booked automatically" }
     ],
     createdAt:new Date().toISOString(),
     deliveredAt:null,
@@ -6433,25 +6446,56 @@ function adminLogin(event){
   appState.admin.enabled=true; saveAppState(); closeAryModal(); showPage("adminPage"); renderAdminSection(appState.admin.lastSection||"overview");
 }
 function adminLogout(){ appState.admin.enabled=false; saveAppState(); showPage("accountPage"); }
+function adminShipmentId(){ return "AK"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase(); }
+function ensureOrderShipment(order){
+  if(!order.shipment) order.shipment={id:adminShipmentId(),status:"Shipment Created",partnerId:null,partnerName:"Unassigned",bookedAt:new Date().toISOString(),lastUpdated:new Date().toISOString()};
+  order.history=Array.isArray(order.history)?order.history:[];
+  return order.shipment;
+}
+function adminUpdateOrderStatus(id,status){
+  const o=(appState.orders||[]).find(x=>x.id===id); if(!o) return;
+  ensureOrderShipment(o); o.status=status; o.shipment.status=status; o.shipment.lastUpdated=new Date().toISOString();
+  o.history.unshift({status,date:new Date().toISOString(),note:"Updated by ARYKART Admin"});
+  if(status==="Delivered") o.deliveredAt=new Date().toISOString();
+  saveAppState(); renderAdminSection(appState.admin.lastSection||"orders"); renderOrders(); showToast("Order status updated");
+}
+function adminAssignPartner(orderId,partnerId){
+  const o=(appState.orders||[]).find(x=>x.id===orderId), p=(appState.deliveryPartners||[]).find(x=>x.id===partnerId); if(!o||!p) return;
+  ensureOrderShipment(o); o.shipment.partnerId=p.id; o.shipment.partnerName=p.name; o.shipment.status="Delivery Partner Assigned"; o.status="Delivery Partner Assigned"; o.shipment.lastUpdated=new Date().toISOString();
+  o.history.unshift({status:"Delivery Partner Assigned",date:new Date().toISOString(),note:p.name+" assigned"}); saveAppState(); renderAdminSection("delivery"); showToast("Delivery partner assigned");
+}
+function adminAddDeliveryPartner(event){
+  event.preventDefault(); const d=new FormData(event.target); const name=String(d.get("name")||"").trim(), phone=String(d.get("phone")||"").trim(), area=String(d.get("area")||"").trim();
+  if(!name||!phone){showToast("Enter partner name and phone");return;} appState.deliveryPartners.unshift({id:akId(),name,phone,area,status:"Active",createdAt:new Date().toISOString()}); saveAppState(); renderAdminSection("partners"); showToast("Delivery partner added");
+}
+function adminRemoveDeliveryPartner(id){ appState.deliveryPartners=(appState.deliveryPartners||[]).filter(x=>x.id!==id); saveAppState(); renderAdminSection("partners"); }
+function adminCard(title,body){return `<div class="order-card" style="padding:14px;"><strong>${esc(title)}</strong><div style="color:var(--muted);margin-top:7px;line-height:1.5;">${body}</div></div>`;}
 function renderAdminSection(section){
   if(!appState.admin.enabled){ showPage("accountPage"); return; }
   appState.admin.lastSection=section; saveAppState();
-  setText("adminCustomerCount",appState.customer?.loggedIn?1:0);
-  setText("adminSellerCount",appState.seller?.registered?1:0);
-  setText("adminProductCount",(appState.seller?.products||[]).length);
-  setText("adminOrderCount",(appState.orders||[]).length);
+  const orders=appState.orders||[], partners=appState.deliveryPartners||[];
+  orders.forEach(ensureOrderShipment);
+  setText("adminCustomerCount",appState.customer?.loggedIn?1:0); setText("adminSellerCount",appState.seller?.registered?1:0); setText("adminProductCount",(appState.seller?.products||[]).length); setText("adminOrderCount",orders.length);
   const content=getEl("adminSectionContent"); if(!content) return;
-  const data={
-    overview:[["Customer",appState.customer?.phone||"No customer account"],["Seller",appState.seller?.registered?appState.seller.name:"No seller account"],["Firebase",appState.firebase?.configured?"Configured":"Not configured"]],
-    customers:[["Name",appState.customer?.name||"—"],["Phone",appState.customer?.phone||"—"],["Verified",appState.customer?.verified?"Yes":"No"]],
-    sellers:[["Name",appState.seller?.name||"—"],["Phone",appState.seller?.phone||"—"],["OTP",appState.seller?.phoneVerified?"Verified":"Not verified"],["Bank",appState.seller?.bank?.status||"—"],["Documents",appState.seller?.documents?.status||"—"]],
-    products:(appState.seller?.products||[]).map(p=>[p.name||"Product",p.price?money(p.price):"No price"]),
-    orders:(appState.orders||[]).map(o=>[o.id||"Order",o.status||"Pending"]),
-    returns:(appState.returns||[]).map(r=>[r.id||"Return",r.status||"Requested"])
-  };
-  const rows=data[section]||data.overview;
-  setText("adminSectionTitle",section.charAt(0).toUpperCase()+section.slice(1));
-  content.innerHTML=rows.length?rows.map(r=>`<div class="order-card" style="padding:12px;"><strong>${esc(r[0])}</strong><div style="color:var(--muted);margin-top:4px;">${esc(String(r[1]))}</div></div>`).join(""):"<p style='color:var(--muted)'>No records yet.</p>";
+  setText("adminSectionTitle",section.replace(/\b\w/g,c=>c.toUpperCase()));
+  if(section==="overview"){
+    const delivered=orders.filter(o=>o.status==="Delivered").length, active=orders.filter(o=>o.status!=="Delivered"&&o.status!=="Cancelled").length, revenue=orders.reduce((a,o)=>a+Number(o.total||0),0);
+    content.innerHTML=adminCard("Business Summary",`Active orders: <b>${active}</b><br>Delivered: <b>${delivered}</b><br>Delivery partners: <b>${partners.length}</b><br>Total order value: <b>${money(revenue)}</b>`)+adminCard("Quick Actions",`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"><button class="secondary-btn" onclick="renderAdminSection('delivery')">Manage Delivery</button><button class="secondary-btn" onclick="renderAdminSection('partners')">Manage Partners</button><button class="secondary-btn" onclick="renderAdminSection('tracking')">Track Shipments</button></div>`);
+  } else if(section==="delivery"||section==="orders"){
+    content.innerHTML=orders.length?orders.map(o=>{const sh=ensureOrderShipment(o); const opts=partners.map(p=>`<option value="${esc(p.id)}" ${sh.partnerId===p.id?"selected":""}>${esc(p.name)}</option>`).join(""); return adminCard(`${esc(o.id)} • ${esc(sh.id)}`,`Customer: ${esc(o.customerName||"Customer")}<br>Current: <b>${esc(o.status||"Order Placed")}</b><br>Partner: ${esc(sh.partnerName||"Unassigned")}<br><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><select onchange="adminAssignPartner('${esc(o.id)}',this.value)"><option value="">Assign delivery partner</option>${opts}</select><select onchange="adminUpdateOrderStatus('${esc(o.id)}',this.value)"><option value="">Update status</option>${["Confirmed","Packed","Ready for Pickup","Picked Up","In Transit","Out for Delivery","Delivered"].map(x=>`<option value="${x}">${x}</option>`).join("")}</select></div>`);}).join(""):"<p style='color:var(--muted)'>No orders yet.</p>";
+  } else if(section==="partners"){
+    const form=`<form onsubmit="adminAddDeliveryPartner(event)" style="display:grid;gap:8px;margin-bottom:12px;"><input name="name" placeholder="Delivery partner name" required><input name="phone" placeholder="Phone number" required><input name="area" placeholder="Service area"><button class="primary-btn">Add Delivery Partner</button></form>`;
+    content.innerHTML=form+(partners.length?partners.map(p=>adminCard(esc(p.name),`Phone: ${esc(p.phone)}<br>Area: ${esc(p.area||"Not set")}<br>Status: <b>${esc(p.status)}</b><br><button class="secondary-btn" style="margin-top:8px;" onclick="adminRemoveDeliveryPartner('${esc(p.id)}')">Remove</button>`)).join(""):"<p style='color:var(--muted)'>No delivery partners added yet.</p>");
+  } else if(section==="tracking"){
+    content.innerHTML=orders.length?orders.map(o=>{const sh=ensureOrderShipment(o), hist=(o.history||[]).slice(0,6).map(h=>`<div style="padding:7px 0;border-bottom:1px solid #e5e7eb;"><b>${esc(h.status||"")}</b><br><small>${esc(new Date(h.date).toLocaleString())}${h.note?" • "+esc(h.note):""}</small></div>`).join(""); return adminCard(`📍 ${esc(sh.id)}`,`Order: ${esc(o.id)}<br>Partner: ${esc(sh.partnerName)}<div style="margin-top:8px;">${hist}</div>`);}).join(""):"<p style='color:var(--muted)'>No shipments yet.</p>";
+  } else if(section==="payments"){
+    const paid=orders.filter(o=>o.payment!=="cod").reduce((a,o)=>a+Number(o.total||0),0), cod=orders.filter(o=>o.payment==="cod").reduce((a,o)=>a+Number(o.total||0),0); content.innerHTML=adminCard("Payment Summary",`Prepaid value: <b>${money(paid)}</b><br>COD value: <b>${money(cod)}</b><br>Refund wallet: <b>${money(appState.wallet?.balance||0)}</b>`);
+  } else if(section==="settings"){
+    content.innerHTML=adminCard("ARYKART Operations",`Internal delivery mode is active. Shipments are created automatically when an order is placed. Real external courier booking can be connected later with an API.<br><br><button class="secondary-btn" onclick="syncAppStateToFirebase()">Sync Data Now</button>`);
+  } else {
+    const data={customers:[["Name",appState.customer?.name||"—"],["Phone",appState.customer?.phone||"—"],["Verified",appState.customer?.verified?"Yes":"No"]],sellers:[["Name",appState.seller?.name||"—"],["Phone",appState.seller?.phone||"—"],["OTP",appState.seller?.phoneVerified?"Verified":"Not verified"]],products:(appState.seller?.products||[]).map(p=>[p.name||"Product",p.price?money(p.price):"No price"]),returns:(appState.returns||[]).map(r=>[r.id||"Return",r.status||"Requested"])};
+    const rows=data[section]||[]; content.innerHTML=rows.length?rows.map(r=>adminCard(r[0],esc(String(r[1])))).join(""):"<p style='color:var(--muted)'>No records yet.</p>";
+  }
 }
 
 window.ARYKART_TRANSLATIONS={
