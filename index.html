@@ -6325,8 +6325,8 @@ function setupRecaptcha(containerId){
 }
 
 function sendCustomerOtpFromModal(){
-  const form=document.querySelector("#arykartModal form");
-  if(!form){ showToast("Login form not found"); return; }
+  const form=document.querySelector("#arykartProfessionalModalBox form") || document.querySelector('form[onsubmit="customerLogin(event)"]');
+  if(!form){ showToast("Login form not found. Please close and reopen the Login / Create Account popup."); return; }
   const phone=String(new FormData(form).get("phone")||"").replace(/\D/g,"");
   if(!/^\d{10}$/.test(phone)){ showToast("Enter a valid 10 digit mobile number"); return; }
   if(!setupRecaptcha("firebaseRecaptchaContainer")){ showToast("Firebase could not initialize. Check the Firebase settings."); return; }
