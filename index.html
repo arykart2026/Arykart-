@@ -6,1472 +6,7 @@
 
 <title>ARYKART - Shop Everything</title>
 
-<style>
-
-/* =========================================================
-   ARYKART COMPLETE PROFESSIONAL APP - PART 1
-========================================================= */
-
-:root{
-  --primary:#2f67c7;
-  --primary-dark:#1f4f9f;
-  --secondary:#ff5a5f;
-  --green:#138a62;
-  --orange:#ff8a00;
-  --purple:#7d2ea8;
-  --red:#d93025;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --border:#e5e7eb;
-  --bg:#f5f7fb;
-  --white:#ffffff;
-  --shadow:0 8px 25px rgba(31,41,55,.08);
-  --radius:18px;
-}
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  padding-bottom:90px;
-}
-
-button,
-input,
-select,
-textarea{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-img{
-  max-width:100%;
-}
-
-.hidden{
-  display:none!important;
-}
-
-.page{
-  display:none;
-  min-height:100vh;
-}
-
-.page.active{
-  display:block;
-}
-
-.container{
-  width:min(100%,1200px);
-  margin:auto;
-  padding:16px;
-}
-
-/* =========================================================
-   TOP HEADER
-========================================================= */
-
-.app-header{
-  position:sticky;
-  top:0;
-  z-index:100;
-  background:rgba(255,255,255,.96);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
-
-.header-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:10px 16px;
-  max-width:1200px;
-  margin:auto;
-}
-
-.icon-btn{
-  width:48px;
-  height:48px;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-}
-
-.icon-btn:active{
-  transform:scale(.96);
-}
-
-.search-box{
-  flex:1;
-  min-width:0;
-  height:48px;
-  border:1px solid var(--border);
-  background:#f7f8fc;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:0 14px;
-}
-
-.search-box input{
-  width:100%;
-  border:none;
-  outline:none;
-  background:transparent;
-  font-size:16px;
-  color:var(--text);
-}
-
-.cart-top-btn{
-  position:relative;
-}
-
-.badge{
-  position:absolute;
-  right:-5px;
-  top:-7px;
-  min-width:22px;
-  height:22px;
-  padding:0 6px;
-  border-radius:20px;
-  background:var(--secondary);
-  color:#fff;
-  font-size:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-}
-
-/* =========================================================
-   BOTTOM NAVIGATION
-========================================================= */
-
-.bottom-nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  z-index:200;
-  background:#fff;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-around;
-  padding:7px 4px max(7px,env(safe-area-inset-bottom));
-  box-shadow:0 -8px 30px rgba(0,0,0,.06);
-}
-
-.nav-item{
-  border:none;
-  background:transparent;
-  color:#6b7280;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  min-width:60px;
-  padding:5px 4px;
-  font-size:12px;
-}
-
-.nav-icon{
-  font-size:24px;
-}
-
-.nav-item.active{
-  color:var(--primary);
-  font-weight:bold;
-}
-
-/* =========================================================
-   HOME PAGE
-========================================================= */
-
-.hero{
-  background:linear-gradient(135deg,#2f67c7,#6f9df0);
-  border-radius:24px;
-  color:#fff;
-  padding:24px;
-  margin:16px 0;
-  overflow:hidden;
-  position:relative;
-  min-height:190px;
-  display:flex;
-  align-items:center;
-}
-
-.hero:after{
-  content:"";
-  position:absolute;
-  width:250px;
-  height:250px;
-  border-radius:50%;
-  background:rgba(255,255,255,.12);
-  right:-100px;
-  top:-100px;
-}
-
-.hero-content{
-  position:relative;
-  z-index:2;
-  max-width:65%;
-}
-
-.hero h1{
-  font-size:28px;
-  margin-bottom:10px;
-}
-
-.hero p{
-  opacity:.92;
-  line-height:1.5;
-}
-
-.hero button{
-  margin-top:16px;
-  background:#fff;
-  color:var(--primary);
-  border:none;
-  border-radius:12px;
-  padding:11px 17px;
-  font-weight:bold;
-}
-
-.section-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  margin:24px 0 14px;
-}
-
-.section-head h2{
-  font-size:23px;
-}
-
-.view-all{
-  border:1px solid var(--primary);
-  background:#fff;
-  color:var(--primary);
-  padding:9px 14px;
-  border-radius:12px;
-  font-weight:bold;
-}
-
-/* =========================================================
-   CATEGORIES
-========================================================= */
-
-.category-scroll{
-  display:flex;
-  gap:12px;
-  overflow-x:auto;
-  padding-bottom:5px;
-  scrollbar-width:none;
-}
-
-.category-scroll::-webkit-scrollbar{
-  display:none;
-}
-
-.category-card{
-  flex:0 0 95px;
-  min-height:105px;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:18px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  box-shadow:0 4px 12px rgba(0,0,0,.03);
-  font-size:13px;
-  font-weight:bold;
-}
-
-.category-card span:first-child{
-  font-size:30px;
-}
-
-/* =========================================================
-   PRODUCT CARDS
-========================================================= */
-
-.product-grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:14px;
-}
-
-.product-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 5px 18px rgba(31,41,55,.06);
-  position:relative;
-  display:flex;
-  flex-direction:column;
-}
-
-.product-image-wrap{
-  position:relative;
-  width:100%;
-  aspect-ratio:1/1;
-  background:#f3f4f6;
-  overflow:hidden;
-}
-
-.product-image-wrap img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.product-heart{
-  position:absolute;
-  right:10px;
-  top:10px;
-  width:42px;
-  height:42px;
-  border:none;
-  background:rgba(255,255,255,.95);
-  border-radius:50%;
-  font-size:21px;
-  box-shadow:0 3px 10px rgba(0,0,0,.12);
-}
-
-.product-info{
-  padding:13px;
-  display:flex;
-  flex-direction:column;
-  flex:1;
-}
-
-.product-title{
-  font-size:15px;
-  line-height:1.35;
-  font-weight:700;
-  min-height:41px;
-  overflow:hidden;
-}
-
-.product-meta{
-  margin-top:9px;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  flex-wrap:wrap;
-}
-
-.rating-pill{
-  display:inline-flex;
-  align-items:center;
-  gap:4px;
-  padding:5px 8px;
-  background:var(--green);
-  color:#fff;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:bold;
-}
-
-.review-count{
-  color:var(--muted);
-  font-size:12px;
-}
-
-.price-row{
-  margin-top:10px;
-  display:flex;
-  align-items:baseline;
-  gap:7px;
-  flex-wrap:wrap;
-}
-
-.price{
-  font-size:21px;
-  font-weight:800;
-}
-
-.old-price{
-  color:#9ca3af;
-  text-decoration:line-through;
-  font-size:13px;
-}
-
-.discount{
-  color:var(--green);
-  font-size:12px;
-  font-weight:bold;
-}
-
-.delivery-text{
-  color:#6b7280;
-  font-size:11px;
-  margin-top:7px;
-}
-
-.product-actions{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:8px;
-  margin-top:13px;
-}
-
-.add-cart-btn{
-  border:none;
-  background:var(--primary);
-  color:#fff;
-  padding:12px;
-  border-radius:11px;
-  font-weight:bold;
-  font-size:14px;
-}
-
-.buy-now-small{
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:#fff;
-  padding:10px;
-  border-radius:11px;
-  font-weight:bold;
-}
-
-/* =========================================================
-   PRODUCT DETAIL
-========================================================= */
-
-.product-detail-wrap{
-  background:#fff;
-  min-height:100vh;
-}
-
-.detail-gallery{
-  position:relative;
-  background:#f4f4f5;
-}
-
-.detail-main-image{
-  width:100%;
-  height:min(60vw,550px);
-  object-fit:cover;
-  display:block;
-}
-
-.detail-gallery-actions{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-}
-
-.circle-action{
-  width:48px;
-  height:48px;
-  border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,.95);
-  font-size:22px;
-}
-
-.thumbnail-row{
-  display:flex;
-  gap:8px;
-  padding:10px;
-  overflow-x:auto;
-  background:#fff;
-}
-
-.thumb{
-  width:62px;
-  height:62px;
-  flex:none;
-  border:2px solid transparent;
-  border-radius:10px;
-  overflow:hidden;
-  background:#eee;
-}
-
-.thumb.active{
-  border-color:var(--primary);
-}
-
-.thumb img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-.detail-content{
-  padding:18px;
-}
-
-.detail-title{
-  font-size:23px;
-  line-height:1.35;
-}
-
-.detail-sub{
-  color:var(--muted);
-  margin-top:8px;
-  line-height:1.5;
-}
-
-.detail-price{
-  margin-top:15px;
-  display:flex;
-  align-items:baseline;
-  gap:9px;
-  flex-wrap:wrap;
-}
-
-.detail-price strong{
-  font-size:32px;
-}
-
-.offer-box{
-  background:#f5f9ff;
-  border:1px solid #cfe0ff;
-  border-radius:14px;
-  padding:14px;
-  margin-top:16px;
-}
-
-.offer-box h4{
-  margin-bottom:7px;
-}
-
-.highlight-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:0;
-  border:1px solid #e6d4ef;
-  border-radius:15px;
-  margin:18px 0;
-  overflow:hidden;
-}
-
-.highlight-item{
-  padding:14px 8px;
-  text-align:center;
-  border-right:1px solid #e6d4ef;
-  font-size:13px;
-  font-weight:bold;
-}
-
-.highlight-item:last-child{
-  border-right:none;
-}
-
-.detail-section{
-  border-top:8px solid var(--bg);
-  padding:22px 18px;
-}
-
-.detail-section h2{
-  margin-bottom:15px;
-}
-
-.spec-table{
-  display:grid;
-  grid-template-columns:1fr;
-  border:1px solid var(--border);
-  border-radius:14px;
-  overflow:hidden;
-}
-
-.spec-row{
-  display:grid;
-  grid-template-columns:42% 58%;
-  border-bottom:1px solid var(--border);
-}
-
-.spec-row:last-child{
-  border-bottom:none;
-}
-
-.spec-row div{
-  padding:12px;
-}
-
-.spec-row div:first-child{
-  background:#fafafa;
-  color:var(--muted);
-}
-
-.review-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:15px;
-  padding:14px;
-  margin-bottom:12px;
-}
-
-.review-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-}
-
-.review-photo-row{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  margin-top:10px;
-}
-
-.review-photo-row img{
-  width:75px;
-  height:75px;
-  border-radius:10px;
-  object-fit:cover;
-}
-
-.write-review-btn{
-  width:100%;
-  border:1px solid var(--primary);
-  background:#fff;
-  color:var(--primary);
-  padding:13px;
-  border-radius:12px;
-  font-weight:bold;
-}
-
-.product-bottom-bar{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  z-index:250;
-  background:#fff;
-  padding:10px 14px max(10px,env(safe-area-inset-bottom));
-  border-top:1px solid var(--border);
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.product-bottom-bar button{
-  min-height:52px;
-  border-radius:12px;
-  font-size:16px;
-  font-weight:bold;
-}
-
-.bottom-add{
-  background:#fff;
-  color:var(--purple);
-  border:1px solid var(--purple);
-}
-
-.bottom-buy{
-  background:var(--purple);
-  color:#fff;
-  border:none;
-}
-
-/* =========================================================
-   ACCOUNT
-========================================================= */
-
-.account-hero{
-  background:linear-gradient(135deg,#eef4ff,#f8f4ff);
-  border:1px solid #dde5f4;
-  border-radius:24px;
-  padding:22px;
-  margin-top:16px;
-}
-
-.account-hero-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:14px;
-}
-
-.login-account-btn{
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:#fff;
-  border-radius:15px;
-  padding:12px 16px;
-  font-weight:bold;
-}
-
-.account-quick{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-  margin-top:18px;
-}
-
-.quick-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  text-align:center;
-}
-
-.quick-card strong{
-  display:block;
-  margin-top:7px;
-}
-
-.settings-box{
-  margin-top:20px;
-  background:#fff;
-  border-radius:22px;
-  border:1px solid var(--border);
-  overflow:hidden;
-}
-
-.settings-item{
-  width:100%;
-  border:none;
-  background:#fff;
-  padding:17px;
-  display:flex;
-  align-items:center;
-  gap:13px;
-  text-align:left;
-  border-bottom:1px solid var(--border);
-}
-
-.settings-item:last-child{
-  border-bottom:none;
-}
-
-.settings-item .setting-icon{
-  width:34px;
-  text-align:center;
-  font-size:22px;
-}
-
-.settings-item .setting-text{
-  flex:1;
-}
-
-.settings-item .setting-title{
-  font-size:16px;
-  font-weight:700;
-}
-
-.settings-item .setting-sub{
-  color:var(--muted);
-  font-size:12px;
-  margin-top:3px;
-}
-
-.settings-item .arrow{
-  color:#9ca3af;
-  font-size:22px;
-}
-
-.settings-heading{
-  padding:20px 17px 8px;
-  font-size:20px;
-}
-
-/* =========================================================
-   ORDERS
-========================================================= */
-
-.order-tabs{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  margin:15px 0;
-}
-
-.order-tab{
-  white-space:nowrap;
-  padding:9px 14px;
-  border-radius:20px;
-  border:1px solid var(--border);
-  background:#fff;
-}
-
-.order-tab.active{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:#fff;
-}
-
-.order-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:14px;
-  margin-bottom:14px;
-  box-shadow:0 4px 14px rgba(0,0,0,.04);
-}
-
-.order-card-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.order-status{
-  color:var(--green);
-  font-weight:bold;
-}
-
-.order-product{
-  display:flex;
-  gap:12px;
-}
-
-.order-product img{
-  width:82px;
-  height:82px;
-  object-fit:cover;
-  border-radius:12px;
-}
-
-.order-product-info{
-  flex:1;
-}
-
-.order-product-info h4{
-  line-height:1.4;
-}
-
-.order-actions{
-  display:flex;
-  gap:9px;
-  margin-top:14px;
-}
-
-.order-actions button{
-  flex:1;
-  border-radius:10px;
-  padding:11px;
-  font-weight:bold;
-}
-
-.primary-outline{
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:#fff;
-}
-
-.danger-outline{
-  border:1px solid var(--red);
-  color:var(--red);
-  background:#fff;
-}
-
-/* =========================================================
-   TRACKING
-========================================================= */
-
-.tracking-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:18px;
-  margin:16px 0;
-}
-
-.timeline{
-  position:relative;
-  padding-left:30px;
-}
-
-.timeline-item{
-  position:relative;
-  padding-bottom:24px;
-}
-
-.timeline-item:last-child{
-  padding-bottom:0;
-}
-
-.timeline-item:before{
-  content:"";
-  position:absolute;
-  left:-22px;
-  top:4px;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:#d1d5db;
-}
-
-.timeline-item:after{
-  content:"";
-  position:absolute;
-  left:-16px;
-  top:18px;
-  bottom:0;
-  width:2px;
-  background:#e5e7eb;
-}
-
-.timeline-item:last-child:after{
-  display:none;
-}
-
-.timeline-item.done:before{
-  background:var(--green);
-}
-
-.timeline-item.active:before{
-  background:var(--primary);
-  box-shadow:0 0 0 5px rgba(47,103,199,.12);
-}
-
-.timeline-title{
-  font-weight:bold;
-}
-
-.timeline-desc{
-  color:var(--muted);
-  font-size:13px;
-  margin-top:4px;
-}
-
-/* =========================================================
-   RETURN SYSTEM
-========================================================= */
-
-.return-banner{
-  background:#fff8e8;
-  border:1px solid #ffd78d;
-  color:#7a5000;
-  border-radius:15px;
-  padding:14px;
-  line-height:1.5;
-}
-
-.return-allowed{
-  background:#ecfdf5;
-  border-color:#a7f3d0;
-  color:#065f46;
-}
-
-.return-form{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:20px;
-  padding:18px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  display:block;
-  margin-bottom:7px;
-  font-weight:bold;
-  font-size:14px;
-}
-
-.field input,
-.field select,
-.field textarea{
-  width:100%;
-  border:1px solid #d1d5db;
-  border-radius:12px;
-  padding:13px;
-  outline:none;
-  background:#fff;
-}
-
-.field textarea{
-  min-height:100px;
-  resize:vertical;
-}
-
-.file-preview{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-top:10px;
-}
-
-.file-preview img{
-  width:70px;
-  height:70px;
-  object-fit:cover;
-  border-radius:10px;
-}
-
-/* =========================================================
-   WALLET
-========================================================= */
-
-.wallet-balance{
-  background:linear-gradient(135deg,#1d6b57,#138a62);
-  color:#fff;
-  padding:24px;
-  border-radius:24px;
-  margin:16px 0;
-}
-
-.wallet-balance small{
-  opacity:.8;
-}
-
-.wallet-balance h1{
-  margin-top:8px;
-  font-size:34px;
-}
-
-.wallet-action-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.wallet-action{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:16px;
-}
-
-.transaction{
-  background:#fff;
-  border:1px solid var(--border);
-  padding:14px;
-  border-radius:15px;
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-}
-
-.transaction small{
-  color:var(--muted);
-}
-
-/* =========================================================
-   SELLER
-========================================================= */
-
-.seller-hero{
-  background:linear-gradient(135deg,#54218f,#9b2e9b);
-  color:#fff;
-  border-radius:24px;
-  padding:24px;
-  margin:16px 0;
-}
-
-.seller-hero p{
-  opacity:.9;
-  margin-top:8px;
-  line-height:1.5;
-}
-
-.seller-choice-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-}
-
-.seller-choice{
-  background:#fff;
-  border:2px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  text-align:left;
-}
-
-.seller-choice.active{
-  border-color:var(--purple);
-  background:#faf5ff;
-}
-
-.seller-choice h3{
-  margin:8px 0;
-}
-
-.seller-choice p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.4;
-}
-
-.seller-form-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:18px;
-  margin-top:18px;
-}
-
-.seller-note{
-  background:#f3f7ff;
-  border:1px solid #cbdcfb;
-  padding:12px;
-  border-radius:12px;
-  color:#244d8d;
-  font-size:13px;
-  line-height:1.5;
-}
-
-.dashboard-stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-  margin:16px 0;
-}
-
-.stat-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:16px;
-}
-
-.stat-card small{
-  color:var(--muted);
-}
-
-.stat-card h2{
-  margin-top:7px;
-}
-
-.seller-menu{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.seller-menu button{
-  background:#fff;
-  border:1px solid var(--border);
-  padding:18px 12px;
-  border-radius:18px;
-  font-weight:bold;
-  min-height:105px;
-}
-
-.listing-section{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:18px;
-}
-
-.listing-section h2{
-  margin-bottom:15px;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.form-grid .full{
-  grid-column:1/-1;
-}
-
-.variant-row{
-  background:#fafafa;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-  margin-bottom:10px;
-}
-
-.variant-row-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr auto;
-  gap:8px;
-}
-
-.remove-variant{
-  border:none;
-  background:#fee2e2;
-  color:var(--red);
-  border-radius:10px;
-  padding:8px;
-}
-
-/* =========================================================
-   MODALS
-========================================================= */
-
-.modal-overlay{
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  background:rgba(17,24,39,.55);
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-}
-
-.modal{
-  width:min(100%,650px);
-  max-height:92vh;
-  overflow-y:auto;
-  background:#fff;
-  border-radius:25px 25px 0 0;
-  padding:20px;
-}
-
-.modal-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.close-modal{
-  width:42px;
-  height:42px;
-  border:none;
-  background:#f3f4f6;
-  border-radius:50%;
-  font-size:22px;
-}
-
-.primary-btn{
-  width:100%;
-  border:none;
-  background:var(--primary);
-  color:#fff;
-  padding:14px;
-  border-radius:13px;
-  font-weight:bold;
-  margin-top:5px;
-}
-
-.secondary-btn{
-  width:100%;
-  border:1px solid var(--primary);
-  color:var(--primary);
-  background:#fff;
-  padding:13px;
-  border-radius:13px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-.danger-btn{
-  width:100%;
-  border:none;
-  background:var(--red);
-  color:#fff;
-  padding:13px;
-  border-radius:13px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-.login-box{
-  width:min(100%,500px);
-  margin:35px auto;
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:25px;
-  padding:24px;
-  box-shadow:var(--shadow);
-}
-
-.login-logo{
-  text-align:center;
-  margin-bottom:25px;
-}
-
-.login-logo h1{
-  color:var(--primary);
-  letter-spacing:1px;
-}
-
-.login-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  border:1px solid var(--border);
-  border-radius:13px;
-  overflow:hidden;
-  margin-bottom:18px;
-}
-
-.login-tab{
-  border:none;
-  background:#fff;
-  padding:12px;
-}
-
-.login-tab.active{
-  background:var(--primary);
-  color:#fff;
-}
-
-/* =========================================================
-   LANGUAGE
-========================================================= */
-
-.language-option{
-  width:100%;
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:15px;
-  padding:16px;
-  margin-bottom:10px;
-  text-align:left;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.language-option.active{
-  border-color:var(--primary);
-  background:#f3f7ff;
-}
-
-/* =========================================================
-   EMPTY STATES
-========================================================= */
-
-.empty-state{
-  text-align:center;
-  padding:45px 20px;
-  color:var(--muted);
-}
-
-.empty-state .empty-icon{
-  font-size:55px;
-  margin-bottom:12px;
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:95px;
-  transform:translateX(-50%) translateY(30px);
-  z-index:3000;
-  background:#111827;
-  color:#fff;
-  padding:12px 18px;
-  border-radius:13px;
-  opacity:0;
-  pointer-events:none;
-  transition:.25s;
-  width:max-content;
-  max-width:90%;
-  text-align:center;
-}
-
-.toast.show{
-  opacity:1;
-  transform:translateX(-50%) translateY(0);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media(min-width:700px){
-
-  body{
-    padding-bottom:0;
-  }
-
-  .bottom-nav{
-    position:fixed;
-    width:min(680px,100%);
-    left:50%;
-    transform:translateX(-50%);
-    border-radius:20px 20px 0 0;
-  }
-
-  .container{
-    padding:20px;
-  }
-
-  .product-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .seller-choice-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-
-  .dashboard-stats{
-    grid-template-columns:repeat(4,1fr);
-  }
-
-  .product-detail-wrap{
-    width:min(900px,100%);
-    margin:auto;
-  }
-
-}
-
-@media(max-width:380px){
-
-  .header-row{
-    gap:8px;
-    padding:8px;
-  }
-
-  .icon-btn{
-    width:44px;
-    height:44px;
-  }
-
-  .search-box{
-    height:44px;
-  }
-
-  .product-title{
-    font-size:14px;
-  }
-
-  .price{
-    font-size:18px;
-  }
-
-  .highlight-item{
-    font-size:11px;
-  }
-
-}
-
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -2111,6 +646,15 @@ img{
         <span class="arrow">›</span>
       </button>
 
+      <button class="settings-item" onclick="openAdminPanel()">
+        <span class="setting-icon">🛠️</span>
+        <span class="setting-text">
+          <span class="setting-title">Admin Panel</span>
+          <span class="setting-sub">Manage customers, sellers, products and orders</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
 
       <button class="settings-item" onclick="showPage('wishlistPage')">
         <span class="setting-icon">❤️</span>
@@ -2594,18 +1138,21 @@ img{
 
     <div class="seller-form-card">
 
-      <h2 style="margin-bottom:16px;">Seller Documents</h2>
+      <h2 style="margin-bottom:8px;">Create Seller Account</h2>
+      <p id="sellerFormHelp" style="color:var(--muted);margin-top:0;line-height:1.5;">
+        Fill the required details for the selected seller type.
+      </p>
 
       <div class="form-grid">
 
         <div class="field full">
-          <label>Seller / Business Name</label>
-          <input id="sellerNameInput" placeholder="Enter seller or business name">
+          <label id="sellerNameLabel">Full Name</label>
+          <input id="sellerNameInput" placeholder="Enter your full name">
         </div>
 
         <div class="field">
           <label>Mobile Number</label>
-          <input id="sellerPhoneInput" type="tel" placeholder="10 digit mobile number">
+          <input id="sellerPhoneInput" type="tel" inputmode="numeric" maxlength="10" placeholder="10 digit mobile number">
         </div>
 
         <div class="field">
@@ -2613,56 +1160,101 @@ img{
           <input id="sellerEmailInput" type="email" placeholder="Email address">
         </div>
 
-        <div class="field">
-          <label>PAN Number</label>
-          <input id="sellerPanInput" placeholder="PAN number">
-        </div>
-
-        <div id="gstFieldWrap" class="field">
-          <label>GST Number</label>
-          <input id="sellerGstInput" placeholder="GST number if applicable">
-        </div>
-
-        <div class="field">
-          <label>Business Type</label>
-          <select id="sellerBusinessType">
-            <option>Individual</option>
-            <option>Proprietorship</option>
-            <option>Partnership</option>
-            <option>Private Limited Company</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Government ID Type</label>
-          <select id="sellerIdType">
-            <option>Aadhaar Card</option>
-            <option>Driving License</option>
-            <option>Voter ID</option>
-            <option>Passport</option>
-          </select>
+        <div class="field full">
+          <label>Mobile OTP Verification</label>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button type="button" class="secondary-btn" style="flex:1;" onclick="sendSellerOtp()">Send OTP</button>
+            <input id="sellerOtpInput" inputmode="numeric" maxlength="6" placeholder="6 digit OTP" style="flex:1;">
+            <button type="button" class="secondary-btn" onclick="verifySellerOtp()">Verify</button>
+          </div>
+          <small id="sellerOtpStatus" style="color:var(--muted);display:block;margin-top:6px;">Verify your mobile number before creating the seller account.</small>
         </div>
 
         <div class="field full">
+          <h3 style="margin:8px 0 0;">Bank Account Details</h3>
+          <small style="color:var(--muted);">Required for seller settlements and payouts.</small>
+        </div>
+
+        <div class="field">
+          <label>Account Holder Name</label>
+          <input id="sellerBankHolder" placeholder="Name as per bank account">
+        </div>
+
+        <div class="field">
+          <label>Bank Name</label>
+          <input id="sellerBankName" placeholder="Bank name">
+        </div>
+
+        <div class="field">
+          <label>Account Number</label>
+          <input id="sellerBankAccount" inputmode="numeric" placeholder="Enter account number">
+        </div>
+
+        <div class="field">
+          <label>Confirm Account Number</label>
+          <input id="sellerBankConfirm" inputmode="numeric" placeholder="Re-enter account number">
+        </div>
+
+        <div class="field full">
+          <label>IFSC Code</label>
+          <input id="sellerBankIfsc" maxlength="11" placeholder="Example: SBIN0001234" style="text-transform:uppercase;">
+        </div>
+
+        <div id="panFieldWrap" class="field">
+          <label>PAN Number</label>
+          <input id="sellerPanInput" placeholder="ABCDE1234F">
+        </div>
+
+        <div id="gstFieldWrap" class="field" style="display:none;">
+          <label>GSTIN</label>
+          <input id="sellerGstInput" maxlength="15" placeholder="15 character GSTIN">
+        </div>
+
+        <div id="businessTypeWrap" class="field" style="display:none;">
+          <label>Business Type</label>
+          <select id="sellerBusinessType">
+            <option value="Proprietorship">Proprietorship</option>
+            <option value="Partnership">Partnership</option>
+            <option value="Private Limited Company">Private Limited Company</option>
+            <option value="LLP">LLP</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div id="idTypeWrap" class="field">
+          <label>Government ID Type</label>
+          <select id="sellerIdType">
+            <option value="Aadhaar Card">Aadhaar Card</option>
+            <option value="Driving License">Driving License</option>
+            <option value="Voter ID">Voter ID</option>
+            <option value="Passport">Passport</option>
+          </select>
+        </div>
+
+        <div id="idNumberWrap" class="field full">
           <label>Government ID Number</label>
           <input id="sellerIdNumber" placeholder="Enter document number">
         </div>
 
-        <div class="field">
-          <label>PAN Document Photo</label>
+        <div id="panPhotoWrap" class="field">
+          <label>PAN Document <span id="panRequiredText">(required)</span></label>
           <input id="sellerPanPhoto" type="file" accept="image/*,.pdf">
         </div>
 
-        <div class="field">
-          <label>ID Document Photo</label>
+        <div id="idPhotoWrap" class="field">
+          <label>Government ID Document <span id="idRequiredText">(required)</span></label>
           <input id="sellerIdPhoto" type="file" accept="image/*,.pdf">
+        </div>
+
+        <div id="gstDocWrap" class="field" style="display:none;">
+          <label>GST Certificate (required)</label>
+          <input id="sellerGstPhoto" type="file" accept="image/*,.pdf">
         </div>
 
       </div>
 
-      <button class="primary-btn" onclick="registerSeller()">
-        Verify Documents & Create Seller Account
+      <button id="createSellerAccountBtn" class="primary-btn" onclick="registerSeller()">
+        Create Individual Seller Account
       </button>
 
     </div>
@@ -2671,6 +1263,44 @@ img{
 
 </div>
 
+
+<!-- =====================================================
+     ADMIN PANEL
+===================================================== -->
+<div id="adminPage" class="page">
+  <header class="app-header">
+    <div class="header-row">
+      <button class="icon-btn" onclick="showPage('accountPage')">←</button>
+      <h2 style="flex:1;">ARYKART Admin Panel</h2>
+      <button class="icon-btn" onclick="adminLogout()">↪</button>
+    </div>
+  </header>
+  <main class="container">
+    <section class="seller-hero">
+      <div>Administration</div>
+      <h1>Store Control Center</h1>
+      <p>Review users, sellers, products, orders and returns.</p>
+    </section>
+    <div class="dashboard-stats">
+      <div class="stat-card"><small>Customers</small><h2 id="adminCustomerCount">0</h2></div>
+      <div class="stat-card"><small>Sellers</small><h2 id="adminSellerCount">0</h2></div>
+      <div class="stat-card"><small>Products</small><h2 id="adminProductCount">0</h2></div>
+      <div class="stat-card"><small>Orders</small><h2 id="adminOrderCount">0</h2></div>
+    </div>
+    <div class="seller-menu">
+      <button onclick="renderAdminSection('customers')">👥<br><br>Customers</button>
+      <button onclick="renderAdminSection('sellers')">🏪<br><br>Sellers</button>
+      <button onclick="renderAdminSection('products')">📦<br><br>Products</button>
+      <button onclick="renderAdminSection('orders')">🧾<br><br>Orders</button>
+      <button onclick="renderAdminSection('returns')">↩️<br><br>Returns</button>
+      <button onclick="syncAppStateToFirebase()">☁️<br><br>Sync Data</button>
+    </div>
+    <div class="seller-form-card" style="margin-top:16px;">
+      <h3 id="adminSectionTitle">Overview</h3>
+      <div id="adminSectionContent" style="display:grid;gap:10px;"></div>
+    </div>
+  </main>
+</div>
 
 <!-- =====================================================
      SELLER DASHBOARD PAGE
@@ -3110,6 +1740,10 @@ img{
      PART 2 YAHAN SE CONTINUE HOGA
 ===================================================== -->
 
+<!-- Firebase SDKs: fill ARYKART_FIREBASE_CONFIG below to enable real OTP + Firestore -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
 <script>
 
 /* =========================================================
@@ -3117,7 +1751,7 @@ img{
 ========================================================= */
 
 /* IMPORTANT:
-   Bhai abhi </script>, </body>, </html> MAT likhna.
+   Bhai abhi script, body, html closing tags MAT likhna.
    PART 2 ka pura code isi line ke niche paste hoga.
 */
 
@@ -3150,8 +1784,18 @@ let appState = {
     registered: false,
     name: "",
     type: "",
+    phoneVerified: false,
+    bank: {},
     products: [],
     drafts: []
+  },
+  admin: {
+    enabled: false,
+    lastSection: "overview"
+  },
+  firebase: {
+    configured: false,
+    phoneOtpEnabled: false
   },
   reviews: {}
 };
@@ -3284,6 +1928,18 @@ function normalizeState(){
 
   appState.seller.documents =
     appState.seller.documents || {};
+
+  appState.seller.phoneVerified =
+    Boolean(appState.seller.phoneVerified);
+
+  appState.seller.bank =
+    appState.seller.bank || {};
+
+  appState.admin =
+    appState.admin || {enabled:false,lastSection:"overview"};
+
+  appState.firebase =
+    appState.firebase || {configured:false,phoneOtpEnabled:false};
 
   appState.seller.products =
     Array.isArray(appState.seller.products)
@@ -3662,7 +2318,8 @@ function renderHomeProducts(list){
   const ids = [
     "suggestedProducts",
     "homeProducts",
-    "products"
+    "products",
+    "productsSection"
   ];
 
   ids.forEach(function(id){
@@ -4327,93 +2984,43 @@ function renderCart(){
 ========================================================= */
 
 function openCustomerLogin(){
-
-  openAryModal(
-    "Login / Create Account",
-
-    `
-      <form onsubmit="customerLogin(event)">
-
-        <div class="field">
-          <label>Full Name</label>
-          <input
-            name="name"
-            required
-            value="${esc(appState.customer.name || "")}"
-          >
-        </div>
-
-        <div class="field">
-          <label>Mobile Number</label>
-          <input
-            name="phone"
-            inputmode="numeric"
-            pattern="[0-9]{10}"
-            required
-            value="${esc(appState.customer.phone || "")}"
-          >
-        </div>
-
-        <div class="field">
-          <label>Email / Gmail</label>
-          <input
-            name="email"
-            type="email"
-            value="${esc(appState.customer.email || "")}"
-          >
-        </div>
-
-        <button
-          class="primary-btn"
-          style="width:100%;margin-top:15px;"
-        >
-          Verify & Continue
-        </button>
-
-      </form>
-
-      <p style="font-size:12px;color:#6b7280;margin-top:12px;">
-        Demo HTML version: real SMS/email OTP requires a secure backend,
-        Firebase, Twilio or another verified authentication service.
-      </p>
-    `
-  );
+  openAryModal("Login / Create Account", `
+    <form onsubmit="customerLogin(event)">
+      <div class="field"><label>Full Name</label><input name="name" required value="${esc(appState.customer.name || "")}"></div>
+      <div class="field"><label>Mobile Number</label><input name="phone" inputmode="numeric" pattern="[0-9]{10}" required value="${esc(appState.customer.phone || "")}"></div>
+      <div class="field"><label>Email / Gmail</label><input name="email" type="email" value="${esc(appState.customer.email || "")}"></div>
+      <div class="field"><label>OTP</label><input name="otp" inputmode="numeric" maxlength="6" placeholder="6 digit OTP"></div>
+      <div id="firebaseRecaptchaContainer"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button type="button" class="secondary-btn" onclick="sendCustomerOtpFromModal()">Send OTP</button>
+        <button class="primary-btn" style="flex:1;">Verify & Continue</button>
+      </div>
+    </form>
+    <p style="font-size:12px;color:#6b7280;margin-top:12px;">If Firebase is not configured, this local HTML file cannot send a real SMS. Add your Firebase project configuration to enable real OTP.</p>
+  `);
 }
 
 function customerLogin(event){
-
   event.preventDefault();
+  const form=new FormData(event.target);
+  const phone=String(form.get("phone") || "").replace(/\D/g,"");
+  const name=String(form.get("name") || "").trim();
+  const email=String(form.get("email") || "").trim();
+  const otp=String(form.get("otp") || "").trim();
 
-  const form =
-    new FormData(event.target);
+  if(phone.length !== 10){ showToast("Enter valid 10 digit mobile number"); return; }
 
-  const phone =
-    String(form.get("phone") || "")
-      .replace(/\D/g,"");
-
-  if(phone.length !== 10){
-    showToast("Enter valid 10 digit mobile number");
+  if(window.arykartOtpConfirmation){
+    if(!/^\d{6}$/.test(otp)){ showToast("Enter the 6 digit OTP"); return; }
+    window.arykartOtpConfirmation.confirm(otp).then(function(){
+      appState.customer={loggedIn:true,name:name,phone:phone,email:email,verified:true};
+      saveAppState(); syncAppStateToFirebase(); closeAryModal(); renderAccount(); showToast("Phone verified successfully ✓");
+    }).catch(function(error){ console.error(error); showToast("Invalid or expired OTP"); });
     return;
   }
 
-  appState.customer = {
-    loggedIn:true,
-    name:String(form.get("name") || "").trim(),
-    phone:phone,
-    email:String(form.get("email") || "").trim(),
-    verified:true
-  };
-
-  saveAppState();
-  closeAryModal();
-
-  renderAccount();
-
-  showToast(
-    "Account verified successfully ✓"
-  );
+  showToast("First send OTP. Configure Firebase for real SMS verification.");
 }
-
 
 /* =========================================================
    ADDRESS SYSTEM
@@ -5483,7 +4090,11 @@ function openReturnRequest(id){
 
 function submitReturnRequest(event,id){
 
-  event.preventDefault();
+  if(event && typeof event.preventDefault === "function"){
+    event.preventDefault();
+  }
+
+  id = id || currentOrderId;
 
   const order =
     appState.orders.find(function(item){
@@ -5492,8 +4103,17 @@ function submitReturnRequest(event,id){
 
   if(!order) return;
 
-  const data =
-    new FormData(event.target);
+  const data = event && event.target
+    ? new FormData(event.target)
+    : {
+        get:function(name){
+          const map = {
+            reason:getEl("returnReason")?.value || "",
+            details:getEl("returnDescription")?.value || ""
+          };
+          return map[name] || "";
+        }
+      };
 
   const returnRequest = {
     id:akId(),
@@ -6249,156 +4869,158 @@ function saveReview(photos,form){
    DOCUMENTS ONLY - NO ADDRESS REQUIRED
 ========================================================= */
 
+function getSellerTypeConfig(type){
+  const configs = {
+    individual:{
+      label:"Individual Seller",
+      button:"Create Individual Seller Account",
+      nameLabel:"Full Name",
+      namePlaceholder:"Enter your full name",
+      help:"For a person selling products in their own name.",
+      needsPan:true,
+      needsId:true,
+      needsBusiness:false,
+      needsGst:false
+    },
+    nonGst:{
+      label:"Non-GST Seller",
+      button:"Create Non-GST Seller Account",
+      nameLabel:"Seller / Business Name",
+      namePlaceholder:"Enter seller or business name",
+      help:"For eligible sellers without GST registration.",
+      needsPan:true,
+      needsId:false,
+      needsBusiness:true,
+      needsGst:false
+    },
+    gst:{
+      label:"GST Seller",
+      button:"Create GST Seller Account",
+      nameLabel:"Business Name",
+      namePlaceholder:"Enter registered business name",
+      help:"For registered businesses selling with a valid GSTIN.",
+      needsPan:true,
+      needsId:false,
+      needsBusiness:true,
+      needsGst:true
+    }
+  };
+  return configs[type] || configs.individual;
+}
+
+function updateSellerFormForType(){
+  const cfg = getSellerTypeConfig(currentSellerType);
+  const cards = {
+    individual:"sellerTypeIndividual",
+    nonGst:"sellerTypeNonGst",
+    gst:"sellerTypeGst"
+  };
+
+  Object.keys(cards).forEach(function(key){
+    const el = getEl(cards[key]);
+    if(el) el.classList.toggle("active", key === currentSellerType);
+  });
+
+  const setDisplay = function(id,show){
+    const el = getEl(id);
+    if(el) el.style.display = show ? "" : "none";
+  };
+
+  setText("sellerNameLabel",cfg.nameLabel);
+  const nameInput=getEl("sellerNameInput");
+  if(nameInput) nameInput.placeholder=cfg.namePlaceholder;
+  setText("sellerFormHelp",cfg.help);
+  setText("createSellerAccountBtn",cfg.button);
+
+  setDisplay("panFieldWrap",cfg.needsPan);
+  setDisplay("panPhotoWrap",cfg.needsPan);
+  setDisplay("idTypeWrap",cfg.needsId);
+  setDisplay("idNumberWrap",cfg.needsId);
+  setDisplay("idPhotoWrap",cfg.needsId);
+  setDisplay("businessTypeWrap",cfg.needsBusiness);
+  setDisplay("gstFieldWrap",cfg.needsGst);
+  setDisplay("gstDocWrap",cfg.needsGst);
+}
+
 function selectSellerType(type){
-
-  currentSellerType = type;
-
-  const individual =
-    getEl("sellerTypeIndividual");
-
-  const gst =
-    getEl("sellerTypeGst");
-
-  if(individual){
-    individual.classList.toggle(
-      "active",
-      type === "individual"
-    );
-  }
-
-  if(gst){
-    gst.classList.toggle(
-      "active",
-      type === "gst"
-    );
-  }
-
-  const gstWrap =
-    getEl("gstFieldWrap");
-
-  if(gstWrap){
-
-    gstWrap.style.display =
-      type === "gst"
-        ? ""
-        : "none";
-  }
+  currentSellerType = ["individual","nonGst","gst"].includes(type) ? type : "individual";
+  updateSellerFormForType();
 }
 
 function registerSeller(){
+  const cfg=getSellerTypeConfig(currentSellerType);
+  const name=getEl("sellerNameInput")?.value.trim() || "";
+  const phone=getEl("sellerPhoneInput")?.value.trim().replace(/\D/g,"") || "";
+  const email=getEl("sellerEmailInput")?.value.trim() || "";
+  const pan=(getEl("sellerPanInput")?.value.trim() || "").toUpperCase();
+  const gst=(getEl("sellerGstInput")?.value.trim() || "").toUpperCase();
+  const businessType=getEl("sellerBusinessType")?.value || "";
+  const idType=getEl("sellerIdType")?.value || "";
+  const idNumber=getEl("sellerIdNumber")?.value.trim() || "";
+  const panPhoto=getEl("sellerPanPhoto")?.files?.[0];
+  const idPhoto=getEl("sellerIdPhoto")?.files?.[0];
+  const gstPhoto=getEl("sellerGstPhoto")?.files?.[0];
 
-  const name =
-    getEl("sellerNameInput")?.value.trim();
+  const holder=getEl("sellerBankHolder")?.value.trim() || "";
+  const bankName=getEl("sellerBankName")?.value.trim() || "";
+  const account=getEl("sellerBankAccount")?.value.trim().replace(/\s/g,"") || "";
+  const confirm=getEl("sellerBankConfirm")?.value.trim().replace(/\s/g,"") || "";
+  const ifsc=(getEl("sellerBankIfsc")?.value.trim() || "").toUpperCase();
 
-  const phone =
-    getEl("sellerPhoneInput")?.value.trim();
+  if(!name || !phone || !email){ showToast("Please enter name, mobile number and email"); return; }
+  if(!/^\d{10}$/.test(phone)){ showToast("Enter a valid 10 digit mobile number"); return; }
+  if(!/^\S+@\S+\.\S+$/.test(email)){ showToast("Enter a valid email address"); return; }
 
-  const email =
-    getEl("sellerEmailInput")?.value.trim();
-
-  const pan =
-    getEl("sellerPanInput")
-      ?.value
-      .trim()
-      .toUpperCase();
-
-  const gst =
-    getEl("sellerGstInput")
-      ?.value
-      .trim()
-      .toUpperCase();
-
-  const businessType =
-    getEl("sellerBusinessType")?.value;
-
-  const idType =
-    getEl("sellerIdType")?.value;
-
-  const idNumber =
-    getEl("sellerIdNumber")
-      ?.value
-      .trim();
-
-  if(
-    !name ||
-    !phone ||
-    !email ||
-    !pan ||
-    !idNumber
-  ){
-    showToast(
-      "Please complete all required seller documents"
-    );
-
+  if(!appState.seller.phoneVerified){
+    showToast("Please verify the seller mobile number with OTP first");
     return;
   }
 
-  if(
-    !/^[A-Z]{5}[0-9]{4}[A-Z]$/
-      .test(pan)
-  ){
-
-    showToast(
-      "Enter valid PAN number"
-    );
-
+  if(!holder || !bankName || !account || !confirm || !ifsc){
+    showToast("Please fill all bank account details");
     return;
   }
+  if(account !== confirm){ showToast("Bank account numbers do not match"); return; }
+  if(!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)){ showToast("Enter a valid 11 character IFSC code"); return; }
 
-  if(
-    currentSellerType === "gst" &&
-    !/^[0-9A-Z]{15}$/.test(gst || "")
-  ){
+  if(cfg.needsPan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(pan)){ showToast("Enter a valid PAN number"); return; }
+  if(cfg.needsId && !idNumber){ showToast("Enter your government ID number"); return; }
+  if(cfg.needsGst && !/^[0-9A-Z]{15}$/.test(gst)){ showToast("Enter a valid 15 character GSTIN"); return; }
+  if(cfg.needsPan && !panPhoto){ showToast("Please upload the PAN document"); return; }
+  if(cfg.needsId && !idPhoto){ showToast("Please upload the government ID document"); return; }
+  if(cfg.needsGst && !gstPhoto){ showToast("Please upload the GST certificate"); return; }
 
-    showToast(
-      "Enter valid 15 character GST number"
-    );
-
-    return;
-  }
-
-  appState.seller = {
+  appState.seller={
     ...appState.seller,
-
     registered:true,
-
-    name:name,
-
-    phone:phone,
-
-    email:email,
-
-    type:
-      currentSellerType === "gst"
-        ? "GST Seller"
-        : "Individual Seller",
-
-    businessType:
-      businessType,
-
+    name:name, phone:phone, email:email, type:cfg.label,
+    phoneVerified:true,
+    businessType:cfg.needsBusiness ? businessType : "Individual",
+    bank:{
+      holder:holder,
+      bankName:bankName,
+      accountLast4:account.slice(-4),
+      ifsc:ifsc,
+      verified:false,
+      status:"Pending Bank Verification"
+    },
     documents:{
-      pan:pan,
-      gst:
-        currentSellerType === "gst"
-          ? gst
-          : "",
-      idType:idType,
-      idNumber:idNumber,
+      pan:cfg.needsPan ? pan : "",
+      gst:cfg.needsGst ? gst : "",
+      idType:cfg.needsId ? idType : "",
+      idNumber:cfg.needsId ? idNumber : "",
+      panUploaded:Boolean(panPhoto),
+      idUploaded:Boolean(idPhoto),
+      gstUploaded:Boolean(gstPhoto),
       status:"Pending Verification"
     }
   };
 
   saveAppState();
-
+  syncAppStateToFirebase();
   renderSellerDashboard();
-
-  showToast(
-    "Seller account created successfully"
-  );
-
-  showPage(
-    "sellerDashboardPage"
-  );
+  showToast(cfg.label + " account created successfully");
+  showPage("sellerDashboardPage");
 }
 
 
@@ -6546,13 +5168,16 @@ function collectListingData(){
       getInputValue("listingDescription"),
 
     image:
+      (Array.isArray(window.arykartListingImages) && window.arykartListingImages[0]) ||
       getInputValue("listingImage") ||
       getInputValue("listingImageUrl"),
 
     images:
-      getInputValue("listingImage")
-        ? [getInputValue("listingImage")]
-        : [],
+      Array.isArray(window.arykartListingImages) && window.arykartListingImages.length
+        ? window.arykartListingImages.slice(0,5)
+        : (getInputValue("listingImage")
+            ? [getInputValue("listingImage")]
+            : []),
 
     weight:
       getNumberValue("listingWeight"),
@@ -7062,73 +5687,66 @@ function renderAccount(){
 
   [
     "accountName",
-    "accountWelcomeName"
+    "accountWelcomeName",
+    "accountWelcome"
   ].forEach(function(id){
     setText(id,name);
   });
 
   [
     "accountPhone",
-    "accountSubtitle"
+    "accountSubtitle",
+    "accountWelcomeText"
   ].forEach(function(id){
     setText(id,phone);
   });
 
-  setText(
-    "refundWalletBalance",
-    money(appState.wallet.balance)
-  );
+  ["refundWalletBalance", "accountWalletBalance"].forEach(function(id){
+    setText(id, money(appState.wallet.balance));
+  });
 
   updateCartCount();
 }
 
+function translateVisibleText(){
+  const lang=appState.language || "en";
+  const map=(window.ARYKART_TRANSLATIONS && window.ARYKART_TRANSLATIONS[lang]) || {};
+  document.querySelectorAll("[data-ak-original]").forEach(function(el){
+    const key=el.getAttribute("data-ak-original");
+    if(key && map[key] && el.children.length===0) el.textContent=map[key];
+    else if(key && lang==="en" && el.children.length===0) el.textContent=key;
+  });
+  if(lang==="en"){
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    let n; while(n=walker.nextNode()){
+      const t=n.nodeValue.trim();
+      if(t && !n.parentElement?.dataset.akOriginal && n.parentElement && !["SCRIPT","STYLE"].includes(n.parentElement.tagName)){
+        n.parentElement.dataset.akOriginal=t;
+      }
+    }
+  }else{
+    document.querySelectorAll("button, h1, h2, h3, h4, p, span, small, label, option").forEach(function(el){
+      if(el.children.length===0 && !el.dataset.akOriginal){
+        const t=el.textContent.trim();
+        if(t) el.dataset.akOriginal=t;
+      }
+      const key=el.dataset.akOriginal;
+      if(key && map[key] && el.children.length===0) el.textContent=map[key];
+    });
+  }
+}
+
 function setLanguage(language){
-
-  appState.language =
-    language === "hi"
-      ? "hi"
-      : "en";
-
+  appState.language=language==="hi" ? "hi" : "en";
   saveAppState();
-
-  const en =
-    getEl("englishLanguage");
-
-  const hi =
-    getEl("hindiLanguage");
-
-  if(en){
-    en.classList.toggle(
-      "active",
-      appState.language === "en"
-    );
-  }
-
-  if(hi){
-    hi.classList.toggle(
-      "active",
-      appState.language === "hi"
-    );
-  }
-
-  const t =
-    translations[appState.language];
-
-  setText(
-    "heroTitle",
-    t.heroTitle
-  );
-
-  setText(
-    "heroText",
-    t.heroText
-  );
-
-  showToast(
-    language === "hi"
-      ? "भाषा हिंदी में बदल दी गई"
-      : "Language changed to English"
-  );
+  const en=getEl("englishLanguage"), hi=getEl("hindiLanguage");
+  if(en) en.classList.toggle("active",appState.language==="en");
+  if(hi) hi.classList.toggle("active",appState.language==="hi");
+  const t=translations[appState.language];
+  setText("heroTitle",t.heroTitle); setText("heroText",t.heroText);
+  setText("currentLanguageText",appState.language==="hi" ? "हिंदी" : "English");
+  translateVisibleText();
+  showToast(appState.language==="hi" ? "भाषा हिंदी में बदल दी गई" : "Language changed to English");
 }
 
 function toggleDarkMode(){
@@ -7492,6 +6110,288 @@ function updateCustomerProfile(event){
 }
 
 
+
+/* =========================================================
+   FINAL COMPATIBILITY FIXES FOR PART 1 + PART 2
+========================================================= */
+
+function loadMoreProducts(){
+  const container = getEl("moreProducts");
+  if(!container) return;
+
+  const all = getAllProducts();
+  const alreadyShown = Math.min(all.length, 12);
+  const more = all.slice(alreadyShown, alreadyShown + 24);
+
+  container.innerHTML = more.length
+    ? more.map(productCard).join("")
+    : `<div class="empty-state"><h3>No more products available</h3></div>`;
+
+  showToast(more.length ? `${more.length} more products loaded` : "No more products available");
+}
+
+function openReviewModal(){
+  openReviewForm();
+}
+
+function openLoginModal(){
+  openCustomerLogin();
+}
+
+function openProfileModal(){
+  openProfile();
+}
+
+function openAppSettings(){
+  openAryModal(
+    "App Settings",
+    `
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:10px;">
+          <input id="aryDarkModeSetting" type="checkbox" ${appState.settings.darkMode ? "checked" : ""}>
+          Enable dark mode
+        </label>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:10px;">
+          <input id="aryOrderNotifications" type="checkbox" ${appState.notifications.orders ? "checked" : ""}>
+          Order notifications
+        </label>
+      </div>
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:10px;">
+          <input id="aryOfferNotifications" type="checkbox" ${appState.notifications.offers ? "checked" : ""}>
+          Offer notifications
+        </label>
+      </div>
+      <button class="primary-btn" style="width:100%;" onclick="saveAppSettings()">Save Settings</button>
+    `
+  );
+}
+
+function saveAppSettings(){
+  const dark = Boolean(getEl("aryDarkModeSetting")?.checked);
+  appState.settings.darkMode = dark;
+  appState.notifications.orders = Boolean(getEl("aryOrderNotifications")?.checked);
+  appState.notifications.offers = Boolean(getEl("aryOfferNotifications")?.checked);
+  document.body.classList.toggle("dark", dark);
+  saveAppState();
+  closeAryModal();
+  showToast("Settings saved");
+}
+
+function openChangePasswordModal(){
+  if(!appState.customer.loggedIn){
+    openCustomerLogin();
+    return;
+  }
+
+  openAryModal(
+    "Change Password",
+    `
+      <form onsubmit="saveDemoPassword(event)">
+        <div class="field">
+          <label>New Password</label>
+          <input name="password" type="password" minlength="6" required>
+        </div>
+        <div class="field">
+          <label>Confirm Password</label>
+          <input name="confirm" type="password" minlength="6" required>
+        </div>
+        <button class="primary-btn" style="width:100%;">Update Password</button>
+      </form>
+    `
+  );
+}
+
+function saveDemoPassword(event){
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const password = String(data.get("password") || "");
+  const confirmPassword = String(data.get("confirm") || "");
+  if(password !== confirmPassword){
+    showToast("Passwords do not match");
+    return;
+  }
+  closeAryModal();
+  showToast("Password updated in this demo app");
+}
+
+function previewListingImages(input){
+  const preview = getEl("listingImagePreview");
+  const files = Array.from(input?.files || []).slice(0,5);
+  window.arykartListingImages = [];
+  if(preview) preview.innerHTML = "";
+  if(!files.length) return;
+
+  files.forEach(function(file){
+    if(!file.type || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = function(event){
+      const src = String(event.target?.result || "");
+      if(!src) return;
+      window.arykartListingImages.push(src);
+      if(preview){
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Product preview";
+        img.style.cssText = "width:80px;height:80px;object-fit:cover;border-radius:10px;margin:4px;";
+        preview.appendChild(img);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function previewReturnPhotos(input){
+  const preview = getEl("returnPhotoPreview");
+  const files = Array.from(input?.files || []).slice(0,5);
+  window.arykartReturnPhotos = [];
+  if(preview) preview.innerHTML = "";
+  files.forEach(function(file){
+    if(!file.type || !file.type.startsWith("image/")) return;
+    const reader = new FileReader();
+    reader.onload = function(event){
+      const src = String(event.target?.result || "");
+      if(!src) return;
+      window.arykartReturnPhotos.push(src);
+      if(preview){
+        const img = document.createElement("img");
+        img.src = src;
+        img.alt = "Return photo preview";
+        img.style.cssText = "width:80px;height:80px;object-fit:cover;border-radius:10px;margin:4px;";
+        preview.appendChild(img);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* =========================================================
+   FIREBASE AUTH + FIRESTORE + ADMIN
+========================================================= */
+const ARYKART_FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+
+let arykartFirebaseApp=null, arykartAuth=null, arykartDb=null, arykartRecaptcha=null;
+
+function initializeFirebase(){
+  try{
+    if(typeof firebase==="undefined" || !ARYKART_FIREBASE_CONFIG.apiKey) return false;
+    arykartFirebaseApp=firebase.apps.length ? firebase.app() : firebase.initializeApp(ARYKART_FIREBASE_CONFIG);
+    arykartAuth=firebase.auth(); arykartDb=firebase.firestore();
+    appState.firebase.configured=true; appState.firebase.phoneOtpEnabled=true; saveAppState();
+    return true;
+  }catch(error){ console.error("Firebase init failed",error); return false; }
+}
+
+function getFirebasePhone(phone){ return "+91"+String(phone||"").replace(/\D/g,"").slice(-10); }
+
+function setupRecaptcha(containerId){
+  if(!initializeFirebase()) return false;
+  if(arykartRecaptcha) try{ arykartRecaptcha.clear(); }catch(e){}
+  const el=getEl(containerId);
+  if(!el) return false;
+  el.innerHTML="";
+  arykartRecaptcha=new firebase.auth.RecaptchaVerifier(containerId,{size:"invisible"});
+  return true;
+}
+
+function sendCustomerOtpFromModal(){
+  const form=document.querySelector("#arykartModal form");
+  if(!form){ showToast("Login form not found"); return; }
+  const phone=String(new FormData(form).get("phone")||"").replace(/\D/g,"");
+  if(!/^\d{10}$/.test(phone)){ showToast("Enter a valid 10 digit mobile number"); return; }
+  if(!setupRecaptcha("firebaseRecaptchaContainer")){ showToast("Firebase is not configured yet. Add Firebase config first."); return; }
+  arykartAuth.signInWithPhoneNumber(getFirebasePhone(phone),arykartRecaptcha)
+    .then(function(result){ window.arykartOtpConfirmation=result; showToast("OTP sent successfully"); })
+    .catch(function(error){ console.error(error); showToast("Could not send OTP: "+(error.message||"check Firebase settings")); });
+}
+
+function ensureSellerOtpRecaptcha(){
+  let el=getEl("sellerRecaptchaContainer");
+  if(!el){
+    el=document.createElement("div"); el.id="sellerRecaptchaContainer";
+    getEl("sellerOtpStatus")?.parentElement?.appendChild(el);
+  }
+  return setupRecaptcha("sellerRecaptchaContainer");
+}
+
+function sendSellerOtp(){
+  const phone=String(getEl("sellerPhoneInput")?.value||"").replace(/\D/g,"");
+  if(!/^\d{10}$/.test(phone)){ showToast("Enter seller 10 digit mobile number first"); return; }
+  if(!ensureSellerOtpRecaptcha()){ showToast("Firebase is not configured yet. Add Firebase config first."); return; }
+  arykartAuth.signInWithPhoneNumber(getFirebasePhone(phone),arykartRecaptcha)
+    .then(function(result){ window.arykartSellerOtpConfirmation=result; setText("sellerOtpStatus","OTP sent. Enter the 6 digit OTP."); showToast("Seller OTP sent"); })
+    .catch(function(error){ console.error(error); showToast("Could not send OTP"); });
+}
+
+function verifySellerOtp(){
+  const code=String(getEl("sellerOtpInput")?.value||"").trim();
+  if(!window.arykartSellerOtpConfirmation){ showToast("Send OTP first"); return; }
+  if(!/^\d{6}$/.test(code)){ showToast("Enter valid 6 digit OTP"); return; }
+  window.arykartSellerOtpConfirmation.confirm(code).then(function(){
+    appState.seller.phoneVerified=true; saveAppState(); setText("sellerOtpStatus","Mobile number verified ✓"); showToast("Seller mobile verified successfully");
+  }).catch(function(){ showToast("Invalid or expired OTP"); });
+}
+
+async function syncAppStateToFirebase(){
+  if(!initializeFirebase() || !arykartDb) return false;
+  try{
+    const customerPhone=appState.customer?.phone;
+    if(customerPhone) await arykartDb.collection("customers").doc(customerPhone).set({...appState.customer,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    const sellerPhone=appState.seller?.phone;
+    if(sellerPhone && appState.seller.registered) await arykartDb.collection("sellers").doc(sellerPhone).set({...appState.seller,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    await arykartDb.collection("appData").doc("latest").set({orders:appState.orders,returns:appState.returns,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    showToast("Data synced to Firebase");
+    return true;
+  }catch(error){ console.error(error); showToast("Firebase sync failed"); return false; }
+}
+
+function openAdminPanel(){
+  openAryModal("Admin Access",`<form onsubmit="adminLogin(event)"><div class="field"><label>Admin PIN</label><input name="pin" type="password" required placeholder="Enter admin PIN"></div><button class="primary-btn" style="width:100%;margin-top:10px;">Open Admin Panel</button></form><p style="font-size:12px;color:var(--muted);margin-top:10px;">Set a secure admin PIN in the source before production.</p>`);
+}
+function adminLogin(event){
+  event.preventDefault();
+  const pin=String(new FormData(event.target).get("pin")||"");
+  if(pin!=="ARYKART_ADMIN_CHANGE_ME"){ showToast("Invalid admin PIN"); return; }
+  appState.admin.enabled=true; saveAppState(); closeAryModal(); showPage("adminPage"); renderAdminSection(appState.admin.lastSection||"overview");
+}
+function adminLogout(){ appState.admin.enabled=false; saveAppState(); showPage("accountPage"); }
+function renderAdminSection(section){
+  if(!appState.admin.enabled){ showPage("accountPage"); return; }
+  appState.admin.lastSection=section; saveAppState();
+  setText("adminCustomerCount",appState.customer?.loggedIn?1:0);
+  setText("adminSellerCount",appState.seller?.registered?1:0);
+  setText("adminProductCount",(appState.seller?.products||[]).length);
+  setText("adminOrderCount",(appState.orders||[]).length);
+  const content=getEl("adminSectionContent"); if(!content) return;
+  const data={
+    overview:[["Customer",appState.customer?.phone||"No customer account"],["Seller",appState.seller?.registered?appState.seller.name:"No seller account"],["Firebase",appState.firebase?.configured?"Configured":"Not configured"]],
+    customers:[["Name",appState.customer?.name||"—"],["Phone",appState.customer?.phone||"—"],["Verified",appState.customer?.verified?"Yes":"No"]],
+    sellers:[["Name",appState.seller?.name||"—"],["Phone",appState.seller?.phone||"—"],["OTP",appState.seller?.phoneVerified?"Verified":"Not verified"],["Bank",appState.seller?.bank?.status||"—"],["Documents",appState.seller?.documents?.status||"—"]],
+    products:(appState.seller?.products||[]).map(p=>[p.name||"Product",p.price?money(p.price):"No price"]),
+    orders:(appState.orders||[]).map(o=>[o.id||"Order",o.status||"Pending"]),
+    returns:(appState.returns||[]).map(r=>[r.id||"Return",r.status||"Requested"])
+  };
+  const rows=data[section]||data.overview;
+  setText("adminSectionTitle",section.charAt(0).toUpperCase()+section.slice(1));
+  content.innerHTML=rows.length?rows.map(r=>`<div class="order-card" style="padding:12px;"><strong>${esc(r[0])}</strong><div style="color:var(--muted);margin-top:4px;">${esc(String(r[1]))}</div></div>`).join(""):"<p style='color:var(--muted)'>No records yet.</p>";
+}
+
+window.ARYKART_TRANSLATIONS={
+  hi:{
+    "Account":"खाता","Orders":"ऑर्डर","My Orders":"मेरे ऑर्डर","Saved Addresses":"सहेजे गए पते","Sell on ARYKART":"ARYKART पर बेचें","Wishlisted Products":"पसंदीदा प्रोडक्ट","Payment & Refund":"भुगतान और रिफंड","Change Language":"भाषा बदलें","English":"अंग्रेज़ी","Notifications":"सूचनाएं","Settings":"सेटिंग्स","Cart":"कार्ट","Checkout":"चेकआउट","Home":"होम","Search":"खोजें","Seller Dashboard":"सेलर डैशबोर्ड","List Your Product":"अपना प्रोडक्ट जोड़ें","Inventory":"इन्वेंट्री","Returns":"रिटर्न","Manage Orders":"ऑर्डर मैनेज करें","Total Products":"कुल प्रोडक्ट","Total Orders":"कुल ऑर्डर","Revenue":"कमाई","Mobile Number":"मोबाइल नंबर","Email":"ईमेल","Full Name":"पूरा नाम","Bank Account Details":"बैंक खाता विवरण","Account Holder Name":"खाताधारक का नाम","Bank Name":"बैंक का नाम","Account Number":"खाता नंबर","Confirm Account Number":"खाता नंबर दोबारा लिखें","IFSC Code":"आईएफएससी कोड","Create Seller Account":"सेलर अकाउंट बनाएं","Admin Panel":"एडमिन पैनल","Customers":"ग्राहक","Sellers":"सेलर","Products":"प्रोडक्ट","Product":"प्रोडक्ट","Orders Delivered":"डिलीवर किए गए ऑर्डर","Cancel":"रद्द करें","Save":"सेव करें","Continue":"जारी रखें","Login / Account":"लॉगिन / खाता","Welcome to ARYKART":"ARYKART में आपका स्वागत है"
+  },
+  en:{}
+};
+
 /* =========================================================
    INITIALIZATION
 ========================================================= */
@@ -7499,6 +6399,9 @@ function updateCustomerProfile(event){
 function initializeArykart(){
 
   normalizeState();
+
+  initializeFirebase();
+  updateSellerFormForType();
 
   if(appState.settings.darkMode){
     document.body.classList.add("dark");
@@ -7556,6 +6459,7 @@ function initializeArykart(){
   renderSellerInventory();
   renderSellerOrders();
   renderSellerReturns();
+  if(appState.admin && appState.admin.enabled) renderAdminSection(appState.admin.lastSection||"overview");
   updateCartCount();
 
   setLanguage(
