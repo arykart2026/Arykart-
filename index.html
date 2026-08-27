@@ -611,7 +611,6 @@
         <span class="setting-icon">👤</span>
         <span class="setting-text">
           <span class="setting-title">My Profile</span>
-          <span class="setting-sub">Name, phone and account details</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -621,7 +620,6 @@
         <span class="setting-icon">📦</span>
         <span class="setting-text">
           <span class="setting-title">My Orders</span>
-          <span class="setting-sub">Track, cancel and manage orders</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -631,7 +629,6 @@
         <span class="setting-icon">📍</span>
         <span class="setting-text">
           <span class="setting-title">Saved Addresses</span>
-          <span class="setting-sub">Manage delivery addresses</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -641,7 +638,14 @@
         <span class="setting-icon">🏪</span>
         <span class="setting-text">
           <span class="setting-title">Sell on ARYKART</span>
-          <span class="setting-sub">Create your seller account</span>
+        </span>
+        <span class="arrow">›</span>
+      </button>
+
+      <button class="settings-item" onclick="openSupportCenter('customer')">
+        <span class="setting-icon">🎧</span>
+        <span class="setting-text">
+          <span class="setting-title">Customer Help</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -650,7 +654,6 @@
         <span class="setting-icon">🛠️</span>
         <span class="setting-text">
           <span class="setting-title">Admin Panel</span>
-          <span class="setting-sub">Manage customers, sellers, products and orders</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -660,7 +663,6 @@
         <span class="setting-icon">❤️</span>
         <span class="setting-text">
           <span class="setting-title">Wishlisted Products</span>
-          <span class="setting-sub">Products saved by you</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -670,16 +672,6 @@
         <span class="setting-icon">💰</span>
         <span class="setting-text">
           <span class="setting-title">Payment & Refund</span>
-          <span class="setting-sub">Refund wallet and transactions</span>
-        </span>
-        <span class="arrow">›</span>
-      </button>
-
-      <button class="settings-item" onclick="openSupportCenter('customer')">
-        <span class="setting-icon">🆘</span>
-        <span class="setting-text">
-          <span class="setting-title">Customer Help</span>
-          <span class="setting-sub">Orders, delivery, payments, returns and account support</span>
         </span>
         <span class="arrow">›</span>
       </button>
@@ -1301,13 +1293,8 @@
       <button onclick="renderAdminSection('sellers')">🏪<br><br>Sellers</button>
       <button onclick="renderAdminSection('products')">📦<br><br>Products</button>
       <button onclick="renderAdminSection('orders')">🧾<br><br>Orders</button>
-      <button onclick="renderAdminSection('delivery')">🚚<br><br>Delivery</button>
-      <button onclick="renderAdminSection('partners')">🛵<br><br>Delivery Partners</button>
-      <button onclick="renderAdminSection('tracking')">📍<br><br>Live Tracking</button>
-      <button onclick="renderAdminSection('payments')">💰<br><br>Payments</button>
       <button onclick="renderAdminSection('returns')">↩️<br><br>Returns</button>
-      <button onclick="renderAdminSection('support')">🎧<br><br>Support</button>
-      <button onclick="renderAdminSection('settings')">⚙️<br><br>Settings</button>
+      <button onclick="renderAdminSection('support')">🎧<br><br>Help & Support</button>
       <button onclick="syncAppStateToFirebase()">☁️<br><br>Sync Data</button>
     </div>
     <div class="seller-form-card" style="margin-top:16px;">
@@ -1392,7 +1379,7 @@
       </button>
 
       <button onclick="openSupportCenter('seller')">
-        🆘<br><br>Seller Help
+        🎧<br><br>Seller Help
       </button>
 
     </div>
@@ -1816,7 +1803,8 @@ let appState = {
     configured: false,
     phoneOtpEnabled: false
   },
-  reviews: {}
+  reviews: {},
+  supportTickets: []
 };
 
 const translations = {
@@ -1912,7 +1900,9 @@ function normalizeState(){
   appState.addresses = Array.isArray(appState.addresses) ? appState.addresses : [];
   appState.orders = Array.isArray(appState.orders) ? appState.orders : [];
   appState.returns = Array.isArray(appState.returns) ? appState.returns : [];
-  appState.supportTickets = Array.isArray(appState.supportTickets) ? appState.supportTickets : [];
+  appState.supportTickets = Array.isArray(appState.supportTickets)
+    ? appState.supportTickets
+    : [];
 
   if(!appState.wallet || typeof appState.wallet !== "object"){
     appState.wallet = {
@@ -1957,8 +1947,6 @@ function normalizeState(){
 
   appState.admin =
     appState.admin || {enabled:false,lastSection:"overview"};
-
-  appState.deliveryPartners = Array.isArray(appState.deliveryPartners) ? appState.deliveryPartners : [];
 
   appState.firebase =
     appState.firebase || {configured:false,phoneOtpEnabled:false};
@@ -3415,17 +3403,11 @@ function placeOrder(){
     payment:payment,
     address:{...address},
     status:"Order Placed",
-    shipment:{
-      id:"AK"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,6).toUpperCase(),
-      status:"Shipment Created",
-      partnerId:null,
-      partnerName:"Unassigned",
-      bookedAt:new Date().toISOString(),
-      lastUpdated:new Date().toISOString()
-    },
     history:[
-      { status:"Order Placed", date:new Date().toISOString() },
-      { status:"Shipment Created", date:new Date().toISOString(), note:"ARYKART internal shipment booked automatically" }
+      {
+        status:"Order Placed",
+        date:new Date().toISOString()
+      }
     ],
     createdAt:new Date().toISOString(),
     deliveredAt:null,
@@ -6445,41 +6427,307 @@ async function syncAppStateToFirebase(){
     if(customerPhone) await arykartDb.collection("customers").doc(customerPhone).set({...appState.customer,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
     const sellerPhone=appState.seller?.phone;
     if(sellerPhone && appState.seller.registered) await arykartDb.collection("sellers").doc(sellerPhone).set({...appState.seller,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    await arykartDb.collection("appData").doc("latest").set({orders:appState.orders,returns:appState.returns,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    await arykartDb.collection("appData").doc("latest").set({orders:appState.orders,returns:appState.returns,supportTickets:appState.supportTickets||[],updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
     showToast("Data synced to Firebase");
     return true;
   }catch(error){ console.error(error); showToast("Firebase sync failed"); return false; }
 }
 
-function supportTicketId(){ return "AKH-"+Date.now().toString(36).toUpperCase()+"-"+Math.random().toString(36).slice(2,6).toUpperCase(); }
-function openSupportCenter(role){
-  role = role === "seller" ? "seller" : "customer";
-  const title = role === "seller" ? "Seller Help Center" : "Customer Help Center";
-  const categories = role === "seller"
+
+/* =========================================================
+   CUSTOMER + SELLER HELP & ADMIN SUPPORT SYSTEM
+========================================================= */
+
+function supportTicketId(){
+  return "AKSUP-" + Date.now().toString(36).toUpperCase() +
+    Math.random().toString(36).slice(2,6).toUpperCase();
+}
+
+function getSupportUser(type){
+  if(type === "seller"){
+    return {
+      name: appState.seller?.name || "ARYKART Seller",
+      phone: appState.seller?.phone || "",
+      email: appState.seller?.email || ""
+    };
+  }
+  return {
+    name: appState.customer?.name || "ARYKART Customer",
+    phone: appState.customer?.phone || "",
+    email: appState.customer?.email || ""
+  };
+}
+
+function openSupportCenter(type){
+  type = type === "seller" ? "seller" : "customer";
+
+  if(type === "customer" && !appState.customer?.loggedIn){
+    showToast("Please login to your customer account first");
+    openLoginModal();
+    return;
+  }
+
+  if(type === "seller" && !appState.seller?.registered){
+    showToast("Please create or login to your seller account first");
+    showPage("sellerPage");
+    return;
+  }
+
+  const categories = type === "seller"
     ? ["Seller Account","Product Listing","Orders","Delivery","Payments & Settlement","Returns","Technical Issue","Other"]
     : ["Order Problem","Delivery Problem","Payment Problem","Return / Refund","Account / Login","Product Problem","Technical Issue","Other"];
-  const mine=(appState.supportTickets||[]).filter(t=>t.role===role && (role==="customer" ? t.userPhone===(appState.customer?.phone||"") : t.userPhone===(appState.seller?.phone||"")));
-  const ticketList=mine.length ? mine.slice(0,5).map(t=>`<div style="padding:9px 0;border-bottom:1px solid #e5e7eb;"><b>${esc(t.id)}</b> • ${esc(t.status)}<br><small>${esc(t.category)} • ${esc(new Date(t.updatedAt||t.createdAt).toLocaleString())}</small><br><button type="button" class="secondary-btn" style="margin-top:6px;" onclick="viewSupportTicket('${esc(t.id)}')">View</button></div>`).join("") : "<p style='color:var(--muted)'>No support tickets yet.</p>";
-  openAryModal(title,`<div style="display:grid;gap:12px;"><p style="color:var(--muted);margin:0;">Select the issue type, explain the problem and ARYKART Admin can manage your request.</p><form onsubmit="submitSupportTicket(event,'${role}')" style="display:grid;gap:10px;"><div class="field"><label>Issue Category</label><select name="category" required><option value="">Select issue</option>${categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div><div class="field"><label>Order ID (optional)</label><input name="orderId" placeholder="Enter related order ID"></div><div class="field"><label>Describe Your Problem</label><textarea name="message" required rows="5" placeholder="Write complete details so support can help you..."></textarea></div><button class="primary-btn" type="submit">Submit Support Request</button></form><div><h4 style="margin:0 0 6px;">My Recent Tickets</h4>${ticketList}</div></div>`);
+
+  const user = getSupportUser(type);
+  const tickets = appState.supportTickets
+    .filter(function(ticket){ return ticket.type === type; })
+    .sort(function(a,b){ return new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt); });
+
+  openAryModal(
+    type === "seller" ? "Seller Help & Support" : "Customer Help & Support",
+    `
+      <div style="display:grid;gap:14px;">
+        <div class="seller-form-card">
+          <h3 style="margin-top:0;">How can we help you?</h3>
+          <p style="color:var(--muted);margin-top:6px;">
+            Submit your issue. ARYKART Admin Support can review it and reply to you.
+          </p>
+        </div>
+
+        <form onsubmit="submitSupportTicket(event,'${type}')">
+          <div class="field">
+            <label>Problem Category</label>
+            <select name="category" required>
+              ${categories.map(function(category){
+                return `<option value="${esc(category)}">${esc(category)}</option>`;
+              }).join("")}
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Related Order ID (Optional)</label>
+            <input name="orderId" placeholder="Example: ARY...">
+          </div>
+
+          <div class="field">
+            <label>Describe your problem</label>
+            <textarea name="message" rows="5" required placeholder="Explain your problem clearly so our support team can help you."></textarea>
+          </div>
+
+          <button class="primary-btn" style="width:100%;margin-top:10px;">
+            Submit Help Request
+          </button>
+        </form>
+
+        <div class="seller-form-card">
+          <h3 style="margin-top:0;">My Support Tickets</h3>
+          <div style="display:grid;gap:10px;">
+            ${
+              tickets.length
+                ? tickets.map(function(ticket){
+                    const lastReply = (ticket.replies || []).slice(-1)[0];
+                    return `
+                      <button class="secondary-btn" style="text-align:left;width:100%;padding:12px;" onclick="openSupportTicket('${ticket.id}')">
+                        <strong>${esc(ticket.id)}</strong><br>
+                        <span style="color:var(--muted);font-size:13px;">
+                          ${esc(ticket.category)} • ${esc(ticket.status || "Open")}
+                        </span>
+                        ${lastReply ? `<br><small>Latest reply: ${esc(lastReply.message || "").slice(0,70)}</small>` : ""}
+                      </button>
+                    `;
+                  }).join("")
+                : `<p style="color:var(--muted);margin:0;">No support tickets yet.</p>`
+            }
+          </div>
+        </div>
+      </div>
+    `
+  );
 }
-function submitSupportTicket(event,role){
-  event.preventDefault(); const d=new FormData(event.target); const category=String(d.get("category")||"").trim(), orderId=String(d.get("orderId")||"").trim(), message=String(d.get("message")||"").trim();
-  if(!category||!message){showToast("Please select an issue and describe the problem");return;}
-  const user=role==="seller"?appState.seller:appState.customer;
-  const ticket={id:supportTicketId(),role,category,orderId,message,status:"Open",userName:user?.name||"ARYKART User",userPhone:user?.phone||"",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),history:[{status:"Open",date:new Date().toISOString(),note:"Support request submitted"}]};
-  appState.supportTickets.unshift(ticket); saveAppState(); showToast("Support ticket "+ticket.id+" created"); closeAryModal();
+
+function submitSupportTicket(event,type){
+  event.preventDefault();
+  normalizeState();
+
+  const form = new FormData(event.target);
+  const user = getSupportUser(type);
+  const now = new Date().toISOString();
+
+  const ticket = {
+    id: supportTicketId(),
+    type: type,
+    user: user,
+    category: String(form.get("category") || "Other"),
+    orderId: String(form.get("orderId") || "").trim(),
+    message: String(form.get("message") || "").trim(),
+    status: "Open",
+    replies: [],
+    createdAt: now,
+    updatedAt: now
+  };
+
+  appState.supportTickets.unshift(ticket);
+  saveAppState();
+  syncAppStateToFirebase();
+
+  closeAryModal();
+  showToast("Support ticket created: " + ticket.id);
+  openSupportTicket(ticket.id);
 }
-function viewSupportTicket(id){
-  const t=(appState.supportTickets||[]).find(x=>x.id===id); if(!t)return;
-  const hist=(t.history||[]).map(h=>`<div style="padding:7px 0;border-bottom:1px solid #e5e7eb;"><b>${esc(h.status)}</b><br><small>${esc(new Date(h.date).toLocaleString())}${h.note?" • "+esc(h.note):""}</small></div>`).join("");
-  openAryModal("Ticket "+esc(t.id),`<div style="display:grid;gap:9px;"><p><b>Status:</b> ${esc(t.status)}<br><b>Category:</b> ${esc(t.category)}${t.orderId?"<br><b>Order:</b> "+esc(t.orderId):""}</p><div class="order-card" style="padding:12px;white-space:pre-wrap;">${esc(t.message)}</div><div><h4 style="margin:0 0 6px;">Ticket History</h4>${hist}</div></div>`);
+
+function getSupportTicket(ticketId){
+  return (appState.supportTickets || []).find(function(ticket){
+    return ticket.id === ticketId;
+  });
 }
-function adminUpdateSupportTicket(id,status,note){
-  const t=(appState.supportTickets||[]).find(x=>x.id===id); if(!t)return; note=String(note||"").trim();
-  t.status=status; t.updatedAt=new Date().toISOString(); t.history=Array.isArray(t.history)?t.history:[]; t.history.unshift({status,date:t.updatedAt,note:note||"Updated by ARYKART Admin"}); saveAppState(); renderAdminSection("support"); showToast("Support ticket updated");
+
+function formatSupportDate(value){
+  try{
+    return new Date(value).toLocaleString("en-IN");
+  }catch(error){
+    return String(value || "");
+  }
 }
-function adminDeleteSupportTicket(id){
-  if(!confirm("Delete this support ticket?")) return; appState.supportTickets=(appState.supportTickets||[]).filter(t=>t.id!==id); saveAppState(); renderAdminSection("support"); showToast("Support ticket deleted");
+
+function openSupportTicket(ticketId){
+  const ticket = getSupportTicket(ticketId);
+  if(!ticket){
+    showToast("Support ticket not found");
+    return;
+  }
+
+  const replies = Array.isArray(ticket.replies) ? ticket.replies : [];
+  const isAdmin = Boolean(appState.admin?.enabled);
+
+  openAryModal(
+    "Support Ticket",
+    `
+      <div style="display:grid;gap:12px;">
+        <div class="seller-form-card">
+          <strong>${esc(ticket.id)}</strong>
+          <p style="margin:6px 0 0;color:var(--muted);">
+            ${esc(ticket.type === "seller" ? "Seller" : "Customer")} • ${esc(ticket.category)}
+          </p>
+          ${ticket.orderId ? `<p style="margin:6px 0 0;"><strong>Order:</strong> ${esc(ticket.orderId)}</p>` : ""}
+          <p style="margin:10px 0 0;white-space:pre-wrap;">${esc(ticket.message)}</p>
+          <small style="color:var(--muted);display:block;margin-top:10px;">
+            Created: ${esc(formatSupportDate(ticket.createdAt))}
+          </small>
+        </div>
+
+        <div class="seller-form-card">
+          <h3 style="margin-top:0;">Conversation</h3>
+          <div style="display:grid;gap:10px;">
+            ${
+              replies.length
+                ? replies.map(function(reply){
+                    return `
+                      <div class="order-card" style="padding:12px;">
+                        <strong>${esc(reply.from === "admin" ? "ARYKART Support" : "User")}</strong>
+                        <div style="margin-top:5px;white-space:pre-wrap;">${esc(reply.message)}</div>
+                        <small style="color:var(--muted);display:block;margin-top:6px;">${esc(formatSupportDate(reply.createdAt))}</small>
+                      </div>
+                    `;
+                  }).join("")
+                : `<p style="color:var(--muted);margin:0;">No reply yet. ${isAdmin ? "You can reply below." : "ARYKART Support will reply here."}</p>`
+            }
+          </div>
+        </div>
+
+        ${
+          isAdmin
+            ? `
+              <form onsubmit="adminReplyToSupport(event,'${ticket.id}')">
+                <div class="field">
+                  <label>Admin Reply</label>
+                  <textarea name="reply" rows="4" required placeholder="Write a helpful reply to the customer or seller"></textarea>
+                </div>
+                <div class="field">
+                  <label>Ticket Status</label>
+                  <select name="status">
+                    ${["Open","In Progress","Resolved","Closed"].map(function(status){
+                      return `<option value="${status}" ${ticket.status === status ? "selected" : ""}>${status}</option>`;
+                    }).join("")}
+                  </select>
+                </div>
+                <button class="primary-btn" style="width:100%;">Send Reply & Update</button>
+              </form>
+            `
+            : `
+              <div class="seller-form-card">
+                <strong>Current Status: ${esc(ticket.status || "Open")}</strong>
+                <p style="color:var(--muted);margin:6px 0 0;">
+                  You can reopen this help section later to check ARYKART Support's reply.
+                </p>
+              </div>
+            `
+        }
+      </div>
+    `
+  );
+}
+
+function adminReplyToSupport(event,ticketId){
+  event.preventDefault();
+
+  if(!appState.admin?.enabled){
+    showToast("Admin access required");
+    return;
+  }
+
+  const ticket = getSupportTicket(ticketId);
+  if(!ticket){
+    showToast("Support ticket not found");
+    return;
+  }
+
+  const form = new FormData(event.target);
+  const reply = String(form.get("reply") || "").trim();
+  const status = String(form.get("status") || ticket.status || "Open");
+
+  if(!reply){
+    showToast("Write a reply first");
+    return;
+  }
+
+  ticket.replies = Array.isArray(ticket.replies) ? ticket.replies : [];
+  ticket.replies.push({
+    id: akId(),
+    from: "admin",
+    message: reply,
+    createdAt: new Date().toISOString()
+  });
+  ticket.status = status;
+  ticket.updatedAt = new Date().toISOString();
+
+  saveAppState();
+  syncAppStateToFirebase();
+  closeAryModal();
+  showToast("Support reply sent");
+  renderAdminSection("support");
+  openSupportTicket(ticketId);
+}
+
+function updateSupportTicketStatus(ticketId,status){
+  const ticket = getSupportTicket(ticketId);
+  if(!ticket || !appState.admin?.enabled) return;
+  ticket.status = status;
+  ticket.updatedAt = new Date().toISOString();
+  saveAppState();
+  syncAppStateToFirebase();
+  renderAdminSection("support");
+}
+
+function deleteSupportTicket(ticketId){
+  if(!appState.admin?.enabled) return;
+  if(!confirm("Delete this support ticket?")) return;
+
+  appState.supportTickets = (appState.supportTickets || []).filter(function(ticket){
+    return ticket.id !== ticketId;
+  });
+  saveAppState();
+  syncAppStateToFirebase();
+  renderAdminSection("support");
+  showToast("Support ticket deleted");
 }
 
 function openAdminPanel(){
@@ -6492,65 +6740,112 @@ function adminLogin(event){
   appState.admin.enabled=true; saveAppState(); closeAryModal(); showPage("adminPage"); renderAdminSection(appState.admin.lastSection||"overview");
 }
 function adminLogout(){ appState.admin.enabled=false; saveAppState(); showPage("accountPage"); }
-function adminShipmentId(){ return "AK"+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,7).toUpperCase(); }
-function ensureOrderShipment(order){
-  if(!order.shipment) order.shipment={id:adminShipmentId(),status:"Shipment Created",partnerId:null,partnerName:"Unassigned",bookedAt:new Date().toISOString(),lastUpdated:new Date().toISOString()};
-  order.history=Array.isArray(order.history)?order.history:[];
-  return order.shipment;
-}
-function adminUpdateOrderStatus(id,status){
-  const o=(appState.orders||[]).find(x=>x.id===id); if(!o) return;
-  ensureOrderShipment(o); o.status=status; o.shipment.status=status; o.shipment.lastUpdated=new Date().toISOString();
-  o.history.unshift({status,date:new Date().toISOString(),note:"Updated by ARYKART Admin"});
-  if(status==="Delivered") o.deliveredAt=new Date().toISOString();
-  saveAppState(); renderAdminSection(appState.admin.lastSection||"orders"); renderOrders(); showToast("Order status updated");
-}
-function adminAssignPartner(orderId,partnerId){
-  const o=(appState.orders||[]).find(x=>x.id===orderId), p=(appState.deliveryPartners||[]).find(x=>x.id===partnerId); if(!o||!p) return;
-  ensureOrderShipment(o); o.shipment.partnerId=p.id; o.shipment.partnerName=p.name; o.shipment.status="Delivery Partner Assigned"; o.status="Delivery Partner Assigned"; o.shipment.lastUpdated=new Date().toISOString();
-  o.history.unshift({status:"Delivery Partner Assigned",date:new Date().toISOString(),note:p.name+" assigned"}); saveAppState(); renderAdminSection("delivery"); showToast("Delivery partner assigned");
-}
-function adminAddDeliveryPartner(event){
-  event.preventDefault(); const d=new FormData(event.target); const name=String(d.get("name")||"").trim(), phone=String(d.get("phone")||"").trim(), area=String(d.get("area")||"").trim();
-  if(!name||!phone){showToast("Enter partner name and phone");return;} appState.deliveryPartners.unshift({id:akId(),name,phone,area,status:"Active",createdAt:new Date().toISOString()}); saveAppState(); renderAdminSection("partners"); showToast("Delivery partner added");
-}
-function adminRemoveDeliveryPartner(id){ appState.deliveryPartners=(appState.deliveryPartners||[]).filter(x=>x.id!==id); saveAppState(); renderAdminSection("partners"); }
-function adminCard(title,body){return `<div class="order-card" style="padding:14px;"><strong>${esc(title)}</strong><div style="color:var(--muted);margin-top:7px;line-height:1.5;">${body}</div></div>`;}
 function renderAdminSection(section){
   if(!appState.admin.enabled){ showPage("accountPage"); return; }
-  appState.admin.lastSection=section; saveAppState();
-  const orders=appState.orders||[], partners=appState.deliveryPartners||[];
-  orders.forEach(ensureOrderShipment);
-  setText("adminCustomerCount",appState.customer?.loggedIn?1:0); setText("adminSellerCount",appState.seller?.registered?1:0); setText("adminProductCount",(appState.seller?.products||[]).length); setText("adminOrderCount",orders.length);
-  const content=getEl("adminSectionContent"); if(!content) return;
-  setText("adminSectionTitle",section.replace(/\b\w/g,c=>c.toUpperCase()));
-  if(section==="overview"){
-    const delivered=orders.filter(o=>o.status==="Delivered").length, active=orders.filter(o=>o.status!=="Delivered"&&o.status!=="Cancelled").length, revenue=orders.reduce((a,o)=>a+Number(o.total||0),0);
-    content.innerHTML=adminCard("Business Summary",`Active orders: <b>${active}</b><br>Delivered: <b>${delivered}</b><br>Delivery partners: <b>${partners.length}</b><br>Total order value: <b>${money(revenue)}</b>`)+adminCard("Quick Actions",`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;"><button class="secondary-btn" onclick="renderAdminSection('delivery')">Manage Delivery</button><button class="secondary-btn" onclick="renderAdminSection('partners')">Manage Partners</button><button class="secondary-btn" onclick="renderAdminSection('tracking')">Track Shipments</button><button class="secondary-btn" onclick="renderAdminSection('support')">Support Tickets</button></div>`);
-  } else if(section==="delivery"||section==="orders"){
-    content.innerHTML=orders.length?orders.map(o=>{const sh=ensureOrderShipment(o); const opts=partners.map(p=>`<option value="${esc(p.id)}" ${sh.partnerId===p.id?"selected":""}>${esc(p.name)}</option>`).join(""); return adminCard(`${esc(o.id)} • ${esc(sh.id)}`,`Customer: ${esc(o.customerName||"Customer")}<br>Current: <b>${esc(o.status||"Order Placed")}</b><br>Partner: ${esc(sh.partnerName||"Unassigned")}<br><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><select onchange="adminAssignPartner('${esc(o.id)}',this.value)"><option value="">Assign delivery partner</option>${opts}</select><select onchange="adminUpdateOrderStatus('${esc(o.id)}',this.value)"><option value="">Update status</option>${["Confirmed","Packed","Ready for Pickup","Picked Up","In Transit","Out for Delivery","Delivered"].map(x=>`<option value="${x}">${x}</option>`).join("")}</select></div>`);}).join(""):"<p style='color:var(--muted)'>No orders yet.</p>";
-  } else if(section==="partners"){
-    const form=`<form onsubmit="adminAddDeliveryPartner(event)" style="display:grid;gap:8px;margin-bottom:12px;"><input name="name" placeholder="Delivery partner name" required><input name="phone" placeholder="Phone number" required><input name="area" placeholder="Service area"><button class="primary-btn">Add Delivery Partner</button></form>`;
-    content.innerHTML=form+(partners.length?partners.map(p=>adminCard(esc(p.name),`Phone: ${esc(p.phone)}<br>Area: ${esc(p.area||"Not set")}<br>Status: <b>${esc(p.status)}</b><br><button class="secondary-btn" style="margin-top:8px;" onclick="adminRemoveDeliveryPartner('${esc(p.id)}')">Remove</button>`)).join(""):"<p style='color:var(--muted)'>No delivery partners added yet.</p>");
-  } else if(section==="tracking"){
-    content.innerHTML=orders.length?orders.map(o=>{const sh=ensureOrderShipment(o), hist=(o.history||[]).slice(0,6).map(h=>`<div style="padding:7px 0;border-bottom:1px solid #e5e7eb;"><b>${esc(h.status||"")}</b><br><small>${esc(new Date(h.date).toLocaleString())}${h.note?" • "+esc(h.note):""}</small></div>`).join(""); return adminCard(`📍 ${esc(sh.id)}`,`Order: ${esc(o.id)}<br>Partner: ${esc(sh.partnerName)}<div style="margin-top:8px;">${hist}</div>`);}).join(""):"<p style='color:var(--muted)'>No shipments yet.</p>";
-  } else if(section==="support"){
-    const tickets=appState.supportTickets||[];
-    const open=tickets.filter(t=>t.status==="Open").length, progress=tickets.filter(t=>t.status==="In Progress").length, resolved=tickets.filter(t=>t.status==="Resolved"||t.status==="Closed").length;
-    content.innerHTML=adminCard("Support Summary",`Open: <b>${open}</b><br>In Progress: <b>${progress}</b><br>Resolved / Closed: <b>${resolved}</b>`)+(tickets.length?tickets.map(t=>{const hist=(t.history||[]).slice(0,4).map(h=>`<div style="padding:6px 0;border-bottom:1px solid #e5e7eb;"><b>${esc(h.status)}</b><br><small>${esc(new Date(h.date).toLocaleString())}${h.note?" • "+esc(h.note):""}</small></div>`).join("");return adminCard(`${esc(t.id)} • ${esc(t.role==="seller"?"Seller":"Customer")}`,`<b>${esc(t.category)}</b><br>Status: <b>${esc(t.status)}</b><br>User: ${esc(t.userName||"ARYKART User")} ${t.userPhone?"• "+esc(t.userPhone):""}${t.orderId?"<br>Order: "+esc(t.orderId):""}<br><div style="margin-top:8px;white-space:pre-wrap;">${esc(t.message)}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><select id="supportStatus_${esc(t.id)}"><option ${t.status==="Open"?"selected":""}>Open</option><option ${t.status==="In Progress"?"selected":""}>In Progress</option><option ${t.status==="Resolved"?"selected":""}>Resolved</option><option ${t.status==="Closed"?"selected":""}>Closed</option></select><button class="secondary-btn" onclick="adminUpdateSupportTicket('${esc(t.id)}',getEl('supportStatus_${esc(t.id)}').value,prompt('Add an admin note (optional):')||'')">Update Ticket</button><button class="secondary-btn" onclick="adminDeleteSupportTicket('${esc(t.id)}')">Delete</button></div><div style="margin-top:10px;">${hist}</div>`);}).join(""):"<p style='color:var(--muted)'>No support tickets yet.</p>");
-  } else if(section==="payments"){
-    const paid=orders.filter(o=>o.payment!=="cod").reduce((a,o)=>a+Number(o.total||0),0), cod=orders.filter(o=>o.payment==="cod").reduce((a,o)=>a+Number(o.total||0),0); content.innerHTML=adminCard("Payment Summary",`Prepaid value: <b>${money(paid)}</b><br>COD value: <b>${money(cod)}</b><br>Refund wallet: <b>${money(appState.wallet?.balance||0)}</b>`);
-  } else if(section==="settings"){
-    content.innerHTML=adminCard("ARYKART Operations",`Internal delivery mode is active. Shipments are created automatically when an order is placed. Real external courier booking can be connected later with an API.<br><br><button class="secondary-btn" onclick="syncAppStateToFirebase()">Sync Data Now</button>`);
-  } else {
-    const data={customers:[["Name",appState.customer?.name||"—"],["Phone",appState.customer?.phone||"—"],["Verified",appState.customer?.verified?"Yes":"No"]],sellers:[["Name",appState.seller?.name||"—"],["Phone",appState.seller?.phone||"—"],["OTP",appState.seller?.phoneVerified?"Verified":"Not verified"]],products:(appState.seller?.products||[]).map(p=>[p.name||"Product",p.price?money(p.price):"No price"]),returns:(appState.returns||[]).map(r=>[r.id||"Return",r.status||"Requested"])};
-    const rows=data[section]||[]; content.innerHTML=rows.length?rows.map(r=>adminCard(r[0],esc(String(r[1])))).join(""):"<p style='color:var(--muted)'>No records yet.</p>";
+
+  normalizeState();
+  appState.admin.lastSection=section;
+  saveAppState();
+
+  setText("adminCustomerCount",appState.customer?.loggedIn?1:0);
+  setText("adminSellerCount",appState.seller?.registered?1:0);
+  setText("adminProductCount",(appState.seller?.products||[]).length);
+  setText("adminOrderCount",(appState.orders||[]).length);
+
+  const content=getEl("adminSectionContent");
+  if(!content) return;
+
+  setText("adminSectionTitle",section === "support" ? "Help & Support" : section.charAt(0).toUpperCase()+section.slice(1));
+
+  if(section === "support"){
+    const tickets=(appState.supportTickets||[]).slice().sort(function(a,b){
+      return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);
+    });
+
+    content.innerHTML = `
+      <div class="seller-form-card">
+        <strong>${tickets.length} Total Tickets</strong>
+        <div style="color:var(--muted);margin-top:4px;">
+          Open: ${tickets.filter(function(t){return t.status==="Open";}).length}
+          • In Progress: ${tickets.filter(function(t){return t.status==="In Progress";}).length}
+          • Resolved: ${tickets.filter(function(t){return t.status==="Resolved";}).length}
+        </div>
+      </div>
+      ${
+        tickets.length
+          ? tickets.map(function(ticket){
+              const userName=ticket.user?.name||"Unknown user";
+              const userPhone=ticket.user?.phone||"";
+              return `
+                <div class="order-card" style="padding:14px;">
+                  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+                    <div>
+                      <strong>${esc(ticket.id)}</strong>
+                      <div style="color:var(--muted);margin-top:4px;">
+                        ${esc(ticket.type === "seller" ? "Seller" : "Customer")} • ${esc(ticket.category)}
+                      </div>
+                    </div>
+                    <select onchange="updateSupportTicketStatus('${ticket.id}',this.value)" style="max-width:150px;">
+                      ${["Open","In Progress","Resolved","Closed"].map(function(status){
+                        return `<option value="${status}" ${ticket.status===status?"selected":""}>${status}</option>`;
+                      }).join("")}
+                    </select>
+                  </div>
+                  <div style="margin-top:8px;">
+                    <strong>${esc(userName)}</strong>
+                    ${userPhone ? `<span style="color:var(--muted);"> • ${esc(userPhone)}</span>` : ""}
+                  </div>
+                  ${ticket.orderId ? `<div style="margin-top:5px;">Order: ${esc(ticket.orderId)}</div>` : ""}
+                  <p style="margin:8px 0;white-space:pre-wrap;">${esc(ticket.message)}</p>
+                  <small style="color:var(--muted);">${esc(formatSupportDate(ticket.createdAt))}</small>
+                  <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+                    <button class="secondary-btn" onclick="openSupportTicket('${ticket.id}')">Open & Reply</button>
+                    <button class="secondary-btn" onclick="deleteSupportTicket('${ticket.id}')">Delete</button>
+                  </div>
+                </div>
+              `;
+            }).join("")
+          : "<p style='color:var(--muted)'>No support tickets yet.</p>"
+      }
+    `;
+    return;
   }
+
+  const data={
+    overview:[
+      ["Customer",appState.customer?.phone||"No customer account"],
+      ["Seller",appState.seller?.registered?appState.seller.name:"No seller account"],
+      ["Support Tickets",(appState.supportTickets||[]).length],
+      ["Firebase",appState.firebase?.configured?"Configured":"Not configured"]
+    ],
+    customers:[
+      ["Name",appState.customer?.name||"—"],
+      ["Phone",appState.customer?.phone||"—"],
+      ["Verified",appState.customer?.verified?"Yes":"No"]
+    ],
+    sellers:[
+      ["Name",appState.seller?.name||"—"],
+      ["Phone",appState.seller?.phone||"—"],
+      ["OTP",appState.seller?.phoneVerified?"Verified":"Not verified"],
+      ["Bank",appState.seller?.bank?.status||"—"],
+      ["Documents",appState.seller?.documents?.status||"—"]
+    ],
+    products:(appState.seller?.products||[]).map(function(p){return [p.name||"Product",p.price?money(p.price):"No price"]}),
+    orders:(appState.orders||[]).map(function(o){return [o.id||"Order",o.status||"Pending"]}),
+    returns:(appState.returns||[]).map(function(r){return [r.id||"Return",r.status||"Requested"]})
+  };
+
+  const rows=data[section]||data.overview;
+  content.innerHTML=rows.length
+    ? rows.map(function(r){
+        return `<div class="order-card" style="padding:12px;"><strong>${esc(r[0])}</strong><div style="color:var(--muted);margin-top:4px;">${esc(String(r[1]))}</div></div>`;
+      }).join("")
+    : "<p style='color:var(--muted)'>No records yet.</p>";
 }
 
 window.ARYKART_TRANSLATIONS={
   hi:{
-    "Account":"खाता","Orders":"ऑर्डर","My Orders":"मेरे ऑर्डर","Saved Addresses":"सहेजे गए पते","Sell on ARYKART":"ARYKART पर बेचें","Wishlisted Products":"पसंदीदा प्रोडक्ट","Payment & Refund":"भुगतान और रिफंड","Change Language":"भाषा बदलें","English":"अंग्रेज़ी","Notifications":"सूचनाएं","Settings":"सेटिंग्स","Cart":"कार्ट","Checkout":"चेकआउट","Home":"होम","Search":"खोजें","Seller Dashboard":"सेलर डैशबोर्ड","List Your Product":"अपना प्रोडक्ट जोड़ें","Inventory":"इन्वेंट्री","Returns":"रिटर्न","Manage Orders":"ऑर्डर मैनेज करें","Total Products":"कुल प्रोडक्ट","Total Orders":"कुल ऑर्डर","Revenue":"कमाई","Mobile Number":"मोबाइल नंबर","Email":"ईमेल","Full Name":"पूरा नाम","Bank Account Details":"बैंक खाता विवरण","Account Holder Name":"खाताधारक का नाम","Bank Name":"बैंक का नाम","Account Number":"खाता नंबर","Confirm Account Number":"खाता नंबर दोबारा लिखें","IFSC Code":"आईएफएससी कोड","Create Seller Account":"सेलर अकाउंट बनाएं","Admin Panel":"एडमिन पैनल","Customer Help":"ग्राहक सहायता","Seller Help":"सेलर सहायता","Support":"सहायता","Customers":"ग्राहक","Sellers":"सेलर","Products":"प्रोडक्ट","Product":"प्रोडक्ट","Orders Delivered":"डिलीवर किए गए ऑर्डर","Cancel":"रद्द करें","Save":"सेव करें","Continue":"जारी रखें","Login / Account":"लॉगिन / खाता","Welcome to ARYKART":"ARYKART में आपका स्वागत है"
+    "Account":"खाता","Orders":"ऑर्डर","My Orders":"मेरे ऑर्डर","Saved Addresses":"सहेजे गए पते","Sell on ARYKART":"ARYKART पर बेचें","Wishlisted Products":"पसंदीदा प्रोडक्ट","Payment & Refund":"भुगतान और रिफंड","Change Language":"भाषा बदलें","English":"अंग्रेज़ी","Notifications":"सूचनाएं","Settings":"सेटिंग्स","Cart":"कार्ट","Checkout":"चेकआउट","Home":"होम","Search":"खोजें","Seller Dashboard":"सेलर डैशबोर्ड","List Your Product":"अपना प्रोडक्ट जोड़ें","Inventory":"इन्वेंट्री","Returns":"रिटर्न","Manage Orders":"ऑर्डर मैनेज करें","Total Products":"कुल प्रोडक्ट","Total Orders":"कुल ऑर्डर","Revenue":"कमाई","Mobile Number":"मोबाइल नंबर","Email":"ईमेल","Full Name":"पूरा नाम","Bank Account Details":"बैंक खाता विवरण","Account Holder Name":"खाताधारक का नाम","Bank Name":"बैंक का नाम","Account Number":"खाता नंबर","Confirm Account Number":"खाता नंबर दोबारा लिखें","IFSC Code":"आईएफएससी कोड","Create Seller Account":"सेलर अकाउंट बनाएं","Admin Panel":"एडमिन पैनल","Customers":"ग्राहक","Sellers":"सेलर","Products":"प्रोडक्ट","Product":"प्रोडक्ट","Orders Delivered":"डिलीवर किए गए ऑर्डर","Cancel":"रद्द करें","Save":"सेव करें","Continue":"जारी रखें","Login / Account":"लॉगिन / खाता","Welcome to ARYKART":"ARYKART में आपका स्वागत है"
   },
   en:{}
 };
@@ -6564,6 +6859,7 @@ function initializeArykart(){
   normalizeState();
 
   initializeFirebase();
+  startSupportRealtimeSync();
   updateSellerFormForType();
 
   if(appState.settings.darkMode){
@@ -6643,6 +6939,263 @@ if(
 }else{
 
   initializeArykart();
+}
+
+
+
+
+/* =========================================================
+   ARYKART LIVE CHAT SUPPORT UPGRADE
+   Customer/Seller <-> Admin conversation, quick help + human handoff
+========================================================= */
+
+window.arykartSupportUnsubscribe = window.arykartSupportUnsubscribe || null;
+
+function supportOwnerKey(type){
+  const u=getSupportUser(type);
+  const identity=String(u.phone||u.email||u.name||'guest').trim().toLowerCase();
+  return type+'|'+identity;
+}
+
+function normalizeSupportTicket(ticket){
+  if(!ticket || typeof ticket!=='object') return ticket;
+  ticket.type=ticket.type==='seller'?'seller':'customer';
+  ticket.user=ticket.user||getSupportUser(ticket.type);
+  ticket.ownerKey=ticket.ownerKey||supportOwnerKey(ticket.type);
+  ticket.id=ticket.id||supportTicketId();
+  ticket.status=ticket.status||'Open';
+  ticket.category=ticket.category||'General Help';
+  ticket.createdAt=ticket.createdAt||new Date().toISOString();
+  ticket.updatedAt=ticket.updatedAt||ticket.createdAt;
+  ticket.messages=Array.isArray(ticket.messages)?ticket.messages:[];
+  if(!ticket.messages.length && ticket.message){
+    ticket.messages.push({id:akId(),from:'user',sender:ticket.type==='seller'?'Seller':'Customer',message:String(ticket.message),createdAt:ticket.createdAt});
+  }
+  ticket.replies=Array.isArray(ticket.replies)?ticket.replies:[];
+  ticket.replies.forEach(function(r){
+    if(!ticket.messages.some(function(m){return m.id===r.id;})){
+      ticket.messages.push({id:r.id||akId(),from:r.from||'admin',sender:r.from==='admin'?'ARYKART Support':'User',message:r.message||'',createdAt:r.createdAt||ticket.updatedAt});
+    }
+  });
+  ticket.messages.sort(function(a,b){return new Date(a.createdAt)-new Date(b.createdAt);});
+  ticket.unreadCustomer=Number(ticket.unreadCustomer||0);
+  ticket.unreadAdmin=Number(ticket.unreadAdmin||0);
+  return ticket;
+}
+
+function normalizeSupportTickets(){
+  normalizeState();
+  appState.supportTickets=(appState.supportTickets||[]).map(normalizeSupportTicket).filter(Boolean);
+}
+
+function supportTicketId(){
+  return 'AKSUP-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,7).toUpperCase();
+}
+
+function getMySupportTickets(type){
+  normalizeSupportTickets();
+  const key=supportOwnerKey(type);
+  const u=getSupportUser(type);
+  return appState.supportTickets.filter(function(t){
+    const sameOwner=t.ownerKey===key || (u.phone && t.user && t.user.phone===u.phone) || (u.email && t.user && t.user.email===u.email);
+    return t.type===type && sameOwner;
+  }).sort(function(a,b){return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);});
+}
+
+function supportQuickTopics(type){
+  return type==='seller'
+    ? ['Order issue','Delivery issue','Payment / settlement','Product listing','Return issue','Technical issue']
+    : ['Where is my order?','My order is late','Refund not received','Return / exchange','Payment problem','Account problem'];
+}
+
+function openSupportCenter(type){
+  type=type==='seller'?'seller':'customer';
+  if(type==='customer' && !appState.customer?.loggedIn){showToast('Please login to your customer account first');openLoginModal();return;}
+  if(type==='seller' && !appState.seller?.registered){showToast('Please create or login to your seller account first');showPage('sellerPage');return;}
+  const tickets=getMySupportTickets(type);
+  const unread=tickets.reduce(function(n,t){return n+Number(t.unreadCustomer||0);},0);
+  openAryModal(type==='seller'?'Seller Help & Support':'Customer Help Centre',`
+    <div style="display:grid;gap:14px;">
+      <div class="seller-form-card">
+        <h3 style="margin:0 0 6px;">Chat with ARYKART Support 💬</h3>
+        <p style="margin:0;color:var(--muted);">Write your problem normally, like you chat with us. First get instant help, and if you still need help, connect the same chat to Admin Support.</p>
+      </div>
+      <button class="primary-btn" style="width:100%;" onclick="startSupportChat('${type}')">💬 Start New Help Chat</button>
+      <div class="seller-form-card">
+        <h3 style="margin:0 0 10px;">Your Conversations ${unread?`<span style=\"font-size:12px;padding:4px 8px;border-radius:999px;background:#fee2e2;color:#b91c1c;\">${unread} new</span>`:''}</h3>
+        <div style="display:grid;gap:9px;">
+          ${tickets.length?tickets.map(function(t){const last=(t.messages||[]).slice(-1)[0];return `<button class="secondary-btn" style="text-align:left;width:100%;padding:12px;" onclick="openSupportChat('${t.id}')"><strong>${esc(t.category||'Support Chat')}</strong> <span style="float:right;">${esc(t.status||'Open')}</span><br><small style="color:var(--muted);">${esc((last&&last.message)||t.message||'Open conversation').slice(0,85)}</small>${Number(t.unreadCustomer||0)?`<br><small style=\"color:#b91c1c;\">${Number(t.unreadCustomer)} new message</small>`:''}</button>`;}).join(''):`<p style="margin:0;color:var(--muted);">No help conversations yet. Start a chat whenever you need help.</p>`}
+        </div>
+      </div>
+    </div>`);
+}
+
+function startSupportChat(type){
+  type=type==='seller'?'seller':'customer';
+  const user=getSupportUser(type), now=new Date().toISOString();
+  const ticket=normalizeSupportTicket({
+    id:supportTicketId(),type:type,user:user,ownerKey:supportOwnerKey(type),category:'General Help',orderId:'',message:'',status:'Bot Support',humanRequested:false,createdAt:now,updatedAt:now,unreadCustomer:0,unreadAdmin:0,messages:[
+      {id:akId(),from:'bot',sender:'ARYKART Assistant',message:type==='seller'?'Hello! 👋 Tell me what problem you are facing with your seller account, products, orders, delivery or payments.':'Hello! 👋 Tell me your problem normally. You can ask about orders, delivery, refunds, returns, payments, products or your account.',createdAt:now}
+    ]
+  });
+  appState.supportTickets.unshift(ticket);saveAppState();syncSupportTicketToFirebase(ticket);closeAryModal();openSupportChat(ticket.id);
+}
+
+function setSupportCategoryFromText(ticket,text){
+  const q=String(text||'').toLowerCase();
+  if(/refund|payment|upi|paid|money/.test(q)) ticket.category='Payment / Refund';
+  else if(/return|exchange/.test(q)) ticket.category='Return / Exchange';
+  else if(/delivery|late|track|courier|order/.test(q)) ticket.category='Order / Delivery';
+  else if(/account|login|otp|profile/.test(q)) ticket.category='Account / Login';
+  else if(/product|wrong item|damaged/.test(q)) ticket.category='Product Problem';
+  else if(/seller|listing|settlement/.test(q)) ticket.category='Seller Support';
+}
+
+function getAutoSupportReply(text,type){
+  const q=String(text||'').toLowerCase();
+  if(/human|admin|agent|person|representative/.test(q)) return {reply:'Sure. I am connecting this conversation to ARYKART Admin Support. Your chat will stay open and the admin can reply here.',handoff:true};
+  if(/late|delayed|not delivered/.test(q)) return {reply:'Sorry your order is delayed. Please share the Order ID if available. You can also choose “Talk to Human Support” below if you want our team to check the exact order.',handoff:false};
+  if(/track|where.*order|order status/.test(q)) return {reply:'I can help with tracking. Please send your Order ID, or open My Orders and select the order. If tracking still looks wrong, connect this chat to Human Support.',handoff:false};
+  if(/refund/.test(q)) return {reply:'Refunds can depend on the return/payment status. Please share the related Order ID and payment issue. If you want us to check the exact transaction, connect to Human Support.',handoff:false};
+  if(/return|exchange/.test(q)) return {reply:'Tell me the Order ID and whether you want a return or exchange. For damaged/wrong items, please describe the issue clearly. You can connect to Human Support for manual review.',handoff:false};
+  if(/payment|upi|card|money deducted/.test(q)) return {reply:'Please do not share your full card, PIN or OTP. Tell me what happened and the related Order ID. If money was deducted or payment status is wrong, Human Support can review the case.',handoff:false};
+  if(/otp|login|account/.test(q)) return {reply:'For account or OTP issues, describe the exact error you see. Never share your OTP or password in chat. If the issue continues, connect to Human Support.',handoff:false};
+  return {reply:'I understand. Please tell me a little more about the problem and share the related Order ID if there is one. If my suggestions do not solve it, tap “Talk to Human Support” and ARYKART Admin can continue this same conversation.',handoff:false};
+}
+
+function addSupportMessage(ticket,from,message,sender){
+  ticket.messages=Array.isArray(ticket.messages)?ticket.messages:[];
+  ticket.messages.push({id:akId(),from:from,sender:sender,message:String(message||'').trim(),createdAt:new Date().toISOString()});
+  ticket.updatedAt=new Date().toISOString();
+}
+
+function openSupportChat(ticketId){
+  normalizeSupportTickets();
+  const ticket=getSupportTicket(ticketId);
+  if(!ticket){showToast('Support conversation not found');return;}
+  const isAdmin=Boolean(appState.admin?.enabled);
+  const role=isAdmin?'admin':ticket.type;
+  if(!isAdmin){
+    const mine=getMySupportTickets(ticket.type).some(function(t){return t.id===ticket.id;});
+    if(!mine){showToast('This support conversation belongs to another account');return;}
+    ticket.unreadCustomer=0;saveAppState();syncSupportTicketToFirebase(ticket);
+  }else{ticket.unreadAdmin=0;saveAppState();syncSupportTicketToFirebase(ticket);}
+  const messages=(ticket.messages||[]).map(function(m){
+    const mine=(isAdmin?m.from==='admin':m.from==='user');
+    const label=m.from==='admin'?'ARYKART Support':(m.from==='bot'?'ARYKART Assistant':(ticket.type==='seller'?'Seller':'You'));
+    return `<div style="display:flex;justify-content:${mine?'flex-end':'flex-start'};"><div style="max-width:88%;padding:11px 13px;border-radius:16px;${mine?'background:var(--primary,#315efb);color:white;':'background:#f3f4f6;color:#111827;'}"><div style="font-size:11px;opacity:.75;margin-bottom:4px;">${esc(label)}</div><div style="white-space:pre-wrap;">${esc(m.message)}</div><div style="font-size:10px;opacity:.7;margin-top:5px;">${esc(formatSupportDate(m.createdAt))}</div></div></div>`;
+  }).join('');
+  openAryModal(isAdmin?'Support Conversation':'ARYKART Support Chat',`
+    <div style="display:grid;gap:12px;">
+      <div class="seller-form-card" style="padding:12px;">
+        <strong>${esc(ticket.id)}</strong><br><small style="color:var(--muted);">${esc(ticket.category||'General Help')} • Status: ${esc(ticket.status||'Open')}${ticket.orderId?' • Order: '+esc(ticket.orderId):''}</small>
+      </div>
+      <div id="supportChatMessages" style="display:grid;gap:9px;max-height:48vh;overflow:auto;padding:2px 1px;">${messages}</div>
+      ${!isAdmin && !ticket.humanRequested && ticket.status!=='Resolved' && ticket.status!=='Closed'?`<div style="display:flex;flex-wrap:wrap;gap:7px;">${supportQuickTopics(ticket.type).map(function(x){return `<button type="button" class="secondary-btn" style="padding:8px 10px;" onclick="supportQuickMessage('${ticket.id}','${esc(x).replace(/&#039;/g,'\\\'')}')">${esc(x)}</button>`;}).join('')}</div><button type="button" class="secondary-btn" style="width:100%;" onclick="requestHumanSupport('${ticket.id}')">👤 Talk to Human / Admin Support</button>`:''}
+      ${isAdmin?`<form onsubmit="sendAdminChatMessage(event,'${ticket.id}')" style="display:grid;gap:8px;"><textarea name="message" rows="3" required placeholder="Reply to the customer or seller"></textarea><select name="status"><option ${ticket.status==='Open'?'selected':''}>Open</option><option ${ticket.status==='In Progress'?'selected':''}>In Progress</option><option ${ticket.status==='Resolved'?'selected':''}>Resolved</option><option ${ticket.status==='Closed'?'selected':''}>Closed</option></select><button class="primary-btn" style="width:100%;">Send Reply</button></form>`:`<form onsubmit="sendSupportChatMessage(event,'${ticket.id}')" style="display:grid;gap:8px;"><textarea name="message" rows="3" required placeholder="Write your message..."></textarea><input name="orderId" value="${esc(ticket.orderId||'')}" placeholder="Related Order ID (optional)"><button class="primary-btn" style="width:100%;">Send Message</button></form>`}
+    </div>`);
+  setTimeout(function(){const box=getEl('supportChatMessages');if(box) box.scrollTop=box.scrollHeight;},50);
+}
+
+function supportQuickMessage(ticketId,text){
+  const form={preventDefault:function(){},target:{}};
+  sendSupportChatText(ticketId,text,'');
+}
+
+function sendSupportChatMessage(event,ticketId){
+  event.preventDefault();
+  const fd=new FormData(event.target);
+  sendSupportChatText(ticketId,String(fd.get('message')||''),String(fd.get('orderId')||''));
+}
+
+function sendSupportChatText(ticketId,text,orderId){
+  const ticket=getSupportTicket(ticketId), msg=String(text||'').trim();
+  if(!ticket||!msg){showToast('Write your message first');return;}
+  if(orderId) ticket.orderId=String(orderId).trim();
+  addSupportMessage(ticket,'user',msg,ticket.type==='seller'?'Seller':'Customer');
+  setSupportCategoryFromText(ticket,msg);
+  if(ticket.humanRequested){ticket.status=ticket.status==='Resolved'||ticket.status==='Closed'?'Open':'In Progress';ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;}
+  else{
+    const auto=getAutoSupportReply(msg,ticket.type);
+    addSupportMessage(ticket,'bot',auto.reply,'ARYKART Assistant');
+    if(auto.handoff){ticket.humanRequested=true;ticket.status='Open';ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;}
+  }
+  saveAppState();syncSupportTicketToFirebase(ticket);openSupportChat(ticket.id);
+}
+
+function requestHumanSupport(ticketId){
+  const ticket=getSupportTicket(ticketId);if(!ticket)return;
+  if(!ticket.humanRequested){
+    ticket.humanRequested=true;ticket.status='Open';
+    addSupportMessage(ticket,'bot','Your conversation has been sent to ARYKART Admin Support. Please keep this chat open or come back later to see the reply.','ARYKART Assistant');
+  }
+  ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToFirebase(ticket);openSupportChat(ticket.id);showToast('Admin Support has been notified');
+}
+
+function sendAdminChatMessage(event,ticketId){
+  event.preventDefault();
+  if(!appState.admin?.enabled){showToast('Admin access required');return;}
+  const ticket=getSupportTicket(ticketId);if(!ticket)return;
+  const fd=new FormData(event.target), msg=String(fd.get('message')||'').trim(), status=String(fd.get('status')||ticket.status||'Open');
+  if(!msg){showToast('Write a reply first');return;}
+  addSupportMessage(ticket,'admin',msg,'ARYKART Support');ticket.replies=ticket.replies||[];ticket.replies.push({id:ticket.messages[ticket.messages.length-1].id,from:'admin',message:msg,createdAt:ticket.updatedAt});
+  ticket.status=status;ticket.humanRequested=true;ticket.unreadCustomer=Number(ticket.unreadCustomer||0)+1;
+  saveAppState();syncSupportTicketToFirebase(ticket);renderAdminSection('support');openSupportChat(ticket.id);
+}
+
+function adminReplyToSupport(event,ticketId){sendAdminChatMessage(event,ticketId);}
+
+function openSupportTicket(ticketId){openSupportChat(ticketId);}
+
+function updateSupportTicketStatus(ticketId,status){
+  const ticket=getSupportTicket(ticketId);if(!ticket||!appState.admin?.enabled)return;
+  ticket.status=status;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToFirebase(ticket);renderAdminSection('support');
+}
+
+function renderAdminSection(section){
+  if(!appState.admin?.enabled){showPage('accountPage');return;}
+  normalizeState();normalizeSupportTickets();appState.admin.lastSection=section;saveAppState();
+  setText('adminCustomerCount',appState.customer?.loggedIn?1:0);setText('adminSellerCount',appState.seller?.registered?1:0);setText('adminProductCount',(appState.seller?.products||[]).length);setText('adminOrderCount',(appState.orders||[]).length);
+  const content=getEl('adminSectionContent');if(!content)return;
+  setText('adminSectionTitle',section==='support'?'Live Help & Support':section.charAt(0).toUpperCase()+section.slice(1));
+  if(section==='support'){
+    const tickets=(appState.supportTickets||[]).slice().sort(function(a,b){return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);});
+    const waiting=tickets.filter(function(t){return t.humanRequested && ['Open','In Progress'].includes(t.status);}).length;
+    content.innerHTML=`<div class="seller-form-card"><strong>💬 Live Support Control</strong><div style="color:var(--muted);margin-top:6px;">${waiting} waiting for human help • ${tickets.reduce(function(n,t){return n+Number(t.unreadAdmin||0);},0)} unread admin messages</div></div>${tickets.length?tickets.map(function(t){const last=(t.messages||[]).slice(-1)[0];return `<div class="order-card" style="padding:14px;margin-top:10px;"><div style="display:flex;justify-content:space-between;gap:8px;"><strong>${esc(t.user?.name||t.type)} ${Number(t.unreadAdmin||0)?`<span style=\"color:#b91c1c;font-size:12px;\">(${Number(t.unreadAdmin)} new)</span>`:''}</strong><span>${esc(t.status||'Open')}</span></div><div style="color:var(--muted);font-size:13px;margin-top:4px;">${esc(t.type)} • ${esc(t.category||'General Help')} • ${esc(t.id)}</div><div style="margin-top:8px;">${esc((last&&last.message)||'No messages').slice(0,140)}</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><button class="primary-btn" type="button" onclick="openSupportChat('${t.id}')">💬 Open Chat & Reply</button><button class="secondary-btn" type="button" onclick="updateSupportTicketStatus('${t.id}','Resolved')">Resolve</button><button class="secondary-btn" type="button" onclick="deleteSupportTicket('${t.id}')">Delete</button></div></div>`;}).join(''):`<p style="color:var(--muted);">No support conversations yet.</p>`}`;
+    return;
+  }
+  const data={overview:[['Customers',appState.customer?.loggedIn?1:0],['Sellers',appState.seller?.registered?1:0],['Products',(appState.seller?.products||[]).length],['Orders',(appState.orders||[]).length],['Support Chats',(appState.supportTickets||[]).length]],customers:[[appState.customer?.name||'No customer',appState.customer?.phone||'—']],sellers:[[appState.seller?.name||'No seller',appState.seller?.phone||'—']],products:(appState.seller?.products||[]).map(function(p){return [p.name||'Product',p.price?money(p.price):'No price'];}),orders:(appState.orders||[]).map(function(o){return [o.id||'Order',o.status||'Pending'];}),returns:(appState.returns||[]).map(function(r){return [r.id||'Return',r.status||'Requested'];})};
+  const rows=data[section]||data.overview;content.innerHTML=rows.length?rows.map(function(r){return `<div class="order-card" style="padding:12px;"><strong>${esc(r[0])}</strong><div style="color:var(--muted);margin-top:4px;">${esc(String(r[1]))}</div></div>`;}).join(''):`<p style='color:var(--muted)'>No records yet.</p>`;
+}
+
+async function syncSupportTicketToFirebase(ticket){
+  if(!ticket || !initializeFirebase() || !arykartDb) return false;
+  try{await arykartDb.collection('supportTickets').doc(ticket.id).set(JSON.parse(JSON.stringify(ticket)),{merge:true});return true;}catch(error){console.error('Support chat sync failed',error);return false;}
+}
+
+function startSupportRealtimeSync(){
+  if(!initializeFirebase() || !arykartDb || window.arykartSupportUnsubscribe) return;
+  try{
+    window.arykartSupportUnsubscribe=arykartDb.collection('supportTickets').onSnapshot(function(snapshot){
+      const remote=snapshot.docs.map(function(doc){return normalizeSupportTicket(Object.assign({id:doc.id},doc.data()));});
+      if(!remote.length) return;
+      const map=new Map((appState.supportTickets||[]).map(function(t){return [t.id,normalizeSupportTicket(t)];}));
+      remote.forEach(function(rt){const local=map.get(rt.id);if(!local || new Date(rt.updatedAt||0)>=new Date(local.updatedAt||0)) map.set(rt.id,rt);});
+      appState.supportTickets=Array.from(map.values()).sort(function(a,b){return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);});saveAppState();
+      if(appState.admin?.enabled && appState.admin.lastSection==='support') renderAdminSection('support');
+    },function(error){console.error('Live support listener failed',error);});
+  }catch(error){console.error(error);}
+}
+
+async function syncAppStateToFirebase(){
+  if(!initializeFirebase() || !arykartDb) return false;
+  try{
+    const customerPhone=appState.customer?.phone;if(customerPhone) await arykartDb.collection('customers').doc(customerPhone).set(Object.assign({},appState.customer,{updatedAt:firebase.firestore.FieldValue.serverTimestamp()}),{merge:true});
+    const sellerPhone=appState.seller?.phone;if(sellerPhone&&appState.seller?.registered) await arykartDb.collection('sellers').doc(sellerPhone).set(Object.assign({},appState.seller,{updatedAt:firebase.firestore.FieldValue.serverTimestamp()}),{merge:true});
+    await arykartDb.collection('appData').doc('latest').set({orders:appState.orders,returns:appState.returns,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    await Promise.all((appState.supportTickets||[]).map(syncSupportTicketToFirebase));
+    return true;
+  }catch(error){console.error(error);return false;}
 }
 
 
