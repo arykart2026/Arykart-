@@ -1471,6 +1471,16 @@ img{
 
 }
 
+
+
+/* =========================================================
+   COMPLETE SELLER DASHBOARD EXTENSION
+========================================================= */
+.seller-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.seller-action-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:16px;text-align:left;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.seller-action-card strong{display:block;margin-top:6px}.seller-action-card small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}
+.seller-section-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:16px;margin:14px 0}.seller-section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.seller-section-head h3{margin:0}.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.metric{border:1px solid var(--border);border-radius:14px;padding:12px}.metric small{display:block;color:var(--muted)}.metric strong{display:block;font-size:18px;margin-top:5px}.payout-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}.payout-row:last-child{border-bottom:none}.status-chip{display:inline-block;padding:5px 9px;border-radius:999px;background:#eef4ff;color:var(--primary);font-size:12px;font-weight:700}.seller-filter-row{display:flex;gap:8px;overflow:auto;margin:12px 0}.seller-filter-row button{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:999px;padding:8px 12px}.seller-filter-row button.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
 </style>
 </head>
 
@@ -2833,12 +2843,20 @@ img{
         ↩️<br><br>Returns
       </button>
 
-      <button onclick="showToast('Analytics are calculated from seller orders.')">
+      <button onclick="showPage('sellerAnalyticsPage')">
         📊<br><br>Analytics
       </button>
 
-      <button onclick="showToast('Seller payment section is ready for future payment gateway connection.')">
+      <button onclick="showPage('sellerPaymentsPage')">
         💰<br><br>Payments
+      </button>
+
+      <button onclick="showPage('sellerDraftsPage')">
+        📝<br><br>Drafts
+      </button>
+
+      <button onclick="showPage('sellerProfilePage')">
+        ⚙️<br><br>Profile
       </button>
 
     </div>
@@ -3143,6 +3161,38 @@ img{
 
   </main>
 
+</div>
+
+
+
+
+<!-- COMPLETE SELLER PAGES -->
+<div id="sellerAnalyticsPage" class="page">
+  <header class="app-header"><div class="header-row"><button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button><h2 style="flex:1;">Seller Analytics</h2></div></header>
+  <main class="container">
+    <div class="seller-filter-row"><button class="active" onclick="setSellerAnalyticsPeriod('all',this)">All Time</button><button onclick="setSellerAnalyticsPeriod('30',this)">30 Days</button><button onclick="setSellerAnalyticsPeriod('7',this)">7 Days</button></div>
+    <div class="seller-section-card"><div class="seller-section-head"><h3>Business Overview</h3><span class="status-chip" id="sellerAnalyticsPeriod">All Time</span></div><div class="metric-row"><div class="metric"><small>Revenue</small><strong id="analyticsRevenue">₹0</strong></div><div class="metric"><small>Delivered</small><strong id="analyticsDelivered">0</strong></div><div class="metric"><small>Avg Order</small><strong id="analyticsAverage">₹0</strong></div></div></div>
+    <div class="seller-section-card"><div class="seller-section-head"><h3>Catalog Health</h3></div><div class="metric-row"><div class="metric"><small>Products</small><strong id="analyticsProducts">0</strong></div><div class="metric"><small>In Stock</small><strong id="analyticsInStock">0</strong></div><div class="metric"><small>Low Stock</small><strong id="analyticsLowStock">0</strong></div></div></div>
+    <div class="seller-section-card"><div class="seller-section-head"><h3>Top Selling Products</h3></div><div id="analyticsTopProducts"></div></div>
+  </main>
+</div>
+
+<div id="sellerPaymentsPage" class="page">
+  <header class="app-header"><div class="header-row"><button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button><h2 style="flex:1;">Seller Payments</h2></div></header>
+  <main class="container">
+    <div class="seller-section-card"><div class="seller-section-head"><h3>Available Balance</h3><span class="status-chip">Wallet</span></div><h1 id="sellerAvailableBalance">₹0</h1><p style="color:var(--muted);">Calculated from delivered seller orders in this demo. Connect a real payment gateway before production payouts.</p><button class="primary-btn" style="width:100%;" onclick="requestSellerPayout()">Request Payout</button></div>
+    <div class="seller-section-card"><div class="seller-section-head"><h3>Payment History</h3></div><div id="sellerPaymentHistory"></div></div>
+  </main>
+</div>
+
+<div id="sellerDraftsPage" class="page">
+  <header class="app-header"><div class="header-row"><button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button><h2 style="flex:1;">Product Drafts</h2><button class="icon-btn" onclick="showPage('sellerListingPage')">＋</button></div></header>
+  <main class="container"><div id="sellerDraftsList"></div></main>
+</div>
+
+<div id="sellerProfilePage" class="page">
+  <header class="app-header"><div class="header-row"><button class="icon-btn" onclick="showPage('sellerDashboardPage')">←</button><h2 style="flex:1;">Seller Profile</h2></div></header>
+  <main class="container"><div id="sellerProfileContent"></div></main>
 </div>
 
 
@@ -4463,7 +4513,7 @@ function openCustomerLogin(){
         <button class="primary-btn" style="flex:1;">Verify & Continue</button>
       </div>
     </form>
-    <p style="font-size:12px;color:#6b7280;margin-top:12px;">If Firebase is not configured, this local HTML file cannot send a real SMS. Add your Firebase project configuration to enable real OTP.</p>
+    <p id="firebaseOtpStatus" style="font-size:12px;color:#6b7280;margin-top:12px;display:none;"></p><div id="firebaseRecaptchaContainer"></div>
   `);
 }
 
@@ -6756,6 +6806,7 @@ function publishProduct(event){
   saveAppState();
 
   const form =
+    getEl("advancedListingForm") ||
     getEl("sellerProductListingForm") ||
     getEl("productListingForm");
 
@@ -7751,13 +7802,24 @@ let arykartFirebaseApp=null, arykartAuth=null, arykartDb=null, arykartRecaptcha=
 
 function initializeFirebase(){
   try{
-    if(typeof firebase==="undefined" || !ARYKART_FIREBASE_CONFIG.apiKey) return false;
+    if(typeof firebase==="undefined" || !ARYKART_FIREBASE_CONFIG.apiKey) throw new Error("Firebase SDK not loaded");
     arykartFirebaseApp=firebase.apps.length ? firebase.app() : firebase.initializeApp(ARYKART_FIREBASE_CONFIG);
-    arykartAuth=firebase.auth(); arykartDb=firebase.firestore();
+    arykartAuth=typeof firebase.auth==="function" ? firebase.auth() : null;
+    try{ arykartDb=typeof firebase.firestore==="function" ? firebase.firestore() : null; }catch(dbError){ console.warn("Firestore unavailable",dbError); arykartDb=null; }
     try{ if(typeof firebase.analytics === "function") firebase.analytics(); }catch(analyticsError){ console.warn("Firebase Analytics unavailable", analyticsError); }
-    appState.firebase.configured=true; appState.firebase.phoneOtpEnabled=true; saveAppState();
-    return true;
-  }catch(error){ console.error("Firebase init failed",error); return false; }
+    appState.firebase.configured=!!arykartAuth;
+    appState.firebase.phoneOtpEnabled=!!arykartAuth;
+    saveAppState();
+    const status=getEl("firebaseOtpStatus");
+    if(status){ status.style.display="none"; status.textContent=""; }
+    return !!arykartAuth;
+  }catch(error){
+    console.error("Firebase init failed",error);
+    appState.firebase.configured=false; appState.firebase.phoneOtpEnabled=false;
+    const status=getEl("firebaseOtpStatus");
+    if(status){ status.style.display="block"; status.textContent="Firebase load nahi hua. Internet connection aur Firebase Phone Authentication check karein."; }
+    return false;
+  }
 }
 
 function getFirebasePhone(phone){ return "+91"+String(phone||"").replace(/\D/g,"").slice(-10); }
@@ -7877,6 +7939,7 @@ function initializeArykart(){
   }
 
   const form =
+    getEl("advancedListingForm") ||
     getEl("sellerProductListingForm") ||
     getEl("productListingForm");
 
@@ -7962,6 +8025,312 @@ window.addEventListener(
     saveAppState();
   }
 );
+
+
+
+
+
+/* =========================================================
+   SELLER DASHBOARD: COMPLETE WORKING EXTENSION
+========================================================= */
+(function(){
+  const originalNormalize = normalizeState;
+  normalizeState = function(){
+    originalNormalize();
+    appState.cloudProducts = Array.isArray(appState.cloudProducts) ? appState.cloudProducts : [];
+    appState.seller.payouts = Array.isArray(appState.seller.payouts) ? appState.seller.payouts : [];
+  };
+
+  getAllProducts = function(){
+    const map = new Map();
+    [...getBaseProducts(), ...(appState.cloudProducts||[]), ...(appState.seller.products||[])].forEach(function(p){
+      if(p && p.id !== undefined) map.set(String(p.id), p);
+    });
+    return Array.from(map.values());
+  };
+
+  const originalLoadProducts = loadProductsFromFirebase;
+  loadProductsFromFirebase = async function(){
+    if(!initializeFirebase() || !arykartDb) return [];
+    try{
+      const snap = await arykartDb.collection("products").get();
+      const remote = snap.docs.map(function(doc){ return {id:doc.id,...doc.data()}; });
+      appState.cloudProducts = remote;
+      const sellerId = String(appState.seller?.phone || "");
+      if(sellerId){
+        const own = remote.filter(function(p){ return String(p.sellerId||"") === sellerId; });
+        const map = new Map();
+        (appState.seller.products||[]).forEach(function(p){ map.set(String(p.id),p); });
+        own.forEach(function(p){ map.set(String(p.id),p); });
+        appState.seller.products = Array.from(map.values());
+      }
+      saveAppState();
+      renderHomeProducts(); renderSellerInventory(); renderSellerDashboard();
+      renderSellerAnalytics(); renderSellerPayments(); renderSellerDrafts();
+      return remote;
+    }catch(error){ console.warn("Could not load cloud products",error); return []; }
+  };
+
+  function sellerOrdersForPeriod(days){
+    const now=Date.now();
+    return getSellerOrders().filter(function(o){
+      if(!days || days==='all') return true;
+      const date=Date.parse(o.createdAt||o.date||0);
+      return Number.isFinite(date) && date >= now-(Number(days)*86400000);
+    });
+  }
+
+  window.sellerAnalyticsDays = 'all';
+  window.setSellerAnalyticsPeriod = function(days,btn){
+    window.sellerAnalyticsDays=days;
+    document.querySelectorAll('#sellerAnalyticsPage .seller-filter-row button').forEach(function(b){b.classList.remove('active');});
+    if(btn) btn.classList.add('active');
+    renderSellerAnalytics();
+  };
+
+  renderSellerAnalytics = function(){
+    const orders=sellerOrdersForPeriod(window.sellerAnalyticsDays||'all');
+    const delivered=orders.filter(function(o){return o.status==='Delivered';});
+    const revenue=delivered.reduce(function(sum,o){return sum+Number(o.total||0);},0);
+    const products=appState.seller.products||[];
+    const inStock=products.filter(function(p){return Number(p.stock||0)>0;}).length;
+    const lowStock=products.filter(function(p){const n=Number(p.stock||0);return n>0&&n<=5;}).length;
+    setText('sellerAnalyticsPeriod',(window.sellerAnalyticsDays==='all'||!window.sellerAnalyticsDays)?'All Time':window.sellerAnalyticsDays+' Days');
+    setText('analyticsRevenue',money(revenue));
+    setText('analyticsDelivered',String(delivered.length));
+    setText('analyticsAverage',money(delivered.length?revenue/delivered.length:0));
+    setText('analyticsProducts',String(products.length));
+    setText('analyticsInStock',String(inStock));
+    setText('analyticsLowStock',String(lowStock));
+    const counts={};
+    orders.forEach(function(o){(o.items||[]).forEach(function(item){
+      if(products.some(function(p){return String(p.id)===String(item.id);})){ const key=String(item.id); counts[key]=(counts[key]||0)+Number(item.qty||1); }
+    });});
+    const top=Object.entries(counts).sort(function(a,b){return b[1]-a[1];}).slice(0,5);
+    const box=getEl('analyticsTopProducts');
+    if(box) box.innerHTML=top.length?top.map(function(entry){const p=findProduct(entry[0])||{};return '<div class="payout-row"><span>'+esc(p.name||'Product')+'</span><strong>'+entry[1]+' sold</strong></div>';}).join(''):'<p style="color:var(--muted);margin:0;">No seller sales data yet.</p>';
+  };
+
+  function sellerDeliveredRevenue(){ return getSellerOrders().filter(function(o){return o.status==='Delivered';}).reduce(function(sum,o){return sum+Number(o.total||0);},0); }
+  function sellerPaidOut(){ return (appState.seller.payouts||[]).filter(function(p){return p.status==='Paid';}).reduce(function(sum,p){return sum+Number(p.amount||0);},0); }
+  function sellerAvailableBalance(){ return Math.max(0,sellerDeliveredRevenue()-sellerPaidOut()); }
+
+  renderSellerPayments = function(){
+    const available=sellerAvailableBalance();
+    setText('sellerAvailableBalance',money(available));
+    const box=getEl('sellerPaymentHistory');
+    if(!box) return;
+    const payouts=appState.seller.payouts||[];
+    box.innerHTML=payouts.length?payouts.map(function(p){return '<div class="payout-row"><div><strong>'+esc(p.id||'Payout')+'</strong><div style="color:var(--muted);font-size:12px;">'+esc(new Date(p.createdAt||Date.now()).toLocaleString())+'</div></div><div style="text-align:right;"><strong>'+money(p.amount)+'</strong><div><span class="status-chip">'+esc(p.status||'Requested')+'</span></div></div></div>';}).join(''):'<p style="color:var(--muted);margin:0;">No payout requests yet.</p>';
+  };
+
+  window.requestSellerPayout = function(){
+    const amount=sellerAvailableBalance();
+    if(amount<=0){showToast('No delivered balance is available for payout');return;}
+    const bank=appState.seller.bank||{};
+    if(!bank.accountLast4){showToast('Complete seller bank details first');showPage('sellerProfilePage');return;}
+    appState.seller.payouts.unshift({id:'PAY'+Date.now().toString(36).toUpperCase(),amount:amount,status:'Requested',createdAt:new Date().toISOString(),bankLast4:bank.accountLast4});
+    saveAppState(); renderSellerPayments(); renderSellerDashboard(); showToast('Payout request created');
+    if(typeof syncAppStateToFirebase==='function') syncAppStateToFirebase().catch(function(){});
+  };
+
+  renderSellerDrafts = function(){
+    const box=getEl('sellerDraftsList'); if(!box) return;
+    const drafts=appState.seller.drafts||[];
+    box.innerHTML=drafts.length?drafts.map(function(d,index){return '<article class="seller-section-card"><strong>'+esc(d.name||'Untitled Draft')+'</strong><p style="color:var(--muted);">'+esc(d.category||'No category')+' · '+money(d.price||0)+'</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><button class="primary-btn" onclick="publishSellerDraft('+index+')">Publish</button><button class="secondary-btn" onclick="deleteSellerDraft('+index+')">Delete</button></div></article>';}).join(''):'<div class="empty-state"><div class="empty-icon">📝</div><h3>No drafts yet</h3><button class="primary-btn" onclick="showPage(\'sellerListingPage\')">Create Product</button></div>';
+  };
+  window.publishSellerDraft = function(index){
+    const draft=(appState.seller.drafts||[])[index]; if(!draft){return;}
+    if(!appState.seller.registered){showToast('Create seller account first');showPage('sellerPage');return;}
+    draft.id=draft.id||akId(); draft.createdAt=draft.createdAt||new Date().toISOString(); draft.sellerId=appState.seller.phone||'seller';
+    appState.seller.products.unshift(draft); appState.seller.drafts.splice(index,1); saveAppState(); renderSellerDrafts(); renderSellerInventory(); renderSellerDashboard(); renderHomeProducts(); showToast('Draft published successfully');
+    if(typeof syncAppStateToFirebase==='function') syncAppStateToFirebase().catch(function(){});
+  };
+  window.deleteSellerDraft = function(index){ if(!confirm('Delete this draft?')) return; appState.seller.drafts.splice(index,1); saveAppState(); renderSellerDrafts(); showToast('Draft deleted'); if(typeof syncAppStateToFirebase==='function') syncAppStateToFirebase().catch(function(){}); };
+
+  renderSellerProfile = function(){
+    const box=getEl('sellerProfileContent'); if(!box) return;
+    const s=appState.seller||{}, b=s.bank||{}, d=s.documents||{};
+    box.innerHTML='<div class="seller-section-card"><h3>'+esc(s.name||'Seller Account')+'</h3><p>'+esc(s.email||'No email')+'</p><p>Mobile: '+esc(s.phone||'Not added')+'</p><p>Type: '+esc(s.type||'Not selected')+'</p><p>Verification: <span class="status-chip">'+esc(d.status||'Pending')+'</span></p></div><div class="seller-section-card"><h3>Bank Details</h3><p>Account holder: '+esc(b.holder||'—')+'</p><p>Bank: '+esc(b.bankName||'—')+'</p><p>Account ending: '+esc(b.accountLast4||'—')+'</p><p>IFSC: '+esc(b.ifsc||'—')+'</p><button class="secondary-btn" style="width:100%;" onclick="showPage(\'sellerPage\')">Update Seller Details</button></div>';
+  };
+
+  const originalShowPage=showPage;
+  showPage=function(pageId){
+    originalShowPage.apply(this,arguments);
+    if(pageId==='sellerAnalyticsPage') renderSellerAnalytics();
+    if(pageId==='sellerPaymentsPage') renderSellerPayments();
+    if(pageId==='sellerDraftsPage') renderSellerDrafts();
+    if(pageId==='sellerProfilePage') renderSellerProfile();
+  };
+
+  const originalInit=initializeArykart;
+  initializeArykart=function(){
+    originalInit.apply(this,arguments);
+    const form=getEl('advancedListingForm');
+    if(form && !form.dataset.arykartBound){ form.addEventListener('submit',publishProduct); form.dataset.arykartBound='1'; }
+    renderSellerAnalytics(); renderSellerPayments(); renderSellerDrafts(); renderSellerProfile();
+  };
+})();
+
+
+/* =========================================================
+   ARYKART COMPLETE FIREBASE CLOUD LAYER
+   Auto-sync: customers, sellers, products, orders, returns,
+   carts, wishlist, addresses, wallet, reviews, drafts,
+   notifications, settings and app metadata.
+========================================================= */
+
+function firebaseClean(value){
+  if(value === undefined) return null;
+  if(value === null || typeof value !== "object") return value;
+  if(Array.isArray(value)) return value.map(firebaseClean);
+  const out={};
+  Object.keys(value).forEach(function(key){
+    if(typeof value[key] !== "undefined") out[key]=firebaseClean(value[key]);
+  });
+  return out;
+}
+
+function firebaseDocId(value, fallback){
+  const id=String(value||fallback||akId()).replace(/[^A-Za-z0-9_-]/g,"_");
+  return id || akId();
+}
+
+async function firebaseSet(collectionName, docId, data, merge){
+  if(!initializeFirebase() || !arykartDb) throw new Error("Firebase is not ready");
+  return arykartDb.collection(collectionName).doc(firebaseDocId(docId)).set(
+    firebaseClean(data),
+    {merge: merge !== false}
+  );
+}
+
+async function syncProductsToFirebase(){
+  if(!initializeFirebase() || !arykartDb) return false;
+  const sellerPhone=appState.seller?.phone || "local-seller";
+  const list=Array.isArray(appState.seller?.products) ? appState.seller.products : [];
+  const batch=arykartDb.batch();
+  list.forEach(function(product){
+    const ref=arykartDb.collection("products").doc(firebaseDocId(product.id,akId()));
+    batch.set(ref,firebaseClean({...product,sellerId:sellerPhone,updatedAt:new Date().toISOString()}),{merge:true});
+  });
+  if(list.length) await batch.commit();
+  return true;
+}
+
+async function syncCollectionArray(collectionName, list, ownerKey){
+  if(!initializeFirebase() || !arykartDb) return false;
+  const arr=Array.isArray(list) ? list : [];
+  if(!arr.length) return true;
+  const batch=arykartDb.batch();
+  arr.forEach(function(item,index){
+    const id=firebaseDocId(item?.id || item?.orderId || item?.productId || index+"_"+ownerKey, akId());
+    batch.set(
+      arykartDb.collection(collectionName).doc(id),
+      firebaseClean({...item,ownerId:ownerKey,updatedAt:new Date().toISOString()}),
+      {merge:true}
+    );
+  });
+  await batch.commit();
+  return true;
+}
+
+async function syncAppStateToFirebase(){
+  if(!initializeFirebase() || !arykartDb){
+    showToast("Firebase could not start. Check internet and Firebase settings.");
+    return false;
+  }
+  try{
+    normalizeState();
+    const customerId=firebaseDocId(appState.customer?.phone || appState.customer?.email,"customer_local");
+    const sellerId=firebaseDocId(appState.seller?.phone,"seller_local");
+    const now=new Date().toISOString();
+
+    await Promise.all([
+      firebaseSet("customers",customerId,{...appState.customer,id:customerId,updatedAt:now}),
+      firebaseSet("sellers",sellerId,{...appState.seller,id:sellerId,updatedAt:now}),
+      firebaseSet("carts",customerId,{items:appState.cart||[],updatedAt:now}),
+      firebaseSet("wishlists",customerId,{items:appState.wishlist||[],updatedAt:now}),
+      firebaseSet("addresses",customerId,{items:appState.addresses||[],updatedAt:now}),
+      firebaseSet("wallets",customerId,{...appState.wallet,updatedAt:now}),
+      firebaseSet("reviews",customerId,{items:appState.reviews||{},updatedAt:now}),
+      firebaseSet("drafts",sellerId,{items:appState.seller?.drafts||[],updatedAt:now}),
+      firebaseSet("notifications",customerId,{...appState.notifications,updatedAt:now}),
+      firebaseSet("appSettings",customerId,{...appState.settings,language:appState.language||"en",updatedAt:now}),
+      firebaseSet("appMeta","arykart",{
+        appName:"ARYKART",
+        version:"1.0",
+        lastSyncAt:now,
+        collections:["customers","sellers","products","orders","returns","carts","wishlists","addresses","wallets","reviews","drafts","notifications","appSettings"]
+      })
+    ]);
+
+    await Promise.all([
+      syncProductsToFirebase(),
+      syncCollectionArray("orders",appState.orders||[],customerId),
+      syncCollectionArray("returns",appState.returns||[],customerId)
+    ]);
+
+    appState.firebase.configured=true;
+    appState.firebase.lastSyncAt=now;
+    saveAppState();
+    showToast("All ARYKART data synced to Firebase ✓");
+    return true;
+  }catch(error){
+    console.error("Full Firebase sync failed",error);
+    showToast("Firebase sync failed: "+(error.message||"Check Firestore rules"));
+    return false;
+  }
+}
+
+async function loadProductsFromFirebase(){
+  if(!initializeFirebase() || !arykartDb) return [];
+  try{
+    const snap=await arykartDb.collection("products").get();
+    const remote=snap.docs.map(function(doc){ return {id:doc.id,...doc.data()}; });
+    const local=Array.isArray(appState.seller?.products)?appState.seller.products:[];
+    const map=new Map();
+    local.forEach(function(p){ map.set(String(p.id),p); });
+    remote.forEach(function(p){ map.set(String(p.id),p); });
+    appState.seller.products=Array.from(map.values());
+    saveAppState();
+    renderHomeProducts();
+    renderSellerInventory();
+    renderSellerDashboard();
+    return remote;
+  }catch(error){
+    console.warn("Could not load cloud products",error);
+    return [];
+  }
+}
+
+function installFirebaseAutoSync(){
+  ["publishProduct","saveListingDraft","saveEditedSellerProduct","deleteSellerProduct","addToCart","removeFromCart","placeOrder","requestReturn","setLanguage"].forEach(function(name){
+    const original=window[name];
+    if(typeof original!=="function" || original.__arykartCloudWrapped) return;
+    const wrapped=function(){
+      const result=original.apply(this,arguments);
+      Promise.resolve(result).finally(function(){
+        setTimeout(function(){ syncAppStateToFirebase().catch(function(){}); },300);
+      });
+      return result;
+    };
+    wrapped.__arykartCloudWrapped=true;
+    window[name]=wrapped;
+  });
+}
+
+async function initializeArykartCloud(){
+  installFirebaseAutoSync();
+  if(initializeFirebase()){
+    await loadProductsFromFirebase();
+  }
+}
+
+window.addEventListener("online",function(){
+  syncAppStateToFirebase().catch(function(){});
+});
+
+setTimeout(function(){ initializeArykartCloud(); },800);
 
 </script>
 
