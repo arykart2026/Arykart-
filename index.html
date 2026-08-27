@@ -6461,12 +6461,6 @@ function getSupportUser(type){
 function openSupportCenter(type){
   type = type === "seller" ? "seller" : "customer";
 
-  if(type === "customer" && !appState.customer?.loggedIn){
-    showToast("Please login to your customer account first");
-    openLoginModal();
-    return;
-  }
-
   if(type === "seller" && !appState.seller?.registered){
     showToast("Please create or login to your seller account first");
     showPage("sellerPage");
@@ -7010,7 +7004,6 @@ function supportQuickTopics(type){
 
 function openSupportCenter(type){
   type=type==='seller'?'seller':'customer';
-  if(type==='customer' && !appState.customer?.loggedIn){showToast('Please login to your customer account first');openLoginModal();return;}
   if(type==='seller' && !appState.seller?.registered){showToast('Please create or login to your seller account first');showPage('sellerPage');return;}
   const tickets=getMySupportTickets(type);
   const unread=tickets.reduce(function(n,t){return n+Number(t.unreadCustomer||0);},0);
