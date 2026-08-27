@@ -2985,7 +2985,7 @@ function renderCart(){
 
 function openCustomerLogin(){
   openAryModal("Login / Create Account", `
-    <form onsubmit="customerLogin(event)">
+    <form id="arykartCustomerLoginForm" onsubmit="customerLogin(event)">
       <div class="field"><label>Full Name</label><input name="name" required value="${esc(appState.customer.name || "")}"></div>
       <div class="field"><label>Mobile Number</label><input name="phone" inputmode="numeric" pattern="[0-9]{10}" required value="${esc(appState.customer.phone || "")}"></div>
       <div class="field"><label>Email / Gmail</label><input name="email" type="email" value="${esc(appState.customer.email || "")}"></div>
@@ -3014,12 +3014,16 @@ function customerLogin(event){
     if(!/^\d{6}$/.test(otp)){ showToast("Enter the 6 digit OTP"); return; }
     window.arykartOtpConfirmation.confirm(otp).then(function(){
       appState.customer={loggedIn:true,name:name,phone:phone,email:email,verified:true};
+      window.arykartOtpConfirmation=null;
       saveAppState(); syncAppStateToFirebase(); closeAryModal(); renderAccount(); showToast("Phone verified successfully ✓");
-    }).catch(function(error){ console.error(error); showToast("Invalid or expired OTP"); });
+    }).catch(function(error){
+      console.error("OTP verification error:",error);
+      showToast(firebaseOtpErrorMessage(error) || "Invalid or expired OTP");
+    });
     return;
   }
 
-  showToast("First send OTP. Configure Firebase for real SMS verification.");
+  showToast("First tap Send OTP and wait for the OTP to be sent.");
 }
 
 /* =========================================================
@@ -6304,6 +6308,7 @@ function getFirebasePhone(phone){ return "+91"+String(phone||"").replace(/\D/g,"
 
 function firebaseOtpErrorMessage(error){
   const code=String(error?.code||"");
+  if(code.includes("configuration-not-found")) return "Firebase Auth configuration not found. In Firebase Console: Authentication > Sign-in method, enable Phone, then reload this website. Also check that this exact Firebase project is selected.";
   if(code.includes("operation-not-allowed")) return "Firebase Phone sign-in is disabled. Enable Phone in Firebase Authentication > Sign-in method.";
   if(code.includes("unauthorized-domain")) return "This website domain is not authorized in Firebase Authentication. Add your GitHub Pages domain to Authorized domains.";
   if(code.includes("invalid-app-credential") || code.includes("captcha-check-failed")) return "reCAPTCHA verification failed. Refresh the page and try again.";
@@ -6325,24 +6330,57 @@ function setupRecaptcha(containerId){
 }
 
 function sendCustomerOtpFromModal(){
-  const form=document.querySelector("#arykartModal form");
-  if(!form){ showToast("Login form not found"); return; }
+  const modalBox=getEl("arykartProfessionalModalBox");
+  const form=getEl("arykartCustomerLoginForm") ||
+    (modalBox ? modalBox.querySelector("form") : null) ||
+    document.querySelector('form[onsubmit="customerLogin(event)"]') ||
+    document.querySelector('form[id*="CustomerLogin"]');
+
+  if(!form){
+    showToast("Login form not found. Please close and reopen the Login / Create Account popup.");
+    return;
+  }
+
   const phone=String(new FormData(form).get("phone")||"").replace(/\D/g,"");
-  if(!/^\d{10}$/.test(phone)){ showToast("Enter a valid 10 digit mobile number"); return; }
-  if(!setupRecaptcha("firebaseRecaptchaContainer")){ showToast("Firebase could not initialize. Check the Firebase settings."); return; }
+  if(!/^\d{10}$/.test(phone)){
+    showToast("Enter a valid 10 digit mobile number");
+    return;
+  }
+
   const help=getEl("customerOtpHelp");
-  if(help) help.textContent="Sending OTP to +91"+phone+"...";
-  arykartAuth.signInWithPhoneNumber(getFirebasePhone(phone),arykartRecaptcha)
-    .then(function(result){
-      window.arykartOtpConfirmation=result;
-      if(help) help.textContent="OTP sent to +91"+phone+". Enter the 6 digit code and tap Verify & Continue.";
-      showToast("OTP sent successfully");
-    })
-    .catch(function(error){
-      console.error(error);
-      if(help) help.textContent=firebaseOtpErrorMessage(error);
-      showToast(firebaseOtpErrorMessage(error));
-    });
+  if(help) help.textContent="Preparing secure OTP verification...";
+
+  try{
+    if(!setupRecaptcha("firebaseRecaptchaContainer")){
+      throw new Error("Firebase could not initialize. Check the Firebase configuration.");
+    }
+
+    if(!arykartAuth || typeof arykartAuth.signInWithPhoneNumber!=="function"){
+      throw new Error("Firebase Authentication is not ready.");
+    }
+
+    window.arykartOtpConfirmation=null;
+    if(help) help.textContent="Sending OTP to +91"+phone+"...";
+
+    arykartAuth.signInWithPhoneNumber(getFirebasePhone(phone),arykartRecaptcha)
+      .then(function(result){
+        window.arykartOtpConfirmation=result;
+        if(help) help.textContent="OTP sent to +91"+phone+". Enter the 6 digit code and tap Verify & Continue.";
+        showToast("OTP sent successfully");
+      })
+      .catch(function(error){
+        console.error("Customer OTP error:",error);
+        window.arykartOtpConfirmation=null;
+        const message=firebaseOtpErrorMessage(error);
+        if(help) help.textContent=message;
+        showToast(message);
+      });
+  }catch(error){
+    console.error("Customer OTP setup error:",error);
+    const message=firebaseOtpErrorMessage(error);
+    if(help) help.textContent=message;
+    showToast(message);
+  }
 }
 
 function ensureSellerOtpRecaptcha(){
