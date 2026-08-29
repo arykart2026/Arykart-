@@ -6,7 +6,7 @@
 
 <title>ARYKART - Shop Everything</title>
 
-<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -1251,6 +1251,9 @@
       <button id="createSellerAccountBtn" class="primary-btn" onclick="registerSeller()">
         Create Individual Seller Account
       </button>
+      <button type="button" class="secondary-btn" style="width:100%;margin-top:10px;" onclick="openSellerLogin()">
+        Already have a seller account? Login
+      </button>
 
     </div>
 
@@ -1289,7 +1292,7 @@
       <button onclick="renderAdminSection('orders')">🧾<br><br>Orders</button>
       <button onclick="renderAdminSection('returns')">↩️<br><br>Returns</button>
       <button onclick="renderAdminSection('support')">🎧<br><br>Help & Support</button>
-      <button onclick="syncAppStateToFirebase()">☁️<br><br>Sync Data</button>
+      <button onclick="syncAppStateToStorage()">💾<br><br>Save Data</button>
     </div>
     <div class="seller-form-card" style="margin-top:16px;">
       <h3 id="adminSectionTitle">Overview</h3>
@@ -1308,6 +1311,7 @@
     <div class="header-row">
       <button class="icon-btn" onclick="showPage('accountPage')">←</button>
       <h2 style="flex:1;">Seller Dashboard</h2>
+      <button class="icon-btn" onclick="sellerLogout()" title="Logout">↪</button>
       <button class="icon-btn" onclick="showPage('sellerListingPage')">＋</button>
     </div>
   </header>
@@ -1740,9 +1744,8 @@
      PART 2 YAHAN SE CONTINUE HOGA
 ===================================================== -->
 
-<!-- Firebase SDKs: fill ARYKART_FIREBASE_CONFIG below to enable Firestore data sync -->
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js"></script>
+<!-- Supabase SDK: add your Project URL and anon key in the config below -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
 /* =========================================================
@@ -1783,7 +1786,6 @@ let appState = {
     registered: false,
     name: "",
     type: "",
-    phoneVerified: false,
     bank: {},
     products: [],
     drafts: []
@@ -1792,9 +1794,8 @@ let appState = {
     enabled: false,
     lastSection: "overview"
   },
-  firebase: {
-    configured: false,
-    phoneOtpEnabled: false
+  supabase: {
+    configured: false
   },
   reviews: {},
   supportTickets: []
@@ -1932,8 +1933,6 @@ function normalizeState(){
   appState.seller.documents =
     appState.seller.documents || {};
 
-  appState.seller.phoneVerified =
-    Boolean(appState.seller.phoneVerified);
 
   appState.seller.bank =
     appState.seller.bank || {};
@@ -1941,8 +1940,8 @@ function normalizeState(){
   appState.admin =
     appState.admin || {enabled:false,lastSection:"overview"};
 
-  appState.firebase =
-    appState.firebase || {configured:false,phoneOtpEnabled:false};
+  appState.supabase =
+    appState.supabase || {configured:false};
 
   appState.seller.products =
     Array.isArray(appState.seller.products)
@@ -2983,35 +2982,70 @@ function renderCart(){
 
 
 /* =========================================================
-   CUSTOMER LOGIN / DEMO OTP
+   CUSTOMER AUTH - SUPABASE EMAIL + PASSWORD (NO PHONE OTP)
 ========================================================= */
 
 function openCustomerLogin(){
-  openAryModal("Create / Login Account", `
-    <form id="arykartCustomerLoginForm" onsubmit="customerLogin(event)">
-      <div class="field"><label>Full Name</label><input name="name" required value="${esc(appState.customer.name || "")}"></div>
-      <div class="field"><label>Phone Number</label><input name="phone" inputmode="numeric" pattern="[0-9]{10}" required value="${esc(appState.customer.phone || "")}"></div>
-      <div class="field"><label>Email / Gmail Address</label><input name="email" type="email" required value="${esc(appState.customer.email || "")}"></div>
-      <div class="field"><label>Password</label><input name="password" type="password" minlength="6" required placeholder="Minimum 6 characters"></div>
-      <button class="primary-btn" style="width:100%;">Continue</button>
-    </form>
+  openAryModal("Customer Account", `
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <button type="button" class="secondary-btn" style="flex:1;" onclick="showCustomerAuthForm('login')">Login</button>
+      <button type="button" class="secondary-btn" style="flex:1;" onclick="showCustomerAuthForm('signup')">Create Account</button>
+    </div>
+    <div id="customerAuthFormWrap"></div>
   `);
+  showCustomerAuthForm('login');
 }
 
-function customerLogin(event){
+function showCustomerAuthForm(mode){
+  const wrap=getEl('customerAuthFormWrap');
+  if(!wrap) return;
+  const signup=mode==='signup';
+  wrap.innerHTML=`
+    <form onsubmit="customerAuth(event,'${signup?'signup':'login'}')">
+      ${signup?`<div class="field"><label>Full Name</label><input name="name" required value="${esc(appState.customer.name||'')}"></div>
+      <div class="field"><label>Phone Number</label><input name="phone" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" required value="${esc(appState.customer.phone||'')}"></div>`:''}
+      <div class="field"><label>Email / Gmail Address</label><input name="email" type="email" required value="${esc(appState.customer.email||'')}"></div>
+      <div class="field"><label>Password</label><input name="password" type="password" minlength="6" required placeholder="Minimum 6 characters"></div>
+      <button class="primary-btn" style="width:100%;">${signup?'Create Account':'Login'}</button>
+    </form>
+  `;
+}
+
+async function customerAuth(event,mode){
   event.preventDefault();
   const form=new FormData(event.target);
-  const phone=String(form.get("phone") || "").replace(/\D/g,"");
-  const name=String(form.get("name") || "").trim();
-  const email=String(form.get("email") || "").trim().toLowerCase();
-  const password=String(form.get("password") || "");
-  if(!name){ showToast("Enter your full name"); return; }
-  if(!/^\d{10}$/.test(phone)){ showToast("Enter valid 10 digit phone number"); return; }
-  if(!/^\S+@\S+\.\S+$/.test(email)){ showToast("Enter a valid email address"); return; }
-  if(password.length<6){ showToast("Password must be at least 6 characters"); return; }
-  appState.customer={loggedIn:true,name:name,phone:phone,email:email,verified:false};
-  saveAppState(); syncAppStateToFirebase(); closeAryModal(); renderAccount(); showToast("Account login successful");
+  const email=String(form.get('email')||'').trim().toLowerCase();
+  const password=String(form.get('password')||'');
+  const name=String(form.get('name')||'').trim();
+  const phone=String(form.get('phone')||'').replace(/\D/g,'');
+  if(!/^\S+@\S+\.\S+$/.test(email)){showToast('Enter a valid email address');return;}
+  if(password.length<6){showToast('Password must be at least 6 characters');return;}
+  if(mode==='signup'){
+    if(!name){showToast('Enter your full name');return;}
+    if(!/^\d{10}$/.test(phone)){showToast('Enter a valid 10 digit phone number');return;}
+  }
+  const client=getSupabaseClient();
+  if(!client) return;
+  try{
+    if(mode==='signup'){
+      const {data,error}=await client.auth.signUp({email,password,options:{data:{full_name:name,phone,account_type:'customer'}}});
+      if(error) throw error;
+      const hasSession=Boolean(data.session);
+      appState.customer={loggedIn:hasSession,name,phone,email,verified:Boolean(data.user?.email_confirmed_at),authId:data.user?.id||''};
+      saveAppState();closeAryModal();renderAccount();
+      showToast(hasSession?'Account created successfully':'Account created. Please confirm your email, then login.');
+    }else{
+      const {data,error}=await client.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      const meta=data.user?.user_metadata||{};
+      if(meta.account_type==='seller'){throw new Error('This is a seller account. Please use Seller Login.');}
+      appState.customer={loggedIn:true,name:meta.full_name||email.split('@')[0],phone:meta.phone||'',email:data.user?.email||email,verified:Boolean(data.user?.email_confirmed_at),authId:data.user?.id||''};
+      saveAppState();closeAryModal();renderAccount();showToast('Logged in successfully');
+    }
+  }catch(error){console.error(error);showToast(error?.message||'Authentication failed');}
 }
+
+function customerLogin(event){customerAuth(event,'signup');}
 
 /* =========================================================
    ADDRESS SYSTEM
@@ -4938,7 +4972,7 @@ function selectSellerType(type){
   updateSellerFormForType();
 }
 
-function registerSeller(){
+async function registerSeller(){
   const cfg=getSellerTypeConfig(currentSellerType);
   const name=getEl("sellerNameInput")?.value.trim() || "";
   const phone=getEl("sellerPhoneInput")?.value.trim().replace(/\D/g,"") || "";
@@ -4978,37 +5012,62 @@ function registerSeller(){
   if(cfg.needsId && !idPhoto){ showToast("Please upload the government ID document"); return; }
   if(cfg.needsGst && !gstPhoto){ showToast("Please upload the GST certificate"); return; }
 
-  appState.seller={
-    ...appState.seller,
-    registered:true,
-    name:name, phone:phone, email:email, type:cfg.label,
-    phoneVerified:false,
-    businessType:cfg.needsBusiness ? businessType : "Individual",
-    bank:{
-      holder:holder,
-      bankName:bankName,
-      accountLast4:account.slice(-4),
-      ifsc:ifsc,
-      verified:false,
-      status:"Pending Bank Verification"
-    },
-    documents:{
-      pan:cfg.needsPan ? pan : "",
-      gst:cfg.needsGst ? gst : "",
-      idType:cfg.needsId ? idType : "",
-      idNumber:cfg.needsId ? idNumber : "",
-      panUploaded:Boolean(panPhoto),
-      idUploaded:Boolean(idPhoto),
-      gstUploaded:Boolean(gstPhoto),
-      status:"Pending Verification"
-    }
-  };
+  const client=getSupabaseClient();
+  if(!client) return;
+  try{
+    const {data,error}=await client.auth.signUp({
+      email:email.toLowerCase(),
+      password,
+      options:{data:{full_name:name,phone,account_type:'seller',seller_type:cfg.label}}
+    });
+    if(error) throw error;
+    const hasSession=Boolean(data.session);
+    appState.seller={
+      ...appState.seller,
+      registered:hasSession,
+      name:name, phone:phone, email:email.toLowerCase(), authId:data.user?.id||'', type:cfg.label,
+      businessType:cfg.needsBusiness ? businessType : 'Individual',
+      bank:{holder:holder,bankName:bankName,accountLast4:account.slice(-4),ifsc:ifsc,verified:false,status:'Pending Bank Verification'},
+      documents:{pan:cfg.needsPan?pan:'',gst:cfg.needsGst?gst:'',idType:cfg.needsId?idType:'',idNumber:cfg.needsId?idNumber:'',panUploaded:Boolean(panPhoto),idUploaded:Boolean(idPhoto),gstUploaded:Boolean(gstPhoto),status:'Pending Verification'}
+    };
+    saveAppState();renderSellerDashboard();
+    showToast(data.session?cfg.label+' account created successfully':'Account created. Please confirm your email, then login.');
+    if(data.session) showPage('sellerDashboardPage');
+  }catch(error){console.error(error);showToast(error?.message||'Seller account creation failed');}
+}
 
-  saveAppState();
-  syncAppStateToFirebase();
-  renderSellerDashboard();
-  showToast(cfg.label + " account created successfully");
-  showPage("sellerDashboardPage");
+
+function openSellerLogin(){
+  openAryModal('Seller Login',`
+    <form onsubmit="sellerLogin(event)">
+      <div class="field"><label>Email</label><input name="email" type="email" required></div>
+      <div class="field"><label>Password</label><input name="password" type="password" minlength="6" required></div>
+      <button class="primary-btn" style="width:100%;">Login as Seller</button>
+    </form>
+  `);
+}
+
+async function sellerLogin(event){
+  event.preventDefault();
+  const form=new FormData(event.target);
+  const email=String(form.get('email')||'').trim().toLowerCase();
+  const password=String(form.get('password')||'');
+  const client=getSupabaseClient();
+  if(!client) return;
+  try{
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error) throw error;
+    const meta=data.user?.user_metadata||{};
+    if(meta.account_type!=='seller') throw new Error('This is not a seller account. Please use Customer Login.');
+    appState.seller={...appState.seller,registered:true,name:meta.full_name||email.split('@')[0],phone:meta.phone||'',email:data.user?.email||email,authId:data.user?.id||'',type:meta.seller_type||appState.seller?.type||'Seller'};
+    saveAppState();closeAryModal();renderSellerDashboard();showPage('sellerDashboardPage');showToast('Seller login successful');
+  }catch(error){console.error(error);showToast(error?.message||'Seller login failed');}
+}
+
+async function sellerLogout(){
+  try{const client=getSupabaseClient(false);if(client) await client.auth.signOut();}catch(error){console.error(error);}
+  appState.seller={registered:false,name:'',type:'',phone:'',email:'',authId:'',bank:{},products:[],drafts:[]};
+  saveAppState();showPage('accountPage');showToast('Seller logged out successfully');
 }
 
 
@@ -5750,23 +5809,10 @@ function toggleDarkMode(){
   saveAppState();
 }
 
-function logoutCustomer(){
-
-  appState.customer = {
-    loggedIn:false,
-    name:"",
-    phone:"",
-    email:"",
-    verified:false
-  };
-
-  saveAppState();
-
-  renderAccount();
-
-  showToast(
-    "Logged out successfully"
-  );
+async function logoutCustomer(){
+  try{const client=getSupabaseClient(false);if(client) await client.auth.signOut();}catch(error){console.error(error);}
+  appState.customer={loggedIn:false,name:"",phone:"",email:"",verified:false,authId:""};
+  saveAppState();renderAccount();showToast("Logged out successfully");
 }
 
 
@@ -6177,7 +6223,7 @@ function openChangePasswordModal(){
   openAryModal(
     "Change Password",
     `
-      <form onsubmit="saveDemoPassword(event)">
+      <form onsubmit="saveAccountPassword(event)">
         <div class="field">
           <label>New Password</label>
           <input name="password" type="password" minlength="6" required>
@@ -6192,17 +6238,20 @@ function openChangePasswordModal(){
   );
 }
 
-function saveDemoPassword(event){
+async function saveAccountPassword(event){
   event.preventDefault();
   const data = new FormData(event.target);
   const password = String(data.get("password") || "");
   const confirmPassword = String(data.get("confirm") || "");
-  if(password !== confirmPassword){
-    showToast("Passwords do not match");
-    return;
-  }
-  closeAryModal();
-  showToast("Password updated in this demo app");
+  if(password.length<6){showToast("Password must be at least 6 characters");return;}
+  if(password !== confirmPassword){showToast("Passwords do not match");return;}
+  const client=getSupabaseClient();
+  if(!client) return;
+  try{
+    const {error}=await client.auth.updateUser({password});
+    if(error) throw error;
+    closeAryModal();showToast("Password updated successfully");
+  }catch(error){console.error(error);showToast(error?.message||"Password update failed");}
 }
 
 function previewListingImages(input){
@@ -6256,48 +6305,50 @@ function previewReturnPhotos(input){
 }
 
 /* =========================================================
-   FIREBASE AUTH + FIRESTORE + ADMIN
+   SUPABASE AUTH CONFIGURATION
+   Paste your Project URL and anon public key below.
 ========================================================= */
-const ARYKART_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCnO3bdwmu4EwBIuRPrxNtX7uRULEUKKnA",
-  authDomain: "arykart-81369.firebaseapp.com",
-  projectId: "arykart-81369",
-  storageBucket: "arykart-81369.firebasestorage.app",
-  messagingSenderId: "1080836673094",
-  appId: "1:1080836673094:web:aed39f56f8f1293bc6c447",
-  measurementId: "G-EJBHXL15FN"
-};
+const ARYKART_SUPABASE_URL = "https://fzkdqcmxldsewdblhcgs.supabase.co";
+const ARYKART_SUPABASE_ANON_KEY = "sb_publishable_-OY-nDxS-yw9nanVX4Dkwg_SAc0U_25";
+let arykartSupabase=null;
 
-let arykartFirebaseApp=null, arykartDb=null;
-
-function initializeFirebase(){
-  try{
-    if(typeof firebase==="undefined" || !ARYKART_FIREBASE_CONFIG.apiKey) return false;
-    arykartFirebaseApp=firebase.apps.length ? firebase.app() : firebase.initializeApp(ARYKART_FIREBASE_CONFIG);
-    arykartDb=firebase.firestore();
-    appState.firebase.configured=true;
-    appState.firebase.phoneOtpEnabled=false;
-    saveAppState();
-    return true;
-  }catch(error){
-    console.error("Firebase init failed",error);
-    appState.firebase.configured=false;
-    appState.firebase.phoneOtpEnabled=false;
-    return false;
+function getSupabaseClient(showError=true){
+  const ready=ARYKART_SUPABASE_URL.startsWith('https://') &&
+    !ARYKART_SUPABASE_URL.includes('PASTE_YOUR') &&
+    ARYKART_SUPABASE_ANON_KEY && !ARYKART_SUPABASE_ANON_KEY.includes('PASTE_YOUR');
+  if(!ready || !window.supabase){
+    appState.supabase={configured:false};
+    if(showError) showToast('Supabase Project URL and anon key add karna baki hai');
+    return null;
   }
+  try{
+    if(!arykartSupabase) arykartSupabase=window.supabase.createClient(ARYKART_SUPABASE_URL,ARYKART_SUPABASE_ANON_KEY);
+    appState.supabase={configured:true};
+    return arykartSupabase;
+  }catch(error){console.error(error);appState.supabase={configured:false};if(showError) showToast('Supabase configuration failed');return null;}
 }
 
-async function syncAppStateToFirebase(){
-  if(!initializeFirebase() || !arykartDb) return false;
+async function initializeSupabase(){
+  const client=getSupabaseClient(false);
+  if(!client) return false;
   try{
-    const customerPhone=appState.customer?.phone;
-    if(customerPhone) await arykartDb.collection("customers").doc(customerPhone).set({...appState.customer,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    const sellerPhone=appState.seller?.phone;
-    if(sellerPhone && appState.seller.registered) await arykartDb.collection("sellers").doc(sellerPhone).set({...appState.seller,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    await arykartDb.collection("appData").doc("latest").set({orders:appState.orders,returns:appState.returns,supportTickets:appState.supportTickets||[],updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    showToast("Data synced to Firebase");
+    const {data:{session}}=await client.auth.getSession();
+    if(!session?.user) return true;
+    const user=session.user, meta=user.user_metadata||{};
+    if(meta.account_type==='seller'){
+      appState.seller={...appState.seller,registered:true,name:meta.full_name||user.email?.split('@')[0]||'',phone:meta.phone||'',email:user.email||'',authId:user.id,type:meta.seller_type||appState.seller?.type||'Seller'};
+    }else{
+      appState.customer={loggedIn:true,name:meta.full_name||user.email?.split('@')[0]||'',phone:meta.phone||'',email:user.email||'',verified:Boolean(user.email_confirmed_at),authId:user.id};
+    }
+    saveAppState();
     return true;
-  }catch(error){ console.error(error); showToast("Firebase sync failed"); return false; }
+  }catch(error){console.error('Supabase init failed',error);return false;}
+}
+
+async function syncAppStateToStorage(){
+  saveAppState();
+  showToast('Data saved on this device');
+  return true;
 }
 
 
@@ -6428,7 +6479,7 @@ function submitSupportTicket(event,type){
 
   appState.supportTickets.unshift(ticket);
   saveAppState();
-  syncAppStateToFirebase();
+  syncAppStateToStorage();
 
   closeAryModal();
   showToast("Support ticket created: " + ticket.id);
@@ -6561,7 +6612,7 @@ function adminReplyToSupport(event,ticketId){
   ticket.updatedAt = new Date().toISOString();
 
   saveAppState();
-  syncAppStateToFirebase();
+  syncAppStateToStorage();
   closeAryModal();
   showToast("Support reply sent");
   renderAdminSection("support");
@@ -6574,7 +6625,7 @@ function updateSupportTicketStatus(ticketId,status){
   ticket.status = status;
   ticket.updatedAt = new Date().toISOString();
   saveAppState();
-  syncAppStateToFirebase();
+  syncAppStateToStorage();
   renderAdminSection("support");
 }
 
@@ -6586,7 +6637,7 @@ function deleteSupportTicket(ticketId){
     return ticket.id !== ticketId;
   });
   saveAppState();
-  syncAppStateToFirebase();
+  syncAppStateToStorage();
   renderAdminSection("support");
   showToast("Support ticket deleted");
 }
@@ -6597,7 +6648,7 @@ function openAdminPanel(){
 function adminLogin(event){
   event.preventDefault();
   const pin=String(new FormData(event.target).get("pin")||"");
-  if(pin!=="ARYKART_ADMIN_CHANGE_ME"){ showToast("Invalid admin PIN"); return; }
+  if(pin!=="Maa@2010"){ showToast("Invalid admin PIN"); return; }
   appState.admin.enabled=true; saveAppState(); closeAryModal(); showPage("adminPage"); renderAdminSection(appState.admin.lastSection||"overview");
 }
 function adminLogout(){ appState.admin.enabled=false; saveAppState(); showPage("accountPage"); }
@@ -6677,7 +6728,7 @@ function renderAdminSection(section){
       ["Customer",appState.customer?.phone||"No customer account"],
       ["Seller",appState.seller?.registered?appState.seller.name:"No seller account"],
       ["Support Tickets",(appState.supportTickets||[]).length],
-      ["Firebase",appState.firebase?.configured?"Configured":"Not configured"]
+      ["Supabase",appState.supabase?.configured?"Configured":"Not configured"]
     ],
     customers:[
       ["Name",appState.customer?.name||"—"],
@@ -6719,7 +6770,7 @@ function initializeArykart(){
 
   normalizeState();
 
-  initializeFirebase();
+  initializeSupabase();
   startSupportRealtimeSync();
   updateSellerFormForType();
 
@@ -6898,7 +6949,7 @@ function startSupportChat(type){
       {id:akId(),from:'bot',sender:'ARYKART Assistant',message:type==='seller'?'Hello! 👋 Tell me what problem you are facing with your seller account, products, orders, delivery or payments.':'Hello! 👋 Tell me your problem normally. You can ask about orders, delivery, refunds, returns, payments, products or your account.',createdAt:now}
     ]
   });
-  appState.supportTickets.unshift(ticket);saveAppState();syncSupportTicketToFirebase(ticket);closeAryModal();openSupportChat(ticket.id);
+  appState.supportTickets.unshift(ticket);saveAppState();syncSupportTicketToStorage(ticket);closeAryModal();openSupportChat(ticket.id);
 }
 
 function setSupportCategoryFromText(ticket,text){
@@ -6938,8 +6989,8 @@ function openSupportChat(ticketId){
   if(!isAdmin){
     const mine=getMySupportTickets(ticket.type).some(function(t){return t.id===ticket.id;});
     if(!mine){showToast('This support conversation belongs to another account');return;}
-    ticket.unreadCustomer=0;saveAppState();syncSupportTicketToFirebase(ticket);
-  }else{ticket.unreadAdmin=0;saveAppState();syncSupportTicketToFirebase(ticket);}
+    ticket.unreadCustomer=0;saveAppState();syncSupportTicketToStorage(ticket);
+  }else{ticket.unreadAdmin=0;saveAppState();syncSupportTicketToStorage(ticket);}
   const messages=(ticket.messages||[]).map(function(m){
     const mine=(isAdmin?m.from==='admin':m.from==='user');
     const label=m.from==='admin'?'ARYKART Support':(m.from==='bot'?'ARYKART Assistant':(ticket.type==='seller'?'Seller':'You'));
@@ -6980,7 +7031,7 @@ function sendSupportChatText(ticketId,text,orderId){
     addSupportMessage(ticket,'bot',auto.reply,'ARYKART Assistant');
     if(auto.handoff){ticket.humanRequested=true;ticket.status='Open';ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;}
   }
-  saveAppState();syncSupportTicketToFirebase(ticket);openSupportChat(ticket.id);
+  saveAppState();syncSupportTicketToStorage(ticket);openSupportChat(ticket.id);
 }
 
 function requestHumanSupport(ticketId){
@@ -6989,7 +7040,7 @@ function requestHumanSupport(ticketId){
     ticket.humanRequested=true;ticket.status='Open';
     addSupportMessage(ticket,'bot','Your conversation has been sent to ARYKART Admin Support. Please keep this chat open or come back later to see the reply.','ARYKART Assistant');
   }
-  ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToFirebase(ticket);openSupportChat(ticket.id);showToast('Admin Support has been notified');
+  ticket.unreadAdmin=Number(ticket.unreadAdmin||0)+1;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToStorage(ticket);openSupportChat(ticket.id);showToast('Admin Support has been notified');
 }
 
 function sendAdminChatMessage(event,ticketId){
@@ -7000,7 +7051,7 @@ function sendAdminChatMessage(event,ticketId){
   if(!msg){showToast('Write a reply first');return;}
   addSupportMessage(ticket,'admin',msg,'ARYKART Support');ticket.replies=ticket.replies||[];ticket.replies.push({id:ticket.messages[ticket.messages.length-1].id,from:'admin',message:msg,createdAt:ticket.updatedAt});
   ticket.status=status;ticket.humanRequested=true;ticket.unreadCustomer=Number(ticket.unreadCustomer||0)+1;
-  saveAppState();syncSupportTicketToFirebase(ticket);renderAdminSection('support');openSupportChat(ticket.id);
+  saveAppState();syncSupportTicketToStorage(ticket);renderAdminSection('support');openSupportChat(ticket.id);
 }
 
 function adminReplyToSupport(event,ticketId){sendAdminChatMessage(event,ticketId);}
@@ -7009,7 +7060,7 @@ function openSupportTicket(ticketId){openSupportChat(ticketId);}
 
 function updateSupportTicketStatus(ticketId,status){
   const ticket=getSupportTicket(ticketId);if(!ticket||!appState.admin?.enabled)return;
-  ticket.status=status;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToFirebase(ticket);renderAdminSection('support');
+  ticket.status=status;ticket.updatedAt=new Date().toISOString();saveAppState();syncSupportTicketToStorage(ticket);renderAdminSection('support');
 }
 
 function renderAdminSection(section){
@@ -7028,35 +7079,9 @@ function renderAdminSection(section){
   const rows=data[section]||data.overview;content.innerHTML=rows.length?rows.map(function(r){return `<div class="order-card" style="padding:12px;"><strong>${esc(r[0])}</strong><div style="color:var(--muted);margin-top:4px;">${esc(String(r[1]))}</div></div>`;}).join(''):`<p style='color:var(--muted)'>No records yet.</p>`;
 }
 
-async function syncSupportTicketToFirebase(ticket){
-  if(!ticket || !initializeFirebase() || !arykartDb) return false;
-  try{await arykartDb.collection('supportTickets').doc(ticket.id).set(JSON.parse(JSON.stringify(ticket)),{merge:true});return true;}catch(error){console.error('Support chat sync failed',error);return false;}
-}
-
-function startSupportRealtimeSync(){
-  if(!initializeFirebase() || !arykartDb || window.arykartSupportUnsubscribe) return;
-  try{
-    window.arykartSupportUnsubscribe=arykartDb.collection('supportTickets').onSnapshot(function(snapshot){
-      const remote=snapshot.docs.map(function(doc){return normalizeSupportTicket(Object.assign({id:doc.id},doc.data()));});
-      if(!remote.length) return;
-      const map=new Map((appState.supportTickets||[]).map(function(t){return [t.id,normalizeSupportTicket(t)];}));
-      remote.forEach(function(rt){const local=map.get(rt.id);if(!local || new Date(rt.updatedAt||0)>=new Date(local.updatedAt||0)) map.set(rt.id,rt);});
-      appState.supportTickets=Array.from(map.values()).sort(function(a,b){return new Date(b.updatedAt||b.createdAt)-new Date(a.updatedAt||a.createdAt);});saveAppState();
-      if(appState.admin?.enabled && appState.admin.lastSection==='support') renderAdminSection('support');
-    },function(error){console.error('Live support listener failed',error);});
-  }catch(error){console.error(error);}
-}
-
-async function syncAppStateToFirebase(){
-  if(!initializeFirebase() || !arykartDb) return false;
-  try{
-    const customerPhone=appState.customer?.phone;if(customerPhone) await arykartDb.collection('customers').doc(customerPhone).set(Object.assign({},appState.customer,{updatedAt:firebase.firestore.FieldValue.serverTimestamp()}),{merge:true});
-    const sellerPhone=appState.seller?.phone;if(sellerPhone&&appState.seller?.registered) await arykartDb.collection('sellers').doc(sellerPhone).set(Object.assign({},appState.seller,{updatedAt:firebase.firestore.FieldValue.serverTimestamp()}),{merge:true});
-    await arykartDb.collection('appData').doc('latest').set({orders:appState.orders,returns:appState.returns,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    await Promise.all((appState.supportTickets||[]).map(syncSupportTicketToFirebase));
-    return true;
-  }catch(error){console.error(error);return false;}
-}
+async function syncSupportTicketToStorage(ticket){saveAppState();return Boolean(ticket);}
+function startSupportRealtimeSync(){return false;}
+async function syncAppStateToStorage(){saveAppState();return true;}
 
 
 /* =========================================================
