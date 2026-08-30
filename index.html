@@ -7,7 +7,7 @@
 <title>ARYKART - Shop Everything</title>
 
 
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -7098,5 +7098,24 @@ window.addEventListener(
 
 </script>
 
+<script>
+(function(){
+  const ready=()=>window.supabase&&typeof window.supabase.from==="function";
+  async function save(table,p){
+    if(!ready()||!p)return;
+    const row={id:p.id,name:p.name||"",email:p.email||null,phone:p.phone||null,updated_at:new Date().toISOString()};
+    if(p.type)row.type=p.type;
+    if(p.verified!==undefined)row.verified=!!p.verified;
+    if(p.phoneVerified!==undefined)row.phone_verified=!!p.phoneVerified;
+    Object.keys(row).forEach(k=>row[k]===undefined&&delete row[k]);
+    try{await window.supabase.from(table).upsert(row,{onConflict:"id"});}catch(e){}
+  }
+  async function load(table){
+    if(!ready())return [];
+    try{const r=await window.supabase.from(table).select("*").order("updated_at",{ascending:false});return r.error?[]:(r.data||[]);}catch(e){return [];}
+  }
+  window.ArykartAccountSync={saveCustomer:p=>save("customers",p),saveSeller:p=>save("sellers",p),loadCustomers:()=>load("customers"),loadSellers:()=>load("sellers")};
+})();
+</script>
 </body>
 </html>
