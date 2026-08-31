@@ -1,0 +1,13 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Arykart",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "Arykart",
+  "start_url": "/",
+  "theme_color": "#2664eb",
+  "id": "aryKart",
+  "description": "Shop from thousands of products and get fast delivery with ARYKART."
+}
